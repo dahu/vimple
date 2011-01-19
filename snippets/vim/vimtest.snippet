@@ -1,0 +1,7 @@
+function! ${1:TestFunction}() 
+  echo "hello world" 
+endfunction 
+
+map <buffer> K <Esc>:w<CR>:so %<CR>:call $1()<CR> 
+
+ " vim: ft=vim
