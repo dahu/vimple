@@ -54,6 +54,8 @@ command! -nargs=* -complete=custom,ScriptnamesFileNameCompletion OpenFileFromScr
 if !hasmapto('<Plug>OpenFileFromScriptnames')
     map <silent><unique> <Leader>o <Plug>OpenFileFromScriptnames
 endif
+noremap <unique><script> <Plug>OpenFileFromScriptnames :OpenFileFromScriptnames<CR>
+
 
 " }}}
 " Implementations {{{
