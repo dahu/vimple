@@ -1,5 +1,5 @@
-au! CursorHold  *.vim nested call PreviewWord(0)
-au! CursorHoldI *.vim nested call PreviewWord(1)
+au! CursorHold  * nested if &ft == 'vim' | call PreviewWord(0) | endif
+au! CursorHoldI * nested if &ft == 'vim' | call PreviewWord(1) | endif
 "noremap <leader>l :call PreviewWord(0)<CR>
 
 let &tags =  &tags . ',' . glob(expand('<sfile>:p:h')."/../../tags/*.tags")
@@ -10,13 +10,13 @@ func! PreviewWord(insert)
 
   let col    = col('.') - a:insert
   let line   = getline('.')
-  let start  = col('.') - 1
-  let ignore = 'synIDattr(synID(line("."), start, 0), "name") =~?  ''string\|comment'''
+  let start  = col - 1
+  let ignore = 'synIDattr(synID(line("."), (start + 1), 0), "name") =~?  ''string\|comment'''
   " Get word under the cursor if any, not the same as <cword>
   let w      = substitute(line, '^.\{-}\(\w\+\%'.(col+1).'c\w*\).\{-}$','\1','')
   " Find out if we are writing a function's arguments. (It could search
   " other lines...)
-  let has_fn = searchpairpos('\w\s*(','',')','cnWb','synIDattr(synID(line("."), col, 0), "name") =~? ''string\|comment''',line('.'))[1]
+  let has_fn = searchpairpos('\w\zs\s*(','',')','cnWb','synIDattr(synID(line("."), col, 0), "name") =~? ''string\|comment''',line('.'))[1]
 
   " See if w should be changed
   if w == '' || (w =~ '\W' && w =~ '\w') || eval(ignore) || has_fn > 0
@@ -59,7 +59,7 @@ func! PreviewWord(insert)
 
       let start -= 1
 
-      if char =~ '\w' && line[start - 1] =~ '\W' && !skip && paren_bal <= 0 && (has_fn <= 0 || has_fn >= start)
+      if char =~ '\w' && line[start - 1] =~ '\W' && !skip && paren_bal <= 0 && (has_fn <= 0 || has_fn > start)
         " Char is a word-char, the next is not, we aren't skipping anymore,
         " parens' balance is ok and, if we are writing arguments, the start of
         " the word is before the open paren. So, stop looking.
@@ -67,7 +67,6 @@ func! PreviewWord(insert)
       endif
     endwhile
     let w = line[start : end]
-  else
   endif
 
   if w =~ '\a'                  " if the word contains a letter
