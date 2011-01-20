@@ -15,7 +15,7 @@ argv	vimbuiltins.vim	/argv( {nr})	"String	{nr} entry of the argument list$/;"	f
 argv	vimbuiltins.vim	/argv( )	"List	the argument list$/;"	f
 asin	vimbuiltins.vim	/asin( {expr})	"Float	arc sine of {expr}$/;"	f
 atan	vimbuiltins.vim	/atan( {expr})	"Float	arc tangent of {expr}$/;"	f
-atan2	vimbuiltins.vim	/atan2( {expr}, {expr})	"Float	arc tangent of {expr1} / {expr2}$/;"	f
+atan2	vimbuiltins.vim	/atan2( {expr}, {expr})	"Float	arc tangent of {expr1} \/ {expr2}$/;"	f
 browse	vimbuiltins.vim	/browse( {save}, {title}, {initdir}, {default})	"String	put up a file requester$/;"	f
 browsedir	vimbuiltins.vim	/browsedir( {title}, {initdir})	"String	put up a directory requester$/;"	f
 bufexists	vimbuiltins.vim	/bufexists( {expr})	"Number	TRUE if buffer {expr} exists$/;"	f
@@ -48,25 +48,25 @@ deepcopy	vimbuiltins.vim	/deepcopy( {expr})	"any	make a full copy of {expr}$/;"	
 delete	vimbuiltins.vim	/delete( {fname})	"Number	delete file {fname}$/;"	f
 did_filetype	vimbuiltins.vim	/did_filetype()	"Number	TRUE if FileType autocommand event used$/;"	f
 diff_filler	vimbuiltins.vim	/diff_filler( {lnum})	"Number	diff filler lines about {lnum}$/;"	f
-diff_hlID	vimbuiltins.vim	/diff_hlID( {lnum}, {col})	"Number	diff highlighting at {lnum}/{col}$/;"	f
+diff_hlID	vimbuiltins.vim	/diff_hlID( {lnum}, {col})	"Number	diff highlighting at {lnum}\/{col}$/;"	f
 empty	vimbuiltins.vim	/empty( {expr})	"Number	TRUE if {expr} is empty$/;"	f
 escape	vimbuiltins.vim	/escape( {string}, {chars})	"String	escape {chars} in {string} with '\'$/;"	f
 eval	vimbuiltins.vim	/eval( {string})	"any	evaluate {string} into its value$/;"	f
 eventhandler	vimbuiltins.vim	/eventhandler( )	"Number	TRUE if inside an event handler$/;"	f
 executable	vimbuiltins.vim	/executable( {expr})	"Number	1 if executable {expr} exists$/;"	f
 exists	vimbuiltins.vim	/exists( {expr})	"Number	TRUE if {expr} exists$/;"	f
-extend	vimbuiltins.vim	/extend( {expr1}, {expr2} [, {expr3}])	"List/Dict	insert items of {expr2} into {expr1}$/;"	f
+extend	vimbuiltins.vim	/extend( {expr1}, {expr2} [, {expr3}])	"List\/Dict	insert items of {expr2} into {expr1}$/;"	f
 exp	vimbuiltins.vim	/exp( {expr})	"Float	exponential of {expr}$/;"	f
 expand	vimbuiltins.vim	/expand( {expr} [, {flag}])	"String	expand special keywords in {expr}$/;"	f
 feedkeys	vimbuiltins.vim	/feedkeys( {string} [, {mode}])	"Number	add key sequence to typeahead buffer$/;"	f
 filereadable	vimbuiltins.vim	/filereadable( {file})	"Number	TRUE if {file} is a readable file$/;"	f
 filewritable	vimbuiltins.vim	/filewritable( {file})	"Number	TRUE if {file} is a writable file$/;"	f
-filter	vimbuiltins.vim	/filter( {expr}, {string})	"List/Dict	remove items from {expr} where {string} is 0$/;"	f
+filter	vimbuiltins.vim	/filter( {expr}, {string})	"List\/Dict	remove items from {expr} where {string} is 0$/;"	f
 finddir	vimbuiltins.vim	/finddir( {name}[, {path}[, {count}]])	"String	find directory {name} in {path}$/;"	f
 findfile	vimbuiltins.vim	/findfile( {name}[, {path}[, {count}]])	"String	find file {name} in {path}$/;"	f
 float2nr	vimbuiltins.vim	/float2nr( {expr})	"Number	convert Float {expr} to a Number$/;"	f
 floor	vimbuiltins.vim	/floor( {expr})	"Float	round {expr} down$/;"	f
-fmod	vimbuiltins.vim	/fmod( {expr1}, {expr2})	"Float	remainder of {expr1} / {expr2}$/;"	f
+fmod	vimbuiltins.vim	/fmod( {expr1}, {expr2})	"Float	remainder of {expr1} \/ {expr2}$/;"	f
 fnameescape	vimbuiltins.vim	/fnameescape( {fname})	"String	escape special characters in {fname}$/;"	f
 fnamemodify	vimbuiltins.vim	/fnamemodify( {fname}, {mods})	"String	modify file name$/;"	f
 foldclosed	vimbuiltins.vim	/foldclosed( {lnum})	"Number	first line of fold at {lnum} if closed$/;"	f
@@ -143,7 +143,7 @@ lispindent	vimbuiltins.vim	/lispindent( {lnum})	"Number	Lisp indent for line {ln
 localtime	vimbuiltins.vim	/localtime()	"Number	current time$/;"	f
 log	vimbuiltins.vim	/log( {expr})	"Float	natural logarithm (base e) of {expr}$/;"	f
 log10	vimbuiltins.vim	/log10( {expr})	"Float	logarithm of Float {expr} to base 10$/;"	f
-map	vimbuiltins.vim	/map( {expr}, {string})	"List/Dict  change each item in {expr} to {expr}$/;"	f
+map	vimbuiltins.vim	/map( {expr}, {string})	"List\/Dict  change each item in {expr} to {expr}$/;"	f
 maparg	vimbuiltins.vim	/maparg( {name}[, {mode} [, {abbr} [, {dict}]]])	"String	rhs of mapping {name} in mode {mode}$/;"	f
 mapcheck	vimbuiltins.vim	/mapcheck( {name}[, {mode} [, {abbr}]])	"String	check for mappings matching {name}$/;"	f
 match	vimbuiltins.vim	/match( {expr}, {pat}[, {start}[, {count}]])	"Number	position where {pat} matches in {expr}$/;"	f
@@ -183,8 +183,8 @@ reverse	vimbuiltins.vim	/reverse( {list})	"List	reverse {list} in-place$/;"	f
 round	vimbuiltins.vim	/round( {expr})	"Float	round off {expr}$/;"	f
 search	vimbuiltins.vim	/search( {pattern} [, {flags} [, {stopline} [, {timeout}]]])	"Number	search for {pattern}$/;"	f
 searchdecl	vimbuiltins.vim	/searchdecl( {name} [, {global} [, {thisblock}]])	"Number	search for variable declaration$/;"	f
-searchpair	vimbuiltins.vim	/searchpair( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])	"Number	search for other end of start/end pair$/;"	f
-searchpairpos	vimbuiltins.vim	/searchpairpos( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])	"List	search for other end of start/end pair$/;"	f
+searchpair	vimbuiltins.vim	/searchpair( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])	"Number	search for other end of start\/end pair$/;"	f
+searchpairpos	vimbuiltins.vim	/searchpairpos( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])	"List	search for other end of start\/end pair$/;"	f
 searchpos	vimbuiltins.vim	/searchpos( {pattern} [, {flags} [, {stopline} [, {timeout}]]])	"List	search for {pattern}$/;"	f
 server2client	vimbuiltins.vim	/server2client( {clientid}, {string})	"Number	send reply string$/;"	f
 serverlist	vimbuiltins.vim	/serverlist()	"String	get a list of available servers$/;"	f
@@ -228,7 +228,7 @@ synIDattr	vimbuiltins.vim	/synIDattr( {synID}, {what} [, {mode}])	"String	attrib
 synIDtrans	vimbuiltins.vim	/synIDtrans( {synID})	"Number	translated syntax ID of {synID}$/;"	f
 synconcealed	vimbuiltins.vim	/synconcealed( {lnum}, {col})	"List	info about concealing$/;"	f
 synstack	vimbuiltins.vim	/synstack( {lnum}, {col})	"List	stack of syntax IDs at {lnum} and {col}$/;"	f
-system	vimbuiltins.vim	/system( {expr} [, {input}])	"String	output of shell command/filter {expr}$/;"	f
+system	vimbuiltins.vim	/system( {expr} [, {input}])	"String	output of shell command\/filter {expr}$/;"	f
 tabpagebuflist	vimbuiltins.vim	/tabpagebuflist( [{arg}])	"List	list of buffer numbers in tab page$/;"	f
 tabpagenr	vimbuiltins.vim	/tabpagenr( [{arg}])	"Number	number of current or last tab page$/;"	f
 tabpagewinnr	vimbuiltins.vim	/tabpagewinnr( {tabarg}[, {arg}])	"Number	number of current window in tab page$/;"	f
