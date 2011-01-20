@@ -49,7 +49,7 @@ BLOCKCOMMENT
 
 " }}}
 " External Definitions {{{
-command! -nargs=* -complete=custom,ScriptnamesFileNameCompletion OpenFileFromScriptnames call s:OpenFileFromScriptnames()
+command! -nargs=* -complete=custom,ScriptnamesFileNameCompletion OpenFileFromScriptnames call OpenFileFromScriptnames()
 
 if !hasmapto('<Plug>OpenFileFromScriptnames')
     map <silent><unique> <Leader>o <Plug>OpenFileFromScriptnames
