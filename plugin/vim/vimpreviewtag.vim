@@ -1,6 +1,6 @@
-"au! CursorHold  *.vim nested call PreviewWord(0)
-"au! CursorHoldI *.vim nested call PreviewWord(1)
-noremap <leader>l :call PreviewWord(0)<CR>
+au! CursorHold  *.vim nested call PreviewWord(0)
+au! CursorHoldI *.vim nested call PreviewWord(1)
+"noremap <leader>l :call PreviewWord(0)<CR>
 
 let &tags =  &tags . ',' . glob(expand('<sfile>:p:h')."/../../tags/*.tags")
 func! PreviewWord(insert)
@@ -25,6 +25,7 @@ func! PreviewWord(insert)
     let end    = 0
     let skip   = 0
 
+    " Start looking
     while start > 0
       if eval(ignore)
         " Inside a comment or string, pass
@@ -66,9 +67,7 @@ func! PreviewWord(insert)
       endif
     endwhile
     let w = line[start : end]
-    echom start.','.end.':No word: '.w.'|'.has_fn
   else
-    echom 'Word: '.w
   endif
 
   if w =~ '\a'                  " if the word contains a letter
