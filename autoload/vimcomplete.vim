@@ -12,7 +12,20 @@ function! vimcomplete#Complete(findstart, base)
    redir => l:funcs
    silent! function
    redir END
-   let l:funclist = map(filter(split(l:funcs, "\n"), 'v:val !~ "\<SNR\>" && v:val =~ "^function '.a:base.'"'), 'substitute(v:val, "^function ", "", "")')
-   return l:funclist
+   let l:complete = []
+   for l:func in map(filter(split(l:funcs, "\n"), 'v:val !~ "\<SNR\>" && v:val =~ "^function '.a:base.'"'), 'substitute(v:val, "^function ", "", "")')
+     let l:spos = match(l:func, '(')
+     let l:epos = match(l:func, ')')
+     " actual text inserted (in 'word')
+     let l:word = strpart(l:func, 0, l:spos)
+     " get arguments for preview windo (in 'info')
+     let l:info = strpart(l:func, l:spos+1, l:epos - l:spos - 1)
+     if l:info == ''
+       let l:info = ' '
+     endif
+     " build completion list
+     call add(l:complete, {'word' : l:word, 'abbr' : l:func, 'info' : l:info, 'kind' : 'f'})
+   endfor
+   return l:complete
   endif
 endfunction
