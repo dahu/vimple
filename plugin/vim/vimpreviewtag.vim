@@ -1,5 +1,6 @@
-au! CursorHold  *.vim nested call PreviewWord(0)
-au! CursorHoldI *.vim nested call PreviewWord(1)
+"au! CursorHold  *.vim nested call PreviewWord(0)
+"au! CursorHoldI *.vim nested call PreviewWord(1)
+noremap <leader>l :call PreviewWord(0)<CR>
 
 let &tags =  &tags . ',' . glob(expand('<sfile>:p:h')."/../../tags/*.tags")
 func! PreviewWord(insert)
@@ -7,13 +8,67 @@ func! PreviewWord(insert)
     return
   endif
 
-  if a:insert && getline('.')[col('.')-2] =~ '\w'
-    " Find word for insert mode
-    let start = searchpos('\w\+','cnb',line('.'))[1]
-    let w     = getline('.')[ start - 1 : col('.') - 2 ]
+  let col    = col('.') - a:insert
+  let line   = getline('.')
+  let start  = col('.') - 1
+  let ignore = 'synIDattr(synID(line("."), start, 0), "name") =~?  ''string\|comment'''
+  " Get word under the cursor if any, not the same as <cword>
+  let w      = substitute(line, '^.\{-}\(\w\+\%'.(col+1).'c\w*\).\{-}$','\1','')
+  " Find out if we are writing a function's arguments. (It could search
+  " other lines...)
+  let has_fn = searchpairpos('\w\s*(','',')','cnWb','synIDattr(synID(line("."), col, 0), "name") =~? ''string\|comment''',line('.'))[1]
+
+  " See if w should be changed
+  if w == '' || (w =~ '\W' && w =~ '\w') || eval(ignore) || has_fn > 0
+    " Monitor parens balance
+    let paren_bal = 0
+    let end    = 0
+    let skip   = 0
+
+    while start > 0
+      if eval(ignore)
+        " Inside a comment or string, pass
+        let start -= 1
+        continue
+      endif
+
+      let char = line[start - 1]
+
+      if char =~ '\w' && end == 0
+        " Set the end of the word
+        let end = start - 1
+      elseif char =~ '\W'
+        " This is not a word, reset end
+        let end = 0
+      endif
+
+      if char =~ '\W' && skip && paren_bal <= 0
+        " Stop skipping chars
+        let skip = 0
+      endif
+
+      " Balance parens
+      if char == ')'
+        " Don't get the word from an already closed function
+        let skip =  1
+        let paren_bal += 1
+      elseif char == '('
+        let paren_bal -= 1
+      endif
+
+      let start -= 1
+
+      if char =~ '\w' && line[start - 1] =~ '\W' && !skip && paren_bal <= 0 && (has_fn <= 0 || has_fn >= start)
+        " Char is a word-char, the next is not, we aren't skipping anymore,
+        " parens' balance is ok and, if we are writing arguments, the start of
+        " the word is before the open paren. So, stop looking.
+        break
+      endif
+    endwhile
+    let w = line[start : end]
+    echom start.','.end.':No word: '.w.'|'.has_fn
   else
-    " Find word for normal mode
-    let w = expand("<cword>")             " get the word under cursor
+    echom 'Word: '.w
   endif
 
   if w =~ '\a'                  " if the word contains a letter
