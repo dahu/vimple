@@ -1,0 +1,3 @@
+
+set updatetime=300             " Preview window timeout
+set previewheight=3
