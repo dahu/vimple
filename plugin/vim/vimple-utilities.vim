@@ -51,7 +51,7 @@ BLOCKCOMMENT
 " External Definitions {{{
 "
 " OpenFileFromScriptnames
-" 
+"
 command! -nargs=* -complete=custom,ScriptnamesFileNameCompletion OpenFileFromScriptnames call OpenFileFromScriptnames()
 
 if !hasmapto('<Plug>OpenFileFromScriptnames')
@@ -60,14 +60,15 @@ endif
 noremap <unique><script> <Plug>OpenFileFromScriptnames :OpenFileFromScriptnames<CR>
 
 "
-" RedirectOutput
-" 
-command! -nargs=? MessageGrep call MessageGrep(<f-args>)
-command! -nargs=* RedirectOutput call RedirectOutput(<f-args>)
-command! -nargs=* GrepRedirectedOutput call GrepRedirectedOutput(<f-args>)
+" RedirectMessageOutput
+"
+command! -nargs=? GrepMessages call GrepMessages(<f-args>)
+command! -nargs=* RedirectMessageOutput call RedirectMessageOutput(<f-args>)
+command! -nargs=* GrepRedirectedMessageOutput call GrepRedirectedMessageOutput(<f-args>)
 
-exec "map <buffer> <D-j>k :RedirectOutput "
-exec "map <buffer> <D-j>l :GrepRedirectedOutput "
+exec "map <buffer> <unique> <D-j>m :GrepMessages "
+exec "map <buffer> <unique> <D-j>r :RedirectMessageOutput "
+exec "map <buffer> <unique> <D-j>g :GrepRedirectedMessageOutput "
 
 " }}}
 " Implementations {{{
@@ -131,7 +132,7 @@ endfunction
 
 " }}}
 " Redirect Output {{{
-function! MessageGrep(...)
+function! GrepMessages(...)
     let l:matchstring = get(a:000, 0, "$")
     let l:command_output = ""
     let l:command_to_grep = ValidHistoryLine(0)
@@ -149,13 +150,13 @@ function! MessageGrep(...)
     endif
 endfunction
 
-function! GrepRedirectedOutput(matchstring, ...)
+function! GrepRedirectedMessageOutput(matchstring, ...)
     call histadd("cmd", join(a:000, " "))
-    call MessageGrep(a:matchstring)
+    call GrepMessages(a:matchstring)
 endfunction
 
-function! RedirectOutput(...)
-    call GrepRedirectedOutput("$", join(a:000, " "))
+function! RedirectMessageOutput(...)
+    call GrepRedirectedMessageOutput("$", join(a:000, " "))
 endfunction
 
 function! ValidHistoryLine(attempt)
@@ -188,10 +189,10 @@ endfunction
 
 function! s:DefaultBlackList()
     let l:blacklist =   [
-                        \ 'GrepRedirectedOutput',
+                        \ 'GrepRedirectedMessageOutput',
                         \ 'ValidHistoryLine',
-                        \ 'RedirectOutput',
-                        \ 'MessageGrep',
+                        \ 'RedirectMessageOutput',
+                        \ 'GrepMessages',
                         \ '^so[urce]\{,4}',
                         \ '^w[rite]\{,4}',
                         \ '^h[elp]\{,3}',
@@ -242,13 +243,13 @@ function! s:Test1()
                             \ ]
     call histadd("cmd", "set")
     call histadd("cmd", "scriptnames")
-    call MessageGrep("Options")
+    call GrepMessages("Options")
 endfunction
 
 function! s:Test2()
     let g:extra_blacklist = 2
     call histadd("cmd", "set")
-    call MessageGrep("Options")
+    call GrepMessages("Options")
 endfunction
 
 function! s:ResetTest()
