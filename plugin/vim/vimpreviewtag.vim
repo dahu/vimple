@@ -1,3 +1,8 @@
+if exists('g:loaded_vimpreviewtag') || &cp
+  finish
+endif
+let g:loaded_vimpreviewtag = 1
+
 au! CursorHold  * nested if &ft == 'vim' | call PreviewWord(0) | endif
 au! CursorHoldI * nested if &ft == 'vim' | call PreviewWord(1) | endif
 "noremap <leader>l :call PreviewWord(0)<CR>
