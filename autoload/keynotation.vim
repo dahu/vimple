@@ -7,6 +7,7 @@ end
 
 let g:keynotation_sentinel_list = [";", ">"]
 function! keynotation#parse() " {{{
+    exe "set undolevels=" . &undolevels
     let original_position = getpos(".")
     let scan = keynotation#scan_for_notation()
     let parsed_notation = keynotation#parse_raw_notation(scan['output'])
