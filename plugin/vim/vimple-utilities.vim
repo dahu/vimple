@@ -2,7 +2,8 @@
 " Utility commands and functions for vimple
 "
 " Maintainers:  Seth Milliken <seth_vim@araxia.net>
-"               <your info here>
+"               <raimondi>
+"               Barry Arthur <barry.arthur@gmail.com>
 " Home:         git://github.com/dahu/vimple.git
 " Date:         2011-01-21 21:27:44 PST
 "
@@ -39,7 +40,8 @@ endif
 "
 " TODO: take a function for postprocessing of redir buffer
 "
-map <buffer> K <Esc>:w<CR>:so %<CR>:Redir 
+" bairui: disabled 'cos it clashes with builtin K doco lookup
+" map <buffer> K <Esc>:w<CR>:so %<CR>:Redir 
 
 command! -nargs=? -complete=command Redir  :call RedirectMessageOutputFromCommand(<f-args>)
 function! RedirectMessageOutputFromCommand(command) " {{{
