@@ -2,11 +2,7 @@
 " ARB
 " version 0.8
 
-function! SortByNumber(i1, i2)
-  let i1 = str2nr(a:i1)
-  let i2 = str2nr(a:i2)
-  return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
-endfunction
+" NOTE: Uses the Numerically sort comparator
 
 function! BufferList()
   let bl = {}
@@ -82,7 +78,7 @@ function! BufferList()
     let printf_str ='printf("'.escape(s_format, '\"').'", '.args.')'
 
     let str = ''
-    for key in sort(keys(buffers), 'SortByNumber')
+    for key in sort(keys(buffers), 'Numerically')
       let str .= eval(printf_str)
     endfor
     return str
@@ -97,6 +93,12 @@ function! BufferList()
   func bl.buffer_type(b)
     return a:b['current'] == 1 ? '%' : a:b['alternate'] == 1 ? '#' : ' '
   endfunc
+
+  function! bl.SortByNumber(i1, i2)
+    let i1 = str2nr(a:i1)
+    let i2 = str2nr(a:i2)
+    return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
+  endfunction
 
   func bl.buffer_flags(b)
     return   (a:b['listed'] == 0 ? 'u' : ' ')
@@ -117,13 +119,13 @@ function! BufferList()
 endfunction
 
 let bl = BufferList()
-call bl.update()      " not necessary here, just showing it's callable
+"call bl.update()      " not necessary here, just showing it's callable
 "echo bl.buffers
 "echo "Current buffer    : " . bl.current
 "echo "Alternate buffer  : " . bl.alternate
 "echo bl.buffers[1]
 "echo "Buffer 1 is hidden: " . bl.buffers[1]['hidden']
-echo bl.to_s()
-echo bl.to_s("%b => \"%n\"\n", 'v:val.number =~ "[2-5]"')
+"echo bl.to_s()
+"echo bl.to_s("%b => \"%n\"\n", 'v:val.number =~ "[2-5]"')
 
 " vim: et sw=2 ft=vim
