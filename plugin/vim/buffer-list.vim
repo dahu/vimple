@@ -14,7 +14,7 @@ function! BufferList()
 
   func bl.update() dict
     redir => bufliststr
-    silent! ls
+    silent! ls!
     redir END
 
     let buffers = {}
@@ -55,6 +55,13 @@ function! BufferList()
   endfun
 
   " to_s([format[, filter]])
+  " format: When absent or empty the default value ("%3b%f\"%n\" line %l\n")
+  " will be used.
+  " Use %b, %n, %f and %l to insert the buffer number, name, flags and cursor
+  " line respectively . The last character will be replaced by d or s as
+  " required by printf(), so you can include extra flags (e.g.: %3b).
+  " filter: This argument will be used by filter() to remove items from the
+  " list.
   func bl.to_s(...) dict
     " An empty format argument uses the default.
     let s_format = a:0 && a:1 != '' ? a:1 : "%3b%f\"%n\" line %l\n"
@@ -84,7 +91,57 @@ function! BufferList()
     return str
   endfunc
 
+  func bl.hidden(...) dict
+    let filters = {
+          \ 1: 'v:val.hidden',
+          \ 2: '!v:val.active && v:val.listed',
+          \ 3: '!v:val.listed',
+          \ 4: '!v:val.active && v:val.listed && !v:val.hidden',
+          \ 5: '!v:val.active || !v:val.listed'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return self.filter_with_choice(self.buffers, choice, filters)
+  endfunc
+
+  func bl.active() dict
+    return filter(self.buffers, 'v:val.active')
+  endfunc
+
+  func bl.modifiable(...) dict
+    let filters = {
+          \ 1: '!v:val.modifiable',
+          \ 2: '!v:val.modifiable || v:val.readonly'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return filter_with_choice(self.buffers, choice, filters)
+  endfunc
+
+  func bl.readonly(...) dict
+    let filters = {
+          \ 1: '!v:val.readonly',
+          \ 2: '!v:val.modifiable || v:val.readonly'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return filter_with_choice(self.buffers, choice, filters)
+  endfunc
+
+  func bl.modified() dict
+    return filter(self.buffers, 'v:val.modified')
+  endfunc
+
+  func bl.read_error() dict
+    return filter(self.buffers, 'v:val.read_error')
+  endfunc
+
+  func bl.unloaded() dict
+    return filter(self.buffers, '!v:val.active && !v:val.hidden && v:val.listed')
+  endfunc
+
   " Private functions - don't need 'dict' modifier
+
+  func bl.filter_with_choice(set, choice, filters)
+    return filter(copy(a:set), a:filters[a:choice])
+  endfunc
 
   func bl.buffer_status(b)
     return a:b['active'] == 1 ? 'a' : a:b['hidden'] == 1 ? 'h' : '!'
@@ -127,5 +184,10 @@ let bl = BufferList()
 "echo "Buffer 1 is hidden: " . bl.buffers[1]['hidden']
 "echo bl.to_s()
 "echo bl.to_s("%b => \"%n\"\n", 'v:val.number =~ "[2-5]"')
+"echo bl.hidden()
+"echo '==================='
+"echo bl.hidden(2)
+"echo '==================='
+"echo bl.hidden(3)
 
 " vim: et sw=2 ft=vim
