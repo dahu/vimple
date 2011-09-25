@@ -64,31 +64,21 @@ function! BufferList()
   " list.
   func bl.to_s(...) dict
     " An empty format argument uses the default.
-    let default_s = "%3b%f\"%n\" line %l\n"
-    let format_s = a:0 && a:1 != '' ? a:1 : default_s
-    let format_s = substitute(format_s, '\(%%\)*\zs%[-0-9#+ .]*c', default_s, 'g')
+    let default = "%3b%f\"%n\" line %l\n"
+    let format = a:0 && a:1 != '' ? a:1 : default
     " Apply filter.
     let buffers = a:0 > 1 ? a:2.buffers : self.buffers
 
-    let args_d = {
-          \ 'b': "buffers[key]['number']",
-          \ 'f': "self.buffer_flags(buffers[key])",
-          \ 'n': "buffers[key]['name']",
-          \ 'l': "buffers[key]['line']"}
-    let args = ''
-    for item in map(split('x'.substitute(format_s, '%%', '', 'g'), '%'), 'matchstr(v:val, ''^[-+#. 0-9]*\zs.'')')
-      let args .= get(args_d, item, '')
-      let args .= args[-1] =~ ',' ? '' : ', '
-    endfor
-    let args = substitute(args, '^\s*,\s*\(.\{-}\),\s*$', '\1', '')
-
-    let format_s = substitute(format_s, '\(%%\)*%[-0-9#+ .]*\zs[nfl]', 's', 'g')
-    let format_s = substitute(format_s, '\(%%\)*%[-0-9#+ .]*\zsb', 'd', 'g')
-    let printf_str ='printf("'.escape(format_s, '\"').'", '.args.')'
-
     let str = ''
     for key in sort(keys(buffers), 'Numerically')
-      let str .= eval(printf_str)
+      let str .= vimple#format#format(
+            \ format,
+            \ { 'b': ['d', buffers[key]['number']],
+            \   'f': ['s', self.buffer_flags(buffers[key])],
+            \   'n': ['s', buffers[key]['name']],
+            \   'l': ['s', buffers[key]['line']]},
+            \ default
+            \ )
     endfor
     return str
   endfunc
