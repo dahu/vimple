@@ -9,6 +9,7 @@ function! BufferList()
   let bl.buffers = {}
   let bl.current = 0
   let bl.alternate = 0
+  let bl.filter_s = ''
 
   " public interface
 
@@ -47,6 +48,9 @@ function! BufferList()
     for bfr in map(copy(bufferlist), '{v:val["number"]: v:val}')
       call extend(self.buffers, bfr)
     endfor
+    if self.filter_s != ''
+      call filter(self.buffers, self.filter_s)
+    endif
 
     let current_l = filter(copy(bufferlist), 'v:val["current"] == 1')
     let alternate_l = filter(copy(bufferlist), 'v:val["alternate"] == 1')
@@ -83,6 +87,13 @@ function! BufferList()
     return str
   endfunc
 
+  func bl.filter(filter) dict abort
+    let dict = deepcopy(self)
+    call filter(dict.buffers, a:filter)
+    let dict.filter_s .= (dict.filter_s == '' ? '' : ' && ').a:filter
+    return dict
+  endfunc
+
   func bl.hidden(...) dict
     let filters = {
           \ 1: 'v:val.hidden',
@@ -92,11 +103,11 @@ function! BufferList()
           \ 5: '!v:val.active || !v:val.listed'
           \ }
     let choice = a:0 ? a:1 : 1
-    return self.filter_with_choice(self.buffers, choice, filters)
+    return self.filter_with_choice(choice, filters)
   endfunc
 
   func bl.active() dict
-    return filter(self.buffers, 'v:val.active')
+    return self.filter('v:val.active')
   endfunc
 
   func bl.modifiable(...) dict
@@ -105,7 +116,7 @@ function! BufferList()
           \ 2: '!v:val.modifiable || v:val.readonly'
           \ }
     let choice = a:0 ? a:1 : 1
-    return filter_with_choice(self.buffers, choice, filters)
+    return filter_with_choice(choice, filters)
   endfunc
 
   func bl.readonly(...) dict
@@ -114,25 +125,29 @@ function! BufferList()
           \ 2: '!v:val.modifiable || v:val.readonly'
           \ }
     let choice = a:0 ? a:1 : 1
-    return filter_with_choice(self.buffers, choice, filters)
+    return filter_with_choice(choice, filters)
   endfunc
 
   func bl.modified() dict
-    return filter(self.buffers, 'v:val.modified')
+    return self.filter('v:val.modified')
   endfunc
 
   func bl.read_error() dict
-    return filter(self.buffers, 'v:val.read_error')
+    return self.filter('v:val.read_error')
   endfunc
 
   func bl.unloaded() dict
-    return filter(self.buffers, '!v:val.active && !v:val.hidden && v:val.listed')
+    return self.filter('!v:val.active && !v:val.hidden && v:val.listed')
   endfunc
 
   " Private functions - don't need 'dict' modifier
 
-  func bl.filter_with_choice(set, choice, filters)
-    return filter(copy(a:set), a:filters[a:choice])
+  func bl.filter_with_choice(choice, filters, ...)
+    if a:0
+      return filter(deepcopy(a:1), a:filters[a:choice])
+    else
+      return self.filter(a:filters[a:choice])
+    endif
   endfunc
 
   func bl.buffer_status(b)
