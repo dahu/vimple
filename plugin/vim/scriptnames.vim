@@ -1,22 +1,24 @@
 " Scriptnames object
 " ARB
 
-" NOTE: Uses the Redir, Associate and To_s library functions
+" NOTE: Uses vimple#redir, vimple#associate and vimple#format
 
 function! Scriptnames()
   let sn = {}
   let sn.scripts = {}
 
   func sn.filter(...)
-    let l:sn = Redir('scriptnames')
+    let l:sn = vimple#redir#redir('scriptnames')
     let l:pat = '.'
     if a:0
       let l:pat = a:1
     endif
-    let self.scripts = Associate(filter(l:sn, 'v:val =~ "'.l:pat.'"'),
+    let self.scripts = vimple#associate#associate(filter(l:sn, 'v:val =~ "'.l:pat.'"'),
           \ '^\s*\(\d\+\):\s*\(.*\)$',
           \ '\1,\2',
           \ '{"number": v:val[0], "script": v:val[1]}')
+    " TODO: add an arg that controls splatting the list out to a dict keyed on
+    " list index (as required by BufferList but not required by Scriptnames)
     return self
   endfunc
 
@@ -42,4 +44,4 @@ endfunction
 let sn = Scriptnames()
 "echo sn.filter('vimple').scripts
 "echo sn.filter('vimpeg')
-echo sn.filter('vimple').to_s()
+"echo sn.filter('vimple').to_s()
