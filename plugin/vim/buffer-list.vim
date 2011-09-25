@@ -64,9 +64,11 @@ function! BufferList()
   " list.
   func bl.to_s(...) dict
     " An empty format argument uses the default.
-    let s_format = a:0 && a:1 != '' ? a:1 : "%3b%f\"%n\" line %l\n"
+    let default_s = "%3b%f\"%n\" line %l\n"
+    let format_s = a:0 && a:1 != '' ? a:1 : default_s
+    let format_s = substitute(format_s, '\(%%\)*\zs%[-0-9#+ .]*c', default_s, 'g')
     " Apply filter.
-    let buffers = a:0 > 1 ? filter(copy(self.buffers), a:2) : self.buffers
+    let buffers = a:0 > 1 ? a:2.buffers : self.buffers
 
     let args_d = {
           \ 'b': "buffers[key]['number']",
@@ -74,15 +76,15 @@ function! BufferList()
           \ 'n': "buffers[key]['name']",
           \ 'l': "buffers[key]['line']"}
     let args = ''
-    for item in map(split('x'.substitute(s_format, '%%', '', 'g'), '%'), 'matchstr(v:val, ''^[-+#. 0-9]*\zs.'')')
+    for item in map(split('x'.substitute(format_s, '%%', '', 'g'), '%'), 'matchstr(v:val, ''^[-+#. 0-9]*\zs.'')')
       let args .= get(args_d, item, '')
       let args .= args[-1] =~ ',' ? '' : ', '
     endfor
     let args = substitute(args, '^\s*,\s*\(.\{-}\),\s*$', '\1', '')
 
-    let s_format = substitute(s_format, '\(%%\)*%[-0-9#+ .]*\zs[nfl]', 's', 'g')
-    let s_format = substitute(s_format, '\(%%\)*%[-0-9#+ .]*\zsb', 'd', 'g')
-    let printf_str ='printf("'.escape(s_format, '\"').'", '.args.')'
+    let format_s = substitute(format_s, '\(%%\)*%[-0-9#+ .]*\zs[nfl]', 's', 'g')
+    let format_s = substitute(format_s, '\(%%\)*%[-0-9#+ .]*\zsb', 'd', 'g')
+    let printf_str ='printf("'.escape(format_s, '\"').'", '.args.')'
 
     let str = ''
     for key in sort(keys(buffers), 'Numerically')
@@ -151,12 +153,6 @@ function! BufferList()
     return a:b['current'] == 1 ? '%' : a:b['alternate'] == 1 ? '#' : ' '
   endfunc
 
-  function! bl.SortByNumber(i1, i2)
-    let i1 = str2nr(a:i1)
-    let i2 = str2nr(a:i2)
-    return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
-  endfunction
-
   func bl.buffer_flags(b)
     return   (a:b['listed'] == 0 ? 'u' : ' ')
           \. (a:b['current'] == 1 ? '%' :
@@ -182,8 +178,9 @@ let bl = BufferList()
 "echo "Alternate buffer  : " . bl.alternate
 "echo bl.buffers[1]
 "echo "Buffer 1 is hidden: " . bl.buffers[1]['hidden']
-"echo bl.to_s()
-"echo bl.to_s("%b => \"%n\"\n", 'v:val.number =~ "[2-5]"')
+echo bl.to_s()
+echo bl.to_s('%c')
+echo bl.to_s('%b ==> %n | %c')
 "echo bl.hidden()
 "echo '==================='
 "echo bl.hidden(2)
