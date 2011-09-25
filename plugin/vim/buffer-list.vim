@@ -168,9 +168,9 @@ let bl = BufferList()
 "echo "Alternate buffer  : " . bl.alternate
 "echo bl.buffers[1]
 "echo "Buffer 1 is hidden: " . bl.buffers[1]['hidden']
-echo bl.to_s()
-echo bl.to_s('%c')
-echo bl.to_s('%b ==> %n | %c')
+"echo bl.to_s()
+"echo bl.to_s('%c')
+"echo bl.to_s('%b ==> %n | %c')
 "echo bl.hidden()
 "echo '==================='
 "echo bl.hidden(2)
