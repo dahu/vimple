@@ -1,23 +1,31 @@
-function! Scriptnames(...)
-  let l:sn = Redir('scriptnames')
-  let l:pat = '.'
-  if a:0
-    let l:pat = a:1
-  endif
-  return filter(l:sn, 'v:val =~ "'.l:pat.'"')
+
+function! Scriptnames()
+  let sn = {}
+  let sn.scripts = {}
+
+  func sn.filter(...)
+    let l:sn = Redir('scriptnames')
+    let l:pat = '.'
+    if a:0
+      let l:pat = a:1
+    endif
+    let self.scripts = Associate(filter(l:sn, 'v:val =~ "'.l:pat.'"'),
+          \ '^\s*\(\d\+\):\s*\(.*\)$',
+          \ '\1,\2',
+          \ '{"number": v:val[0], "name": v:val[1]}')
+    return self
+  endfunc
+
+  func sn.to_s(...)
+    let args_d = {
+          \ 'n': "buffers[key]['number']",
+          \ 's': "buffers[key]['name']"}
+    "let str = To_s(self.scripts, args_d, format_s)
+    return self.scripts
+  endfunc
+
+  return sn
 endfunction
 
-function! Associate(lines, pattern, replacement, names)
-  let lst = repeat([''], len(a:lines))
-  for i in range(0, len(a:lines) - 1)
-    let lst[i] = substitute(a:lines[i], a:pattern, a:replacement, '')
-  endfor
-  call map(lst, 'split(v:val, ",")')
-  return map(lst, a:names)
-endfunction
-
-echo Associate(Scriptnames('vimple'),
-      \ '^\s*\(\d\+\):\s*\(.*\)$',
-      \ '\1,\2',
-      \ '{"number": v:val[0], "name": v:val[1]}')
-
+let sn = Scriptnames()
+echo sn.filter('vimple').to_s()
