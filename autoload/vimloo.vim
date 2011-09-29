@@ -58,7 +58,6 @@ function! g:vimloo#Object.accessor(name,...) dict abort
   "  echohl None
   "  return 0
   "endif
-  let save_reg = @a
   let dict = {}
   let func_lines = [
         \ 'function! dict.accessor(...) dict abort',
@@ -68,10 +67,9 @@ function! g:vimloo#Object.accessor(name,...) dict abort
         \ '  return self.'.var_path,
         \ 'endfunction'
         \]
-  let @a = join(func_lines, "\<CR>")
-  silent @a
+  exec join(func_lines, "\n")
   let self[a:name] = dict.accessor
-  let @a = save_reg
+  return 1
 endfunction
 
 function! g:vimloo#Object.lineage() dict abort
@@ -95,8 +93,8 @@ function! g:vimloo#Object.new(...) dict
   if type(init) == type(0) && init == 1
     return obj
   endif
-  echohl Error
-  echom 'There was a problem initializing "'.obj.clas().'".'
+  echohl ErrorMsg
+  echom 'There was a problem initializing "'.obj.class().'".'
   echohl None
   return {}
 endfunction
