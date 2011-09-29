@@ -25,12 +25,11 @@ function! vimloo#ex#Output.update() dict abort
   return 1
 endfunction
 
-function! vimloo#ex#Output.filter(filter, ...) dict abort
-  let bunch = a:0 ? a:1 : self.lines
-  let main_filter = self.private.filter
-  call filter(bunch, a:filter)
-  let self.private.filter .= (main_filter == '' ? '' : ' && ') . a:filter
-  return a:0 ? bunch : self
+function! vimloo#ex#Output.filter(filter) dict abort
+    let dict = deepcopy(self)
+    call filter(dict.lines, a:filter)
+    let dict.filter_s .= (dict.filter_s == '' ? '' : ' && ').a:filter
+    return dict
 endfunction
 
 finish
