@@ -38,7 +38,6 @@ endfunction
 
 function! g:vimloo#Object.super() dict abort
   let lineage = self.lineage()
-  echo lineage
   if len(lineage) > 1
     return lineage[-2]
   endif
@@ -96,8 +95,66 @@ function! g:vimloo#Object.new(...) dict
   return {}
 endfunction
 
+function! vimloo#Object.is_a(class) dict
+  return index(self.lineage(), a:class) > -1
+endfunction
 
+function! vimloo#Object.instance_of(class) dict
+  return self.lineage()[-1] == a:class
+endfunction
+
+function! vimloo#Object.methods(class) dict
+  return keys(filter(deepcopy(self), 'type(a:val) == type(function(''tr''))'))
+endfunction
+
+" String class
+let vimloo#String = vimloo#class('vimloo#String')
+
+function! vimloo#String.init(s) dict
+  call {'g:'.self.super()}.init()
+  let self.value = a:s
+  return 1
+endfunction
+
+function! vimloo#String.split(c) dict
+  return g:vimloo#List.new(split(self.value, a:c))
+endfunction
+
+function! vimloo#String.to_s() dict
+  return self.value
+endfunction
+
+function! vimloo#String.sub(range) dict
+  let obj = deepcopy(self)
+  let obj.value = eval('obj.value['.a:range.']')
+  return obj
+endfunction
+
+" List class
+let vimloo#List = vimloo#class('vimloo#List')
+
+function! vimloo#List.init(l) dict
+  call {'g:'.self.super()}.init()
+  let self.value = a:l
+  return 1
+endfunction
+
+function! vimloo#List.join(c) dict
+  return g:vimloo#String.new(join(self.value, a:c))
+endfunction
+
+function! vimloo#List.to_s() dict
+  return string(self.value)
+endfunction
+
+let vimloo#List.sub = vimloo#String.sub
+
+let s = vimloo#String.new('uno dos tres')
+echo s.split(' ').sub(':-2').join(':').to_s()
+let s2 = 'uno dos tres'
+echo join(split(s2, ' ')[:-2], ':')
 finish
+
 let o = vimloo#Object.new()
 echo o.lineage()
 call o.accessor('test')
