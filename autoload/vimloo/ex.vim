@@ -4,7 +4,7 @@ let vimloo#ex#Output = vimloo#class('vimloo#ex#Output')
 let vimloo#ex#Output.private.filter = ''
 
 function! vimloo#ex#Output.init(cmd) dict abort
-  call {self.super()}.init()
+  call {'g:'.self.super()}.init()
   call self.accessor('command')
   call self.command(a:cmd)
   return 1

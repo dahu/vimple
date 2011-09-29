@@ -11,36 +11,38 @@ function! vimloo#class(name, ...) abort
   else
       let dict = deepcopy(g:vimloo#Object)
   endif
-  call dict.super(dict.class())
-  call dict.class(a:name)
+  "Update lineage
+  "call dict.super(dict.class())
+  "call dict.class(a:name)
+  call dict.lineage(a:name)
   return dict
 endfunction
 
 " The first class
 let g:vimloo#Object = {}
 let g:vimloo#Object.private = {}
-let g:vimloo#Object.private.class = 'vimloo#Object'
-let g:vimloo#Object.private.super = 'vimloo#Object'
+"let g:vimloo#Object.private.class = 'vimloo#Object'
+"let g:vimloo#Object.private.super = 'vimloo#Object'
+let g:vimloo#Object.private.lineage = ['vimloo#Object']
 
 function! g:vimloo#Object.init(...) dict abort
   if self.class() == 'vimloo#Object'
     return 1
   endif
-  return call({self.super()}.init(), a:000, self) == 1
+  return call({'g:'.self.super()}.init(), a:000, self) == 1
 endfunction
 
-function! g:vimloo#Object.class(...) dict abort
-  if a:0
-    let self.private.class = a:1
-  endif
-  return self.private.class
+function! g:vimloo#Object.class() dict abort
+  return self.lineage()[-1]
 endfunction
 
-function! g:vimloo#Object.super(...) dict abort
-  if a:0
-    let self.private.super = a:1
+function! g:vimloo#Object.super() dict abort
+  let lineage = self.lineage()
+  echo lineage
+  if len(lineage) > 1
+    return lineage[-2]
   endif
-  return 'g:'.self.private.super
+  return lineage[-1]
 endfunction
 
 function! g:vimloo#Object.accessor(name,...) dict abort
@@ -52,12 +54,15 @@ function! g:vimloo#Object.accessor(name,...) dict abort
   else
     let var_path = 'private.'.a:name
   endif
+
+  " Is this necessary? or even good?
   "if !exists(self[var_path])
   "  echohl Error
   "  echom 'Could not create the accessor "'.a:name.'()" because the associated property "'.var_path.'" does not exists.'
   "  echohl None
   "  return 0
   "endif
+
   let dict = {}
   let func_lines = [
         \ 'function! dict.accessor(...) dict abort',
@@ -72,19 +77,11 @@ function! g:vimloo#Object.accessor(name,...) dict abort
   return 1
 endfunction
 
-function! g:vimloo#Object.lineage() dict abort
-  let current = self
-  let lineage = []
-  let i = 0
-  while i < 1000
-    call insert(lineage, current.class())
-    if current.class() == 'vimloo#Object'
-      return lineage
-    endif
-    let current = {current.super()}
-    let i += 1
-  endwhile
-  return []
+function! g:vimloo#Object.lineage(...) dict abort
+  if a:0
+    call add(self.private.lineage, a:1)
+  endif
+  return self.private.lineage
 endfunction
 
 function! g:vimloo#Object.new(...) dict
