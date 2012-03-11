@@ -130,7 +130,7 @@ function! BufferList()
       let args = []
     endif
     unlet extra
-    if a:1 =~ '^\%(non\|un\)'
+    if a:1 =~ '^\%(non\?\|un\)'
       let arg = matchstr(a:1, '^\%(un\|non\)\zs.*')
       let bang = '!'
     else
