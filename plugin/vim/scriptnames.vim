@@ -38,7 +38,7 @@ function! Scriptnames()
     return str
   endfunc
 
-  return sn
+  return sn.filter()
 endfunction
 
 let sn = Scriptnames()
