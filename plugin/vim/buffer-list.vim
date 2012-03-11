@@ -6,19 +6,17 @@
 
 function! BufferList()
   let bl = {}
-  let bl.buffers = {}
+  let bl.__buffers = {}
   let bl.current = 0
   let bl.alternate = 0
-  let bl.filter_s = ''
+  let bl.__filter = ''
 
   " public interface
 
-  func bl.update() dict
+  func bl.update() dict abort
     redir => bufliststr
     silent! ls!
     redir END
-
-    let buffers = {}
 
     let bufferlist = split(bufliststr, '\n')
     " Reorder and clean up a bit the output.
@@ -46,16 +44,17 @@ function! BufferList()
           \.'"read_error": v:val[1] =~ "x"}')
 
     for bfr in map(copy(bufferlist), '{v:val["number"]: v:val}')
-      call extend(self.buffers, bfr)
+      call extend(self.__buffers, bfr)
     endfor
-    if self.filter_s != ''
-      call filter(self.buffers, self.filter_s)
+    if self.__filter != ''
+      call filter(self.__buffers, self.__filter)
     endif
 
     let current_l = filter(copy(bufferlist), 'v:val["current"] == 1')
     let alternate_l = filter(copy(bufferlist), 'v:val["alternate"] == 1')
     let self.current = len(current_l) > 0 ?current_l[0].number : 0
     let self.alternate = len(alternate_l) > 0 ? alternate_l[0].number : 0
+    return 1
   endfun
 
   " to_s([format[, filter]])
@@ -71,7 +70,7 @@ function! BufferList()
     let default = "%3b%f\"%n\" line %l\n"
     let format = a:0 && a:1 != '' ? a:1 : default
     " Apply filter.
-    let buffers = a:0 > 1 ? a:2.buffers : self.buffers
+    let buffers = a:0 > 1 ? a:2.__buffers : self.__buffers
 
     let str = ''
     for key in sort(keys(buffers), 'Numerically')
@@ -89,9 +88,93 @@ function! BufferList()
 
   func bl.filter(filter) dict abort
     let dict = deepcopy(self)
-    call filter(dict.buffers, a:filter)
-    let dict.filter_s .= (dict.filter_s == '' ? '' : ' && ').a:filter
+    call filter(dict.__buffers, a:filter)
+    let dict.__filter .= (dict.__filter == '' ? '' : ' && ').a:filter
     return dict
+  endfunc
+
+  func bl.get_filter() dict
+    return string(self.__filter)
+  endfunc
+
+  func bl.filter_add_or(filter) dict
+    let self.__filter .= ' || ' . a:filter
+  endfunc
+
+  func bl.filter_add_and(filter) dict
+    let self.__filter .= ' && ' . a:filter
+  endfunc
+
+  func bl.merge(bl) dict
+    let bl = deepcopy(self)
+    call extend(bl.__buffers, a:bl.__buffers, 'keep')
+    call bl.filter_add_or(a:bl.__filter)
+    return bl
+  endfunc
+
+  func bl.buffers(...) dict
+    if !a:0
+      " Return listed buffers.
+      return self.filter('v:val.listed')
+    endif
+    if type(a:000[-1]) == type({})
+      let orig = a:000[-1]
+      let extra = 1
+    else
+      let orig = self
+      let extra = 0
+    endif
+    if len(a:000) >= 1 + extra
+      let args = a:000[1: -1 - extra]
+    else
+      let args = []
+    endif
+    unlet extra
+    if a:1 =~ '^\%(non\|un\)'
+      let arg = matchstr(a:1, '^\%(un\|non\)\zs.*')
+      let bang = '!'
+    else
+      let arg = a:1
+      let bang = ''
+    endif
+    if arg == 'hidden'
+      let filter = 'v:val.hidden'
+    elseif arg == 'active'
+      let filter = 'v:val.active'
+    elseif arg == 'modifiable'
+      let filter = 'v:val.modifiable'
+    elseif arg == 'readonly'
+      let filter = 'v:val.readonly'
+    elseif arg == 'modified'
+      let filter = 'v:val.modified'
+    elseif arg == 'read_error'
+      let filter = 'v:val.read_error'
+    elseif arg == 'unloaded'
+      let filter = '!v:val.active && !v:val.hidden && v:val.listed'
+    elseif arg == 'listed'
+      let filter = 'v:val.listed'
+    elseif arg == 'all'
+      let filter = '1'
+    else
+      let filter = arg
+    endif
+    let bl = orig.filter(bang . '(' . filter . ')')
+    if len(args) > 0
+      let bl = call(bl.merge, [call(orig.buffers, args + [orig], orig)], bl)
+    endif
+    return bl
+  endfunc
+
+  func bl.and(filter) dict
+    return call(self.buffers, [a:filter], self)
+  endfunc
+
+  func bl.to_l(...) dict
+    return values(call(self.buffers, a:000, self).__buffers)
+  endfunc
+
+  func bl.to_d(...) dict
+    return call(self.buffers, a:000, self).__buffers
   endfunc
 
   func bl.hidden(...) dict
@@ -178,11 +261,11 @@ endfunction
 
 let bl = BufferList()
 "call bl.update()      " not necessary here, just showing it's callable
-"echo bl.buffers
+"echo bl.__buffers
 "echo "Current buffer    : " . bl.current
 "echo "Alternate buffer  : " . bl.alternate
-"echo bl.buffers[1]
-"echo "Buffer 1 is hidden: " . bl.buffers[1]['hidden']
+"echo bl.__buffers[1]
+"echo "Buffer 1 is hidden: " . bl.__buffers[1]['hidden']
 "echo bl.to_s()
 "echo bl.to_s('%c')
 "echo bl.to_s('%b ==> %n | %c')
