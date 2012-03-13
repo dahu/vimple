@@ -1,1 +1,0 @@
-set keywordprg=:help

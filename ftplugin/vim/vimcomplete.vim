@@ -1,1 +1,0 @@
-set completefunc=vimcomplete#Complete
