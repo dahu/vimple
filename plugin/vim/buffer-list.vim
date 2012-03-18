@@ -17,10 +17,11 @@ function! BufferList()
     let bufferlist = vimple#redir#redir('ls!')
 
     let bufferlist = vimple#associate#associate(bufferlist,
-          \ [ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
+          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
             \ '\1,\2,\4,\3',
-            \ '' ],
-          \ [ 'add(v:val[0:2], join(v:val[3:-1], ","))',
+            \ '' ]],
+          \ [ 'split(v:val, ",")',
+            \ 'add(v:val[0:2], join(v:val[3:-1], ","))',
             \ '{"number": v:val[0],'
             \.'"line": v:val[2],'
             \.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
@@ -38,6 +39,8 @@ function! BufferList()
     "for i in range(0, len(bufferlist) - 1)
       "let bufferlist[i] = substitute(bufferlist[i], '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$', '\1,\2,\4,\3','')
     "endfor
+
+    "echo bufferlist
 
     "" Split on commas.
     "call map(bufferlist, 'split(v:val, ",")')
