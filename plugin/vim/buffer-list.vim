@@ -64,7 +64,7 @@ function! BufferList()
 
     let str = ''
     for key in sort(keys(buffers), 'Numerically')
-      let str .= vimple#format#format(
+      let str .= vimple#format(
             \ format,
             \ { 'b': ['d', buffers[key]['number']],
             \   'f': ['s', self.buffer_flags(buffers[key])],
