@@ -1,4 +1,4 @@
-"let str = vimple#format#format(
+"let str = vimple#format(
 "      \ format,
 "      \ { 'b': ['d', 1],
 "      \   'f': ['s', "abc"],
