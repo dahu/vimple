@@ -34,16 +34,16 @@ function! BufferList()
             \.'"modified": v:val[1]   =~ "+",'
             \.'"read_error": v:val[1] =~ "x"}' ])
 
-     Reorder and clean up a bit the output.
+    "" Reorder and clean up a bit the output.
     "for i in range(0, len(bufferlist) - 1)
       "let bufferlist[i] = substitute(bufferlist[i], '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$', '\1,\2,\4,\3','')
     "endfor
 
-     Split on commas.
+    "" Split on commas.
     "call map(bufferlist, 'split(v:val, ",")')
-     Restore file names with comma(s)
+    "" Restore file names with comma(s)
     "call map(bufferlist, 'add(v:val[0:2], join(v:val[3:-1], ","))')
-     Empty names give an empty string instead of "[No Name]".
+    "" Empty names give an empty string instead of "[No Name]".
     "call map(bufferlist,
           "\ '{"number": v:val[0],'
           "\.'"line": v:val[2],'
