@@ -16,47 +16,47 @@ function! BufferList()
   func bl.update() dict abort
     let bufferlist = vimple#redir#redir('ls!')
 
-    "let bufferlist = vimple#associate#associate(bufferlist,
-          "\ [ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
-            "\ '\1,\2,\4,\3',
-            "\ '' ],
-          "\ [ 'add(v:val[0:2], join(v:val[3:-1], ","))',
-            "\ '{"number": v:val[0],'
-            "\.'"line": v:val[2],'
-            "\.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
-            "\.'"listed": v:val[1]     !~ "u",'
-            "\.'"current": v:val[1]    =~ "%",'
-            "\.'"alternate": v:val[1]  =~ "#",'
-            "\.'"active": v:val[1]     =~ "a",'
-            "\.'"hidden": v:val[1]     =~ "h",'
-            "\.'"modifiable": v:val[1] !~ "-",'
-            "\.'"readonly": v:val[1]   =~ "=",'
-            "\.'"modified": v:val[1]   =~ "+",'
-            "\.'"read_error": v:val[1] =~ "x"}' ])
+    let bufferlist = vimple#associate#associate(bufferlist,
+          \ [ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
+            \ '\1,\2,\4,\3',
+            \ '' ],
+          \ [ 'add(v:val[0:2], join(v:val[3:-1], ","))',
+            \ '{"number": v:val[0],'
+            \.'"line": v:val[2],'
+            \.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
+            \.'"listed": v:val[1]     !~ "u",'
+            \.'"current": v:val[1]    =~ "%",'
+            \.'"alternate": v:val[1]  =~ "#",'
+            \.'"active": v:val[1]     =~ "a",'
+            \.'"hidden": v:val[1]     =~ "h",'
+            \.'"modifiable": v:val[1] !~ "-",'
+            \.'"readonly": v:val[1]   =~ "=",'
+            \.'"modified": v:val[1]   =~ "+",'
+            \.'"read_error": v:val[1] =~ "x"}' ])
 
-    " Reorder and clean up a bit the output.
-    for i in range(0, len(bufferlist) - 1)
-      let bufferlist[i] = substitute(bufferlist[i], '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$', '\1,\2,\4,\3','')
-    endfor
+     Reorder and clean up a bit the output.
+    "for i in range(0, len(bufferlist) - 1)
+      "let bufferlist[i] = substitute(bufferlist[i], '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$', '\1,\2,\4,\3','')
+    "endfor
 
-    " Split on commas.
-    call map(bufferlist, 'split(v:val, ",")')
-    " Restore file names with comma(s)
-    call map(bufferlist, 'add(v:val[0:2], join(v:val[3:-1], ","))')
-    " Empty names give an empty string instead of "[No Name]".
-    call map(bufferlist,
-          \ '{"number": v:val[0],'
-          \.'"line": v:val[2],'
-          \.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
-          \.'"listed": v:val[1]     !~ "u",'
-          \.'"current": v:val[1]    =~ "%",'
-          \.'"alternate": v:val[1]  =~ "#",'
-          \.'"active": v:val[1]     =~ "a",'
-          \.'"hidden": v:val[1]     =~ "h",'
-          \.'"modifiable": v:val[1] !~ "-",'
-          \.'"readonly": v:val[1]   =~ "=",'
-          \.'"modified": v:val[1]   =~ "+",'
-          \.'"read_error": v:val[1] =~ "x"}')
+     Split on commas.
+    "call map(bufferlist, 'split(v:val, ",")')
+     Restore file names with comma(s)
+    "call map(bufferlist, 'add(v:val[0:2], join(v:val[3:-1], ","))')
+     Empty names give an empty string instead of "[No Name]".
+    "call map(bufferlist,
+          "\ '{"number": v:val[0],'
+          "\.'"line": v:val[2],'
+          "\.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
+          "\.'"listed": v:val[1]     !~ "u",'
+          "\.'"current": v:val[1]    =~ "%",'
+          "\.'"alternate": v:val[1]  =~ "#",'
+          "\.'"active": v:val[1]     =~ "a",'
+          "\.'"hidden": v:val[1]     =~ "h",'
+          "\.'"modifiable": v:val[1] !~ "-",'
+          "\.'"readonly": v:val[1]   =~ "=",'
+          "\.'"modified": v:val[1]   =~ "+",'
+          "\.'"read_error": v:val[1] =~ "x"}')
 
     for bfr in map(copy(bufferlist), '{v:val["number"]: v:val}')
       call extend(self.__buffers, bfr)
