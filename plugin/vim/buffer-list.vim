@@ -14,9 +14,7 @@ function! BufferList()
   " public interface
 
   func bl.update() dict abort
-    let bufferlist = vimple#redir#redir('ls!')
-
-    let bufferlist = vimple#associate#associate(bufferlist,
+    let bufferlist = vimple#associate#associate(vimple#redir#redir('ls!'),
           \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
             \ '\1,\2,\4,\3',
             \ '' ]],
