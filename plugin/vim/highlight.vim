@@ -35,11 +35,9 @@ function! Highlight()
     return str
   endfunc
 
-  " takes three optional arguments:
-  " 1 : format  used by to_s()
-  " 2 : data    used by to_s()
-  func hl.print(...) dict
-    let str = call(self.to_s, a:000, self)
+  " only able to colour print the default to_s() output at this stage
+  func hl.print() dict
+    let str = self.to_s()
     let dta = map(split(str, "\n"), '[split(v:val, " ")[0], v:val . "\n"]')
     call vimple#echoc(dta)
   endfunc

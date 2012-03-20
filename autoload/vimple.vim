@@ -87,19 +87,28 @@ endfunction
 " Solarized inspired default colours...
 " Doesn't override existing user-defined colours for these highlight terms.
 " Shown with case here, but actually case-insensitive within Vim.
+"
+" TODO: Only vaguely considered at this stage. Based on the 16 colour
+" solarized pallette
+" the order of applying these to echoc is important
+"
 function! vimple#default_colorscheme()
-  call s:vimple_highlight('BL_Number'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Line'       , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Name'       , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Listed'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Current'    , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Alternate'  , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Active'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Hidden'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Modifiable' , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Readonly'   , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_Modified'   , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
-  call s:vimple_highlight('BL_ReadError'  , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Number'          , 'ctermfg=4 ctermbg=8 guifg=4 guibg=8')
+  call s:vimple_highlight('BL_Line'            , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
+  call s:vimple_highlight('BL_Name'            , 'ctermfg=12 ctermbg=8 guifg=12 guibg=8')
+  call s:vimple_highlight('BL_Unlisted'        , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
+  call s:vimple_highlight('BL_CurrentBuffer'   , 'ctermfg=14 ctermbg=0 guifg=14 guibg=0')
+  call s:vimple_highlight('BL_AlternateBuffer' , 'ctermfg=14 ctermbg=0 guifg=14 guibg=0')
+  " buffer active
+  call s:vimple_highlight('BL_Active'          , 'ctermfg=12 ctermbg=0 guifg=12 guibg=0')
+  call s:vimple_highlight('BL_Hidden'          , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
+  " flags
+  call s:vimple_highlight('BL_Current'         , 'ctermfg=5 guifg=5')
+  call s:vimple_highlight('BL_Alternate'       , 'ctermfg=13 guifg=13')
+  call s:vimple_highlight('BL_Modifiable'      , 'ctermfg=2 guifg=2')
+  call s:vimple_highlight('BL_Readonly'        , 'ctermfg=6 guifg=6')
+  call s:vimple_highlight('BL_Modified'        , 'ctermfg=9 guifg=9')
+  call s:vimple_highlight('BL_ReadError'       , 'ctermfg=1 guifg=1')
 endfunction
 
 call vimple#default_colorscheme()

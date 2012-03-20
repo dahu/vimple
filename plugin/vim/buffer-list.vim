@@ -76,6 +76,15 @@ function! BufferList()
     return str
   endfunc
 
+  " only able to colour print the default to_s() output at this stage
+  func bl.print() dict
+    call self.update()
+    let str = self.to_s()
+    " following code is from hl.print() and would not work as is here
+    "let dta = map(split(str, "\n"), '[split(v:val, " ")[0], v:val . "\n"]')
+    "call vimple#echoc(dta)
+  endfunc
+
   func bl.filter(filter) dict abort
     let dict = deepcopy(self)
     call filter(dict.__buffers, a:filter)
