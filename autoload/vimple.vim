@@ -55,6 +55,20 @@ function! vimple#associate(lines, subs, maps)
   return lst
 endfunction
 
+function! vimple#join(data, pattern)
+  let x = -1
+  let lines = repeat([''], len(a:data))
+  for line in a:data
+    if line =~ a:pattern
+      let lines[x] .= line
+    else
+      let x += 1
+      let lines[x] = line
+    endif
+  endfor
+  return filter(lines, 'v:val !~ "^$"')
+endfunction
+
 function! vimple#echoc(data)
   for sets in a:data
     exe "echohl " . sets[0]
