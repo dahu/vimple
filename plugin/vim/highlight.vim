@@ -15,6 +15,9 @@ function! Highlight()
     return self
   endfunc
 
+  " takes two optional arguments:
+  " 1 : format
+  " 2 : data
   func hl.to_s(...) dict
     let default = "%t %a\n"
     let format = a:0 && a:1 != '' ? a:1 : default
@@ -32,8 +35,11 @@ function! Highlight()
     return str
   endfunc
 
+  " takes three optional arguments:
+  " 1 : format  used by to_s()
+  " 2 : data    used by to_s()
   func hl.print(...) dict
-    let str = self.to_s() "(a:000)
+    let str = call(self.to_s, a:000, self)
     let dta = map(split(str, "\n"), '[split(v:val, " ")[0], v:val . "\n"]')
     call vimple#echoc(dta)
   endfunc
