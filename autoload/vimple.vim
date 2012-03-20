@@ -55,3 +55,10 @@ function! vimple#associate(lines, subs, maps)
   return lst
 endfunction
 
+function! vimple#echoc(data)
+  for sets in a:data
+    exe "echohl " . sets[0]
+    exe "echo " . string(sets[1])
+  endfor
+  echohl None
+endfunction
