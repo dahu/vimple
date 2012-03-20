@@ -7,7 +7,7 @@
 "      \ default
 "      \ )
 
-func vimple#format(format, args_d, default)
+function! vimple#format(format, args_d, default)
   let format = a:format == '' ? a:default : a:format
   let format = substitute(format, '\(%%\)*\zs%[-0-9#+ .]*c', a:default, 'g')
 
@@ -28,7 +28,7 @@ func vimple#format(format, args_d, default)
   let printf_str ='printf("'.escape(format, '\"').'", '.args.')'
 
   return eval(printf_str)
-endfunc
+endfunction
 
 function! vimple#redir(command, ...)
   let split_pat = '\n'
@@ -58,7 +58,34 @@ endfunction
 function! vimple#echoc(data)
   for sets in a:data
     exe "echohl " . sets[0]
-    exe "echo " . string(sets[1])
+    exe "echon " . string(sets[1])
   endfor
-  echohl None
 endfunction
+
+function! s:vimple_highlight(name, attrs)
+  try
+    silent exe "hi ".a:name
+  catch /^Vim\%((\a\+)\)\=:E411/
+    silent exe "hi ".a:name." ".a:attrs
+  endtry
+endfunction
+
+" Solarized inspired default colours...
+" Doesn't override existing user-defined colours for these highlight terms.
+" Shown with case here, but actually case-insensitive within Vim.
+function! vimple#default_colorscheme()
+  call s:vimple_highlight('BL_Number'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Line'       , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Name'       , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Listed'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Current'    , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Alternate'  , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Active'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Hidden'     , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Modifiable' , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Readonly'   , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_Modified'   , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+  call s:vimple_highlight('BL_ReadError'  , 'ctermfg=blue ctermbg=green guifg=blue guibg=green')
+endfunction
+
+call vimple#default_colorscheme()
