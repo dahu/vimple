@@ -1,7 +1,7 @@
 " Scriptnames object
 " ARB
 
-function! Scriptnames()
+function! vimple#scriptnames#new()
   let sn = {}
   let sn.__scripts = {}
   let sn.__filter = ''
@@ -45,7 +45,3 @@ function! Scriptnames()
   call sn.update()
   return sn
 endfunction
-
-let sn = Scriptnames()
-"echo sn.filter_by_name('vimple').to_s()
-"echo sn.to_s("%n\n", sn.filter_by_name('vimple'))

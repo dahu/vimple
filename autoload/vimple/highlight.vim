@@ -1,7 +1,7 @@
 " Highlight object
 " ARB
 
-function! Highlight()
+function! vimple#highlight#new()
   let hl = {}
   let hl.__data = {}
   let hl.__filter = ''
@@ -23,7 +23,7 @@ function! Highlight()
     let format = a:0 && a:1 != '' ? a:1 : default
     let data = a:0 > 1 ? a:2.__data : self.__data
     let str = ''
-    let data = sort(data, 'Termly')
+    let data = sort(data, vimple#comparators#termly)
     for i in range(0, len(data) - 1)
       let str .= vimple#format(
             \ format,
@@ -54,11 +54,9 @@ function! Highlight()
   endfunc
 
   func hl.sort()
-    return sort(self.__data, Termly)
+    return sort(self.__data, vimple#comparators#termly)
   endfunc
 
   call hl.update()
   return hl
 endfunction
-
-let hl = Highlight()

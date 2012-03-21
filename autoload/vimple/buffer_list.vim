@@ -2,9 +2,11 @@
 " ARB
 " version 0.8
 
-" NOTE: Uses the Numerically sort comparator
+" TODO: Use the Numerically sort comparator for print()
+" TODO: Use one s:dict instead of recreating the whole thing. Easier to debug.
+" TODO: Improve alignment of line numbers of print().
 
-function! BufferList()
+function! vimple#buffer_list#new()
   let bl = {}
   let bl.__buffers = {}
   let bl.current = 0
@@ -53,17 +55,15 @@ function! BufferList()
   " Use %b, %n, %f and %l to insert the buffer number, name, flags and cursor
   " line respectively . The last character will be replaced by d or s as
   " required by printf(), so you can include extra flags (e.g.: %3b).
-  " filter: This argument will be used by filter() to remove items from the
-  " list.
   func bl.to_s(...) dict
     " An empty format argument uses the default.
     let default = "%3b%f\"%n\" line %l\n"
     let format = a:0 && a:1 != '' ? a:1 : default
     " Apply filter.
-    let buffers = a:0 > 1 ? a:2.__buffers : self.__buffers
+    let buffers = self.data()
 
     let str = ''
-    for key in sort(keys(buffers), 'Numerically')
+    for key in sort(keys(buffers), 'vimple#comparators#numerically')
       let str .= vimple#format(
             \ format,
             \ { 'b': ['d', buffers[key]['number']],
@@ -328,21 +328,5 @@ function! BufferList()
   call bl.update()
   return bl
 endfunction
-
-let bl = BufferList()
-"call bl.update()      " not necessary here, just showing it's callable
-"echo bl.__buffers
-"echo "Current buffer    : " . bl.current
-"echo "Alternate buffer  : " . bl.alternate
-"echo bl.__buffers[1]
-"echo "Buffer 1 is hidden: " . bl.__buffers[1]['hidden']
-"echo bl.to_s()
-"echo bl.to_s('%c')
-"echo bl.to_s('%b ==> %n | %c')
-"echo bl.hidden()
-"echo '==================='
-"echo bl.hidden(2)
-"echo '==================='
-"echo bl.hidden(3)
 
 " vim: et sw=2 ft=vim

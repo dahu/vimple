@@ -120,4 +120,9 @@ function! vimple#tracer()
   echom d.t()
 endfunction
 
+" Shortcuts to library objects
+let vimple#bl = vimple#buffer_list#new()
+let vimple#hl = vimple#highlight#new()
+let vimple#sn = vimple#scriptnames#new()
+
 call vimple#default_colorscheme()
