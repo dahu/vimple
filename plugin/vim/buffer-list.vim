@@ -76,13 +76,84 @@ function! BufferList()
     return str
   endfunc
 
+  func bl.compare(k1, k2) dict
+    let k1 = a:k1.number * 1
+    let k2 = a:k2.number * 1
+    return k1 == k2 ? 0 : k1 > k2 ? 1 : -1
+  endfunc
+
   " only able to colour print the default to_s() output at this stage
-  func bl.print() dict
+  func bl.print(...) dict
+    let bang = a:0 ? a:1 : 0
     call self.update()
-    let str = self.to_s()
+    "let str = self.to_s()
     " following code is from hl.print() and would not work as is here
     "let dta = map(split(str, "\n"), '[split(v:val, " ")[0], v:val . "\n"]')
     "call vimple#echoc(dta)
+    let pairs = []
+    let data = self.data()
+    let max_length = max(map(deepcopy(values(self.data())), 'len(v:val.name)'))
+    for buffer in sort(values(data), self.compare, self)
+      if !bang && !buffer.listed
+        continue
+      endif
+      call add(pairs, ['BL_Nnumber', printf('%3d',buffer.number)])
+      if buffer.listed
+        call add(pairs, ['Normal', ' '])
+      else
+        call add(pairs, ['BL_Unlisted', 'u'])
+      endif
+      if buffer.current
+        call add(pairs, ['BL_Current', '%'])
+      elseif buffer.alternate
+        call add(pairs, ['BL_Alternate', '#'])
+      else
+        call add(pairs, ['Normal', ' '])
+      endif
+      if buffer.active
+        call add(pairs, ['BL_Active', 'a'])
+      elseif buffer.hidden
+        call add(pairs, ['BL_Hidden', 'h'])
+      else
+        call add(pairs, ['Normal', ' '])
+      endif
+      if !buffer.modifiable
+        call add(pairs, ['BL_Modifiable', '-'])
+      elseif buffer.readonly
+        call add(pairs, ['BL_Readonly', '='])
+      else
+        call add(pairs, ['Normal', ' '])
+      endif
+      if buffer.read_error
+        call add(pairs, ['BL_RearError', 'x'])
+      elseif buffer.modified
+        call add(pairs, ['BL_Modified', '+'])
+      else
+        call add(pairs, ['Normal', ' '])
+      endif
+      call add(pairs, ['Normal', ' '])
+      call add(pairs, [
+            \ buffer.current ?
+            \ 'BL_CurrentBuffer' :
+            \ buffer.alternate ?
+            \ 'BL_AlternateBuffer' :
+            \ 'Normal',
+            \ '"' . buffer.name . '"'])
+      let spaces = len(buffer.name) >= 29 ? 1 : 29 - len(buffer.name)
+      call add(pairs, ['Normal',
+            \ repeat(' ', spaces)])
+      call add(pairs, ['BL_Line',
+            \ 'line ' . buffer.line . "\<NL>"
+            \ ])
+    endfor
+    call vimple#echoc(pairs)
+    " Remove the last <NL>. Why?
+    let pairs[-1][1] = pairs[-1][-1][:-2]
+    return pairs
+  endfunc
+
+  func bl.data() dict
+    return self.__buffers
   endfunc
 
   func bl.filter(filter) dict abort

@@ -74,6 +74,7 @@ function! vimple#echoc(data)
     exe "echohl " . sets[0]
     exe "echon " . string(sets[1])
   endfor
+  echohl Normal
 endfunction
 
 function! s:vimple_highlight(name, attrs)
@@ -93,22 +94,30 @@ endfunction
 " the order of applying these to echoc is important
 "
 function! vimple#default_colorscheme()
-  call s:vimple_highlight('BL_Number'          , 'ctermfg=4 ctermbg=8 guifg=4 guibg=8')
-  call s:vimple_highlight('BL_Line'            , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
-  call s:vimple_highlight('BL_Name'            , 'ctermfg=12 ctermbg=8 guifg=12 guibg=8')
-  call s:vimple_highlight('BL_Unlisted'        , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
-  call s:vimple_highlight('BL_CurrentBuffer'   , 'ctermfg=14 ctermbg=0 guifg=14 guibg=0')
-  call s:vimple_highlight('BL_AlternateBuffer' , 'ctermfg=14 ctermbg=0 guifg=14 guibg=0')
+  call s:vimple_highlight('BL_Number'          , 'ctermfg=4 ctermbg=8 guifg=#0087ff guibg=#1c1c1c')
+  call s:vimple_highlight('BL_Line'            , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
+  call s:vimple_highlight('BL_Name'            , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#1c1c1c')
+  call s:vimple_highlight('BL_Unlisted'        , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
+  call s:vimple_highlight('BL_CurrentBuffer'   , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
+  call s:vimple_highlight('BL_AlternateBuffer' , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
   " buffer active
-  call s:vimple_highlight('BL_Active'          , 'ctermfg=12 ctermbg=0 guifg=12 guibg=0')
-  call s:vimple_highlight('BL_Hidden'          , 'ctermfg=10 ctermbg=8 guifg=10 guibg=8')
+  call s:vimple_highlight('BL_Active'          , 'ctermfg=12 ctermbg=0 guifg=#808080 guibg=#262626')
+  call s:vimple_highlight('BL_Hidden'          , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
   " flags
-  call s:vimple_highlight('BL_Current'         , 'ctermfg=5 guifg=5')
-  call s:vimple_highlight('BL_Alternate'       , 'ctermfg=13 guifg=13')
-  call s:vimple_highlight('BL_Modifiable'      , 'ctermfg=2 guifg=2')
-  call s:vimple_highlight('BL_Readonly'        , 'ctermfg=6 guifg=6')
-  call s:vimple_highlight('BL_Modified'        , 'ctermfg=9 guifg=9')
-  call s:vimple_highlight('BL_ReadError'       , 'ctermfg=1 guifg=1')
+  call s:vimple_highlight('BL_Current'         , 'ctermfg=5 guifg=#af005f')
+  call s:vimple_highlight('BL_Alternate'       , 'ctermfg=13 guifg=#5f5faf')
+  call s:vimple_highlight('BL_Modifiable'      , 'ctermfg=2 guifg=#5f8700')
+  call s:vimple_highlight('BL_Readonly'        , 'ctermfg=6 guifg=#00afaf')
+  call s:vimple_highlight('BL_Modified'        , 'ctermfg=9 guifg=#d75f00')
+  call s:vimple_highlight('BL_ReadError'       , 'ctermfg=1 guifg=#af0000')
+endfunction
+
+function! vimple#tracer()
+  let d = {}
+  func d.t()
+    return expand('<sfile>')
+  endfunc
+  echom d.t()
 endfunction
 
 call vimple#default_colorscheme()
