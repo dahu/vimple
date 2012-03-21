@@ -23,7 +23,7 @@ function! vimple#highlight#new()
     let format = a:0 && a:1 != '' ? a:1 : default
     let data = a:0 > 1 ? a:2.__data : self.__data
     let str = ''
-    let data = sort(data, vimple#comparators#termly)
+    let data = sort(data, 'vimple#comparators#termly')
     for i in range(0, len(data) - 1)
       let str .= vimple#format(
             \ format,

@@ -94,22 +94,27 @@ endfunction
 " the order of applying these to echoc is important
 "
 function! vimple#default_colorscheme()
-  call s:vimple_highlight('BL_Number'          , 'ctermfg=4 ctermbg=8 guifg=#0087ff guibg=#1c1c1c')
-  call s:vimple_highlight('BL_Line'            , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
-  call s:vimple_highlight('BL_Name'            , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#1c1c1c')
-  call s:vimple_highlight('BL_Unlisted'        , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
-  call s:vimple_highlight('BL_CurrentBuffer'   , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
-  call s:vimple_highlight('BL_AlternateBuffer' , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
+  " Buffer List
+  call s:vimple_highlight('vimple_BL_Number'          , 'ctermfg=4 ctermbg=8 guifg=#0087ff guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_BL_Line'            , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_BL_Name'            , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_BL_Unlisted'        , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_BL_CurrentBuffer'   , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
+  call s:vimple_highlight('vimple_BL_AlternateBuffer' , 'ctermfg=14 ctermbg=0 guifg=#8a8a8a guibg=#262626')
   " buffer active
-  call s:vimple_highlight('BL_Active'          , 'ctermfg=12 ctermbg=0 guifg=#808080 guibg=#262626')
-  call s:vimple_highlight('BL_Hidden'          , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_BL_Active'          , 'ctermfg=12 ctermbg=0 guifg=#808080 guibg=#262626')
+  call s:vimple_highlight('vimple_BL_Hidden'          , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
   " flags
-  call s:vimple_highlight('BL_Current'         , 'ctermfg=5 guifg=#af005f')
-  call s:vimple_highlight('BL_Alternate'       , 'ctermfg=13 guifg=#5f5faf')
-  call s:vimple_highlight('BL_Modifiable'      , 'ctermfg=2 guifg=#5f8700')
-  call s:vimple_highlight('BL_Readonly'        , 'ctermfg=6 guifg=#00afaf')
-  call s:vimple_highlight('BL_Modified'        , 'ctermfg=9 guifg=#d75f00')
-  call s:vimple_highlight('BL_ReadError'       , 'ctermfg=1 guifg=#af0000')
+  call s:vimple_highlight('vimple_BL_Current'         , 'ctermfg=5 guifg=#af005f')
+  call s:vimple_highlight('vimple_BL_Alternate'       , 'ctermfg=13 guifg=#5f5faf')
+  call s:vimple_highlight('vimple_BL_Modifiable'      , 'ctermfg=2 guifg=#5f8700')
+  call s:vimple_highlight('vimple_BL_Readonly'        , 'ctermfg=6 guifg=#00afaf')
+  call s:vimple_highlight('vimple_BL_Modified'        , 'ctermfg=9 guifg=#d75f00')
+  call s:vimple_highlight('vimple_BL_ReadError'       , 'ctermfg=1 guifg=#af0000')
+
+  " Scriptnames
+  call s:vimple_highlight('vimple_SN_Number'          , 'ctermfg=4 ctermbg=8 guifg=#0087ff guibg=#1c1c1c')
+  call s:vimple_highlight('vimple_SN_Term'            , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#1c1c1c')
 endfunction
 
 function! vimple#tracer()
