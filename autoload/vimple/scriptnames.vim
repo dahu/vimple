@@ -31,6 +31,13 @@ function! vimple#scriptnames#new()
     return str
   endfunc
 
+  " only able to colour print the default to_s() output at this stage
+  " Note: This is a LOT of dancing just to get coloured numbers ;)
+  func sn.print() dict
+    call self.update()
+    call map(map(map(split(self.to_s(), '\n'), 'split(v:val, "\\d\\@<= ")'), '[["vimple_SN_Number", v:val[0]] , ["vimple_SN_Term", " : " . v:val[1] . "\n"]]'), 'vimple#echoc(v:val)')
+  endfunc
+
   func sn.filter(filter) dict abort
     let dict = deepcopy(self)
     call filter(dict.__scripts, a:filter)
