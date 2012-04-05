@@ -1,6 +1,6 @@
 " BufferList object
 " ARB
-" version 0.8
+" version 0.8.1
 
 " TODO: Use the Numerically sort comparator for print()
 " TODO: Use one s:dict instead of recreating the whole thing. Easier to debug.
@@ -13,8 +13,9 @@ function! vimple#buffer_list#new()
   let bl.alternate = 0
   let bl.__filter = ''
 
-  " public interface
+  " public interface {{{1
 
+  " update {{{2
   func bl.update() dict abort
     let bufferlist = vimple#associate(vimple#redir('ls!'),
           \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
@@ -49,7 +50,7 @@ function! vimple#buffer_list#new()
     return 1
   endfun
 
-  " to_s([format[, filter]])
+  " to_s([format[, filter]]) {{{2
   " format: When absent or empty the default value ("%3b%f\"%n\" line %l\n")
   " will be used.
   " Use %b, %n, %f and %l to insert the buffer number, name, flags and cursor
@@ -76,12 +77,17 @@ function! vimple#buffer_list#new()
     return str
   endfunc
 
-  func bl.compare(k1, k2) dict
-    let k1 = a:k1.number * 1
-    let k2 = a:k2.number * 1
-    return k1 == k2 ? 0 : k1 > k2 ? 1 : -1
+  " to_l {{{2
+  func bl.to_l(...) dict
+    return values(call(self.buffers, a:000, self).__buffers)
   endfunc
 
+  " to_d {{{2
+  func bl.to_d(...) dict
+    return call(self.buffers, a:000, self).__buffers
+  endfunc
+
+  " print {{{2
   " only able to colour print the default to_s() output at this stage
   func bl.print(...) dict
     let bang = a:0 ? a:1 : 0
@@ -152,10 +158,14 @@ function! vimple#buffer_list#new()
     return pairs
   endfunc
 
-  func bl.data() dict
-    return self.__buffers
+  " compare {{{3
+  func bl.compare(k1, k2) dict
+    let k1 = a:k1.number * 1
+    let k2 = a:k2.number * 1
+    return k1 == k2 ? 0 : k1 > k2 ? 1 : -1
   endfunc
 
+  " filter {{{2
   func bl.filter(filter) dict abort
     let dict = deepcopy(self)
     call filter(dict.__buffers, a:filter)
@@ -163,18 +173,22 @@ function! vimple#buffer_list#new()
     return dict
   endfunc
 
+  " get_filter {{{3
   func bl.get_filter() dict
     return string(self.__filter)
   endfunc
 
+  " filter_add_or {{{3
   func bl.filter_add_or(filter) dict
     let self.__filter .= ' || ' . a:filter
   endfunc
 
+  " filter_add_and {{{3
   func bl.filter_add_and(filter) dict
     let self.__filter .= ' && ' . a:filter
   endfunc
 
+  " merge {{{3
   func bl.merge(bl) dict
     let bl = deepcopy(self)
     call extend(bl.__buffers, a:bl.__buffers, 'keep')
@@ -182,6 +196,65 @@ function! vimple#buffer_list#new()
     return bl
   endfunc
 
+  " and {{{3
+  func bl.and(filter) dict
+    return call(self.buffers, [a:filter], self)
+  endfunc
+
+  " hidden {{{3
+  func bl.hidden(...) dict
+    let filters = {
+          \ 1: 'v:val.hidden',
+          \ 2: '!v:val.active && v:val.listed',
+          \ 3: '!v:val.listed',
+          \ 4: '!v:val.active && v:val.listed && !v:val.hidden',
+          \ 5: '!v:val.active || !v:val.listed'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return self.filter_with_choice(choice, filters)
+  endfunc
+
+  " active {{{3
+  func bl.active() dict
+    return self.filter('v:val.active')
+  endfunc
+
+  " modifiable {{{3
+  func bl.modifiable(...) dict
+    let filters = {
+          \ 1: '!v:val.modifiable',
+          \ 2: '!v:val.modifiable || v:val.readonly'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return self.filter_with_choice(choice, filters)
+  endfunc
+
+  " readonly {{{3
+  func bl.readonly(...) dict
+    let filters = {
+          \ 1: '!v:val.readonly',
+          \ 2: '!v:val.modifiable || v:val.readonly'
+          \ }
+    let choice = a:0 ? a:1 : 1
+    return self.filter_with_choice(choice, filters)
+  endfunc
+
+  " modified {{{3
+  func bl.modified() dict
+    return self.filter('v:val.modified')
+  endfunc
+
+  " read_error {{{3
+  func bl.read_error() dict
+    return self.filter('v:val.read_error')
+  endfunc
+
+  " unloaded {{{3
+  func bl.unloaded() dict
+    return self.filter('!v:val.active && !v:val.hidden && v:val.listed')
+  endfunc
+
+  " buffers - alias for data {{{2
   func bl.buffers(...) dict
     if !a:0
       " Return listed buffers.
@@ -235,66 +308,14 @@ function! vimple#buffer_list#new()
     return bl
   endfunc
 
-  func bl.and(filter) dict
-    return call(self.buffers, [a:filter], self)
+  " data - alias for buffers {{{3
+  func bl.data() dict
+    return self.__buffers
   endfunc
 
-  func bl.to_l(...) dict
-    return values(call(self.buffers, a:000, self).__buffers)
-  endfunc
+  " Private functions - don't need 'dict' modifier {{{2
 
-  func bl.to_d(...) dict
-    return call(self.buffers, a:000, self).__buffers
-  endfunc
-
-  func bl.hidden(...) dict
-    let filters = {
-          \ 1: 'v:val.hidden',
-          \ 2: '!v:val.active && v:val.listed',
-          \ 3: '!v:val.listed',
-          \ 4: '!v:val.active && v:val.listed && !v:val.hidden',
-          \ 5: '!v:val.active || !v:val.listed'
-          \ }
-    let choice = a:0 ? a:1 : 1
-    return self.filter_with_choice(choice, filters)
-  endfunc
-
-  func bl.active() dict
-    return self.filter('v:val.active')
-  endfunc
-
-  func bl.modifiable(...) dict
-    let filters = {
-          \ 1: '!v:val.modifiable',
-          \ 2: '!v:val.modifiable || v:val.readonly'
-          \ }
-    let choice = a:0 ? a:1 : 1
-    return filter_with_choice(choice, filters)
-  endfunc
-
-  func bl.readonly(...) dict
-    let filters = {
-          \ 1: '!v:val.readonly',
-          \ 2: '!v:val.modifiable || v:val.readonly'
-          \ }
-    let choice = a:0 ? a:1 : 1
-    return filter_with_choice(choice, filters)
-  endfunc
-
-  func bl.modified() dict
-    return self.filter('v:val.modified')
-  endfunc
-
-  func bl.read_error() dict
-    return self.filter('v:val.read_error')
-  endfunc
-
-  func bl.unloaded() dict
-    return self.filter('!v:val.active && !v:val.hidden && v:val.listed')
-  endfunc
-
-  " Private functions - don't need 'dict' modifier
-
+  " filter_with_choice {{{3
   func bl.filter_with_choice(choice, filters, ...)
     if a:0
       return filter(deepcopy(a:1), a:filters[a:choice])
@@ -303,14 +324,17 @@ function! vimple#buffer_list#new()
     endif
   endfunc
 
+  " buffer_status {{{3
   func bl.buffer_status(b)
     return a:b['active'] == 1 ? 'a' : a:b['hidden'] == 1 ? 'h' : '!'
   endfunc
 
+  " buffer_type {{{3
   func bl.buffer_type(b)
     return a:b['current'] == 1 ? '%' : a:b['alternate'] == 1 ? '#' : ' '
   endfunc
 
+  " buffer_flags {{{3
   func bl.buffer_flags(b)
     return   (a:b['listed'] == 0 ? 'u' : ' ')
           \. (a:b['current'] == 1 ? '%' :
@@ -322,6 +346,7 @@ function! vimple#buffer_list#new()
           \. (a:b['modified'] == 1 ? '+' : ' ')
           \. (a:b['read_error'] == 1 ? 'x' : ' ')
   endfunc
+  " }}}2
 
   " constructor
 
@@ -329,4 +354,4 @@ function! vimple#buffer_list#new()
   return bl
 endfunction
 
-" vim: et sw=2 ft=vim
+" vim: et sw=2 ft=vim fdm=marker
