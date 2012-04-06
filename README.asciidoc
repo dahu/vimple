@@ -1,0 +1,13 @@
+Vimple
+------
+
+_Pacifying Vimmers_
+
+http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
+
+Vimple provides VimLOO (Object Oriented VimL) objects for Vim's
+write-only ++:ex++ commands, such as ++:ls++, ++:scriptnames++ and
+++:highlight++.
+
+Vimple provides existing objects for these builtin ++:ex++ commands,
+and allows Vim developers to craft their own objects for others.

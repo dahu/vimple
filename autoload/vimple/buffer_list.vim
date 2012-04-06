@@ -50,7 +50,7 @@ function! vimple#buffer_list#new()
     return 1
   endfun
 
-  " to_s([format[, filter]]) {{{2
+  " to_s([format]) {{{2
   " format: When absent or empty the default value ("%3b%f\"%n\" line %l\n")
   " will be used.
   " Use %b, %n, %f and %l to insert the buffer number, name, flags and cursor

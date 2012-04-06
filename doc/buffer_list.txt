@@ -1,0 +1,179 @@
+*buffer_list.txt*	For Vim version 7.3	Last change: 2012-03-05
+
+
+			VIM REFERENCE MANUAL	by Barry Arthur
+
+
+Help on using vimple#buffer_list                 *vimple#buffer_list*
+
+1. The Buffer List Object                      |buffer_list-object|
+2. Configuration			|buffer_list-configuration|
+3. Other					|buffer_list-other|
+
+==============================================================================
+ 1. THE BUFFER LIST OBJECT                       *buffer_list-object*
+
+The |Vimple| Buffer List object provides a scriptable interface to Vim's
+|:buffers| (or |:ls|) command.
+
+Vimple uses VimLOO (Object Oriented VimL) and so returns Objects with which
+you can subsequently interact.
+
+                                            *buffer_list-constructor*
+Constructor~
+
+To instantiate a new vimple#buffer_list object:
+>
+  :call vimple#buffer_list#new()
+<
+
+This will create a globally accessible object called:
+>
+  vimple#bl
+<
+
+You can also create your own vimple#buffer_list objects with calls like:
+>
+  :let bl = vimple#buffer_list#new()
+<
+
+ 2. BUFFER LIST PUBLIC METHODS           *buffer_list-public-methods*
+------------------------------------------------------------------------------
+
+|buffer_list-to_d()|	Returns a dictionary representation of the buffer list.
+|buffer_list-print()|	Prints (colourfully) the buffer list.
+|buffer_list-filter()|	Auxilliary method used to filter out desired buffers only.
+|buffer_list-buffers()|	Access to the internal buffers dictionary; hiding be damned.
+
+                                               *buffer_list-update()*
+------------------------------------------------------------------------------
+Args: NONE~
+
+Overview:~
+
+  Refreshes the object's internal buffer list data structure.
+
+Synopsis:~
+>
+  :call vimple#bl.update()
+<
+Description:~
+
+Use this method to update the vimple#buffer_list object's knowledge of Vim's
+current buffer state. If you open new files or use |:bdelete| or |:bwipeout|
+to remove buffers, you will need to manually update your vimple#buffer_list
+objects to reflect those changes. The need to call this manually for certain
+vimple#buffer_list calls might be removed in future versions.
+
+                                                 *buffer_list-to_s()*
+------------------------------------------------------------------------------
+Args: [format]~
+
+Overview:~
+
+  Returns a string representation of the buffer list.
+
+Synopsis:~
+>
+  :echo vimple#bl.to_s()
+<
+Description:~
+
+Use this method to print to the screen a simple (non-coloured) textual
+representation of the buffer list. The default (without arguments) tries to
+emulate the builtin |:ls| output.
+
+Arguments:~
+
+format~
+
+Using a printf-like format specifier, you can alter the appearance of the
+output. The available format specifiers are:
+
+- %b	buffer number
+- %n	name
+- %f	flags
+- %l	cursor line
+
+                                                 *buffer_list-to_l()*
+------------------------------------------------------------------------------
+Args: [format]~
+
+Overview:~
+
+  Returns a list representation of the buffer list.
+
+Synopsis:~
+>
+  :echo vimple#bl.to_l()
+<
+Description:~
+
+This method returns a list
+representation of the buffer list. The default (without arguments) tries to
+emulate the builtin |:ls| output.
+
+Arguments:~
+
+The to_l() method is actually just a wrapper for the |buffer_list-buffers()|
+method. See that method for argument details.
+
+Return:~
+The to_l() method returns a dictionary with the following fields:
+>
+  {'active':      0,
+   'number':      '1',
+   'alternate':   0,
+   'name':        'doc/buffer_list.txt',
+   'readonly':    0,
+   'current':     1,
+   'line':        '1',
+   'modified':    0,
+   'modifiable':  1,
+   'hidden':      0,
+   'read_error':  0,
+   'listed':      1
+  }
+<
+
+NOTE: Currently you have to manually call vimple#bl.update() before calling
+vimple#bl.to_l() if you want the latest information. This may change in a
+future version.
+
+
+==============================================================================
+ 3. PRIVATE FUNCTIONS                 *buffer_list-private_functions*
+
+A block of indented text can be highlighted by ending the previous line with a
+greater than ">" character. The highlighting will end on a line with a less
+than character "<" as the first non-blank or any unindented line.
+
+Something like this: >
+
+	if a > b
+      echo a
+    else
+      echo b
+    endif
+<
+Note that the less than and greater than chars will hidden when conceal is
+enabled.
+
+The tilde can be used to highlight column headers:
+
+		Header1   Header2   Header3 ~
+		---------------------------
+        item      entry1    entry2
+
+This items will use the corresponding highlighting group:
+
+	*String	needs an actual tab before and after the '*String'
+	*Todo	needs an actual tab before and after the '*Todo'
+	*Error	needs an actual tab before and after the '*Error'
+
+There are some special cases that will be also highlighted:
+- <Anything>	<= Anything enclosed in <>.
+- {Another}		<= Anything enclosed in {}
+- CTRL-X		<= CTRL- followed by any char.
+
+ vim:tw=78:ts=8:ft=help:norl:
