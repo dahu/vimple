@@ -260,19 +260,20 @@ function! vimple#buffer_list#new()
       " Return listed buffers.
       return self.filter('v:val.listed')
     endif
-    if type(a:000[-1]) == type({})
-      let orig = a:000[-1]
-      let extra = 1
-    else
-      let orig = self
-      let extra = 0
-    endif
-    if len(a:000) >= 1 + extra
-      let args = a:000[1: -1 - extra]
-    else
-      let args = []
-    endif
-    unlet extra
+    "if type(a:000[-1]) == type({})
+      "let orig = a:000[-1]
+      "let extra = 1
+    "else
+      "let orig = self
+      "let extra = 0
+    "endif
+    "if len(a:000) >= 1 + extra
+      "let args = a:000[1: -1 - extra]
+      "let args = a:000[1: -1]
+    "else
+      "let args = []
+    "endif
+    "unlet extra
     if a:1 =~ '^\%(non\?\|un\)'
       let arg = matchstr(a:1, '^\%(un\|non\)\zs.*')
       let bang = '!'
@@ -301,10 +302,10 @@ function! vimple#buffer_list#new()
     else
       let filter = arg
     endif
-    let bl = orig.filter(bang . '(' . filter . ')')
-    if len(args) > 0
-      let bl = call(bl.merge, [call(orig.buffers, args + [orig], orig)], bl)
-    endif
+    let bl = self.filter(bang . '(' . filter . ')')
+    "if len(args) > 0
+      "let bl = call(bl.merge, [call(orig.buffers, args + [orig], orig)], bl)
+    "endif
     return bl
   endfunc
 
