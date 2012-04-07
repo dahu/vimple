@@ -1,23 +1,28 @@
-*buffer_list.txt*	For Vim version 7.3	Last change: 2012-03-05
+*buffer_list.txt*     For Vim version 7.3     Last change: 2012-04-07
 
 
-			VIM REFERENCE MANUAL	by Barry Arthur
+                   VIM REFERENCE MANUAL    by Barry Arthur
 
 
 Help on using vimple#buffer_list                 *vimple#buffer_list*
 
-1. The Buffer List Object                      |buffer_list-object|
-2. Configuration			|buffer_list-configuration|
-3. Other					|buffer_list-other|
+1. The Vimple Architecture          |buffer_list-vimple_architecture|
+2. The Buffer List Object                        |buffer_list-object|
+3. Public Methods                        |buffer_list-public_methods|
+4. Plugins Using Vimple Buffer List             |buffer_list-plugins|
 
 ==============================================================================
- 1. THE BUFFER LIST OBJECT                       *buffer_list-object*
+ 1. THE VIMPLE ARCHITECTURE         *buffer_list-vimple_architecture*
 
-The |Vimple| Buffer List object provides a scriptable interface to Vim's
-|:buffers| (or |:ls|) command.
+|Vimple| uses VimLOO (Object Oriented VimL) and so returns Objects which
+contain methods to update and manipulate them. See OBJECT ORIENTED PROGRAMMING
+in section |41.8| to learn more about VimLOO.
 
-Vimple uses VimLOO (Object Oriented VimL) and so returns Objects with which
-you can subsequently interact.
+==============================================================================
+ 2. THE BUFFER LIST OBJECT                       *buffer_list-object*
+
+The Vimple Buffer List provides a scriptable interface to Vim's |:buffers| (or
+|:ls|) command.
 
                                             *buffer_list-constructor*
 Constructor~
@@ -37,14 +42,7 @@ You can also create your own vimple#buffer_list objects with calls like:
   :let bl = vimple#buffer_list#new()
 <
 
- 2. BUFFER LIST PUBLIC METHODS           *buffer_list-public-methods*
-------------------------------------------------------------------------------
-
-|buffer_list-to_d()|	Returns a dictionary representation of the buffer list.
-|buffer_list-print()|	Prints (colourfully) the buffer list.
-|buffer_list-filter()|	Auxilliary method used to filter out desired buffers only.
-|buffer_list-buffers()|	Access to the internal buffers dictionary; hiding be damned.
-
+ 3. BUFFER LIST PUBLIC METHODS           *buffer_list-public-methods*
                                                *buffer_list-update()*
 ------------------------------------------------------------------------------
 Args: NONE~
@@ -65,6 +63,13 @@ to remove buffers, you will need to manually update your vimple#buffer_list
 objects to reflect those changes. The need to call this manually for certain
 vimple#buffer_list calls might be removed in future versions.
 
+Return:~
+
+The bl object which allows chaining of buffer_list methods, like:
+>
+  :echo vimple#bl.update().to_s()
+<
+
                                                  *buffer_list-to_s()*
 ------------------------------------------------------------------------------
 Args: [format]~
@@ -75,7 +80,7 @@ Overview:~
 
 Synopsis:~
 >
-  :echo vimple#bl.to_s()
+  :echo vimple#bl.to_s( ... )
 <
 Description:~
 
@@ -95,9 +100,18 @@ output. The available format specifiers are:
 - %f	flags
 - %l	cursor line
 
+Return:~
+
+A string of newline terminated buffer list entries similar to the |:ls|
+builtin.
+
+NOTE: Currently you have to manually call vimple#bl.update() before calling
+vimple#bl.to_s() if you want the latest information. This may change in a
+future version.
+
                                                  *buffer_list-to_l()*
 ------------------------------------------------------------------------------
-Args: [format]~
+Args: [buffer_property]~
 
 Overview:~
 
@@ -105,21 +119,21 @@ Overview:~
 
 Synopsis:~
 >
-  :echo vimple#bl.to_l()
+  :echo vimple#bl.to_l( ... )
 <
 Description:~
 
-This method returns a list
-representation of the buffer list. The default (without arguments) tries to
-emulate the builtin |:ls| output.
+This method returns a list representation of the buffer list.
 
 Arguments:~
 
 The to_l() method is actually just a wrapper for the |buffer_list-buffers()|
-method. See that method for argument details.
+method. See that method for details about the buffer_property argument.
 
 Return:~
-The to_l() method returns a dictionary with the following fields:
+
+The to_l() method returns a list of dictionaries, each with the following
+fields (with example values):
 >
   {'active':      0,
    'number':      '1',
@@ -140,40 +154,191 @@ NOTE: Currently you have to manually call vimple#bl.update() before calling
 vimple#bl.to_l() if you want the latest information. This may change in a
 future version.
 
+                                                 *buffer_list-to_d()*
+------------------------------------------------------------------------------
+Args: [buffer_property]~
+
+Overview:~
+
+  Returns a dictionary representation of the buffer list.
+
+Synopsis:~
+>
+  :echo vimple#bl.to_d( ... )
+<
+Description:~
+
+This method returns a dictionary representation of the buffer list. The key
+for each entry in the dictionary is the buffer number as shown by |:ls|
+
+Arguments:~
+
+The to_d() method is actually just a wrapper for the |buffer_list-buffers()|
+method. See that method for details about the buffer_property argument.
+
+Return:~
+
+The to_d() method returns a dictionary of dictionaries with the following
+fields (with example values):
+>
+  {'1':
+   {'active':      0,
+    'number':      '1',
+    'alternate':   0,
+    'name':        'doc/buffer_list.txt',
+    'readonly':    0,
+    'current':     1,
+    'line':        '1',
+    'modified':    0,
+    'modifiable':  1,
+    'hidden':      0,
+    'read_error':  0,
+    'listed':      1
+   }
+  }
+<
+
+NOTE: Currently you have to manually call vimple#bl.update() before calling
+vimple#bl.to_d() if you want the latest information. This may change in a
+future version.
+
+                                                *buffer_list-print()*
+------------------------------------------------------------------------------
+Args: [show_unlisted]~
+
+Overview:~
+
+  Prints (colourfully) the buffer list.
+
+Synopsis:~
+>
+  :call vimple#bl.print( BOOL )
+<
+Description:~
+
+Use this method to print to the screen a coloured representation of the buffer
+list. The layout resembles the builtin |:ls| command but is by default
+coloured to show important information more obviously. See the
+autoload/vimple/vimple.vim file to see how to customise the colours used by
+vimple#buffer_list.print().
+
+Arguments:~
+
+show_unlisted~
+
+If this boolean argument is not false then all buffers (including the unlisted
+ones) are printed (as with the |:ls!| command. With no argument or one that
+evaluates to false, only the listed buffers are shown (as with the |:ls|
+command).
+
+Return:~
+
+The bl object (for chaining), although it's not immediately clear how this
+could be useful (for the print() method), but a design decision was made to
+return the bl object for all methods that didn't have to explicitly return a
+different type (as the to_x() methods do).
+
+NOTE: Unlike most of the other methods, the print() method -does- update the
+buffer list (with an internal call to update()) prior to printing.
+
+                                               *buffer_list-filter()*
+------------------------------------------------------------------------------
+Args: [filter]~
+
+Overview:~
+
+  Auxilliary method used to filter out desired buffers only.
+
+Synopsis:~
+>
+  :call vimple#bl.filter( ... )
+<
+Description:~
+
+The filter() method selects buffers from the internal list based on the
+criteria provided in the argument. This method is used heavily internally by
+other public methods, like the to_l() and to_d() and buffers() methods. This
+method returns a new buffer_list object containing only the selected buffers.
+
+Arguments:~
+
+filter~
+
+The buffer_list#filter() method uses the built-in |filter()| function which
+uses the |v:val| variable to aaccess the elements of the internal buffer
+properties. Call filter() like this:
+>
+  :call vimple#bl.filter('v:val.modified').print()
+  :call vimple#bl.filter('v:val.name =~ "\.txt$"').print()
+  :echo vimple#bl.filter('v:val.name =~ "\.txt$"').to_s()
+<
+The available v:val properties are:
+
+- active
+- alternate
+- current
+- hidden
+- line
+- listed
+- modifiable
+- modified
+- name
+- number
+- read_error
+- readonly
+
+Return:~
+
+The bl object (for chaining).
+
+                                              *buffer_list-buffers()*
+------------------------------------------------------------------------------
+Args: [buffer_property]~
+
+Overview:~
+
+  Simplified filter wrapper.
+
+Synopsis:~
+>
+  :echo vimple#bl.buffers( ... )
+<
+Description:~
+
+This utility method provides a simpler way to filter based on the flags
+commonly used to select buffers.
+
+Arguments:~
+
+buffer_property~
+
+Call buffers() like this:
+>
+  :echo vimple#bl.buffers('modified')
+  :echo vimple#bl.buffers('hidden')
+<
+The available buffer properties are:
+
+- active
+- hidden
+- listed
+- modifiable
+- modified
+- read_error
+- readonly
+
+Return:~
+
+The bl object (for chaining).
+
 
 ==============================================================================
- 3. PRIVATE FUNCTIONS                 *buffer_list-private_functions*
+ 4. PLUGINS USING VIMPLE BUFFER LIST            *buffer_list-plugins*
 
-A block of indented text can be highlighted by ending the previous line with a
-greater than ">" character. The highlighting will end on a line with a less
-than character "<" as the first non-blank or any unindented line.
+Vimple was designed to be a library for Vim developers and plugin writers. The
+currently known plugins using Vimple:
 
-Something like this: >
-
-	if a > b
-      echo a
-    else
-      echo b
-    endif
-<
-Note that the less than and greater than chars will hidden when conceal is
-enabled.
-
-The tilde can be used to highlight column headers:
-
-		Header1   Header2   Header3 ~
-		---------------------------
-        item      entry1    entry2
-
-This items will use the corresponding highlighting group:
-
-	*String	needs an actual tab before and after the '*String'
-	*Todo	needs an actual tab before and after the '*Todo'
-	*Error	needs an actual tab before and after the '*Error'
-
-There are some special cases that will be also highlighted:
-- <Anything>	<= Anything enclosed in <>.
-- {Another}		<= Anything enclosed in {}
-- CTRL-X		<= CTRL- followed by any char.
+- the buffalo (https://github.com/Raimondi/vim-buffalo) - A lightning fast
+  buffer switching tool using fuzzy matching.
 
  vim:tw=78:ts=8:ft=help:norl:
