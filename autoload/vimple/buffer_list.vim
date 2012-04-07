@@ -103,52 +103,52 @@ function! vimple#buffer_list#new()
       if !bang && !buffer.listed
         continue
       endif
-      call add(pairs, ['BL_Nnumber', printf('%3d',buffer.number)])
+      call add(pairs, ['vimple_BL_Nnumber', printf('%3d',buffer.number)])
       if buffer.listed
         call add(pairs, ['Normal', ' '])
       else
-        call add(pairs, ['BL_Unlisted', 'u'])
+        call add(pairs, ['vimple_BL_Unlisted', 'u'])
       endif
       if buffer.current
-        call add(pairs, ['BL_Current', '%'])
+        call add(pairs, ['vimple_BL_Current', '%'])
       elseif buffer.alternate
-        call add(pairs, ['BL_Alternate', '#'])
+        call add(pairs, ['vimple_BL_Alternate', '#'])
       else
         call add(pairs, ['Normal', ' '])
       endif
       if buffer.active
-        call add(pairs, ['BL_Active', 'a'])
+        call add(pairs, ['vimple_BL_Active', 'a'])
       elseif buffer.hidden
-        call add(pairs, ['BL_Hidden', 'h'])
+        call add(pairs, ['vimple_BL_Hidden', 'h'])
       else
         call add(pairs, ['Normal', ' '])
       endif
       if !buffer.modifiable
-        call add(pairs, ['BL_Modifiable', '-'])
+        call add(pairs, ['vimple_BL_Modifiable', '-'])
       elseif buffer.readonly
-        call add(pairs, ['BL_Readonly', '='])
+        call add(pairs, ['vimple_BL_Readonly', '='])
       else
         call add(pairs, ['Normal', ' '])
       endif
       if buffer.read_error
-        call add(pairs, ['BL_RearError', 'x'])
+        call add(pairs, ['vimple_BL_RearError', 'x'])
       elseif buffer.modified
-        call add(pairs, ['BL_Modified', '+'])
+        call add(pairs, ['vimple_BL_Modified', '+'])
       else
         call add(pairs, ['Normal', ' '])
       endif
       call add(pairs, ['Normal', ' '])
       call add(pairs, [
             \ buffer.current ?
-            \ 'BL_CurrentBuffer' :
+            \ 'vimple_BL_CurrentBuffer' :
             \ buffer.alternate ?
-            \ 'BL_AlternateBuffer' :
+            \ 'vimple_BL_AlternateBuffer' :
             \ 'Normal',
             \ '"' . buffer.name . '"'])
       let spaces = len(buffer.name) >= 29 ? 1 : 29 - len(buffer.name)
       call add(pairs, ['Normal',
             \ repeat(' ', spaces)])
-      call add(pairs, ['BL_Line',
+      call add(pairs, ['vimple_BL_Line',
             \ 'line ' . buffer.line . "\<NL>"
             \ ])
     endfor
