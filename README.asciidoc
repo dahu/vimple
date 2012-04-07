@@ -10,4 +10,4 @@ write-only ++:ex++ commands, such as ++:ls++, ++:scriptnames++ and
 ++:highlight++.
 
 Vimple provides existing objects for these builtin ++:ex++ commands,
-and allows Vim developers to craft their own objects for others.
+and allows Vim developers to craft their own objects too.
