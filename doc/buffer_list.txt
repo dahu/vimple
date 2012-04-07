@@ -84,9 +84,14 @@ Synopsis:~
 <
 Description:~
 
-Use this method to print to the screen a simple (non-coloured) textual
-representation of the buffer list. The default (without arguments) tries to
-emulate the builtin |:ls| output.
+This method returns a simple textual representation of the buffer list. The
+default (without arguments) tries to emulate the layout of the builtin |:ls|
+output. This method should be used with Vim's :echo or :let statements, like:
+>
+  :echo vimple#bl.to_s()
+  :echo vimple#bl.to_s("%n\n")
+  :let my_buffers = split(vimple#bl.to_s("%n\n"), "\n")
+<
 
 Arguments:~
 
