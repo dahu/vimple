@@ -2,17 +2,16 @@
 " Vimple wrapper for :ls builtin
 " Maintainers:	Barry Arthur <barry.arthur@gmail.com>
 " 		Israel Chauca F. <israelchauca@gmail.com>
-" Version:	0.9
 " Description:	Vimple object for Vim's builtin :ls command.
 " Last Change:	2012-04-08
 " License:	Vim License (see :help license)
 " Location:	autoload/vimple/ls.vim
 " Website:	https://github.com/dahu/vimple
 "
-" See vimple_ls.txt for help.  This can be accessed by doing:
+" See vimple#ls.txt for help.  This can be accessed by doing:
 "
 " :helptags ~/.vim/doc
-" :help vimple_ls
+" :help vimple#ls
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Vimscript Setup: {{{1
