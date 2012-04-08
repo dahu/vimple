@@ -1,3 +1,40 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim library provides objects for builtin ++:ex++ commands
+" Maintainer:	Barry Arthur
+" 		Israel Chauca F. <israelchauca@gmail.com>
+" Version:	0.9
+" Description:	Vimple provides VimLOO (Object Oriented VimL) objects for
+" 		Vim's write-only ++:ex++ commands, such as ++:ls++,
+" 		++:scriptnames++ and ++:highlight++.
+" Last Change:	2012-04-07
+" License:	Vim License (see :help license)
+" Location:	autoload/vimple.vim
+" Website:	https://github.com/dahu/vimple
+"
+" See vimple.txt for help.  This can be accessed by doing:
+"
+" :helptags ~/.vim/doc
+" :help vimple
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vimple_version = '0.9'
+
+" Vimscript Setup: {{{1
+" Allow use of line continuation.
+let s:save_cpo = &cpo
+set cpo&vim
+
+" load guard
+" uncomment after plugin development
+"if exists("g:loaded_lib_vimple")
+"      \ || v:version < 700
+"      \ || v:version == 703 && !has('patch338')
+"      \ || &compatible
+"  let &cpo = s:save_cpo
+"  finish
+"endif
+"let g:loaded_lib_vimple = 1
+
+" Library Interface: {{{1
 "let str = vimple#format(
 "      \ format,
 "      \ { 'b': ['d', 1],
@@ -131,3 +168,8 @@ let vimple#hl = vimple#highlight#new()
 let vimple#sn = vimple#scriptnames#new()
 
 call vimple#default_colorscheme()
+
+" Teardown:{{{1
+"reset &cpo back to users setting
+let &cpo = s:save_cpo
+" vim: set sw=2 sts=2 et fdm=marker:
