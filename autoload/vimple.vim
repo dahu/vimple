@@ -1,12 +1,12 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vim library provides objects for builtin ++:ex++ commands
-" Maintainer:	Barry Arthur
+" Maintainers:	Barry Arthur <barry.arthur@gmail.com>
 " 		Israel Chauca F. <israelchauca@gmail.com>
 " Version:	0.9
 " Description:	Vimple provides VimLOO (Object Oriented VimL) objects for
 " 		Vim's write-only ++:ex++ commands, such as ++:ls++,
 " 		++:scriptnames++ and ++:highlight++.
-" Last Change:	2012-04-07
+" Last Change:	2012-04-08
 " License:	Vim License (see :help license)
 " Location:	autoload/vimple.vim
 " Website:	https://github.com/dahu/vimple
