@@ -1,5 +1,37 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vimple wrapper for :highlight builtin
+" Maintainers:	Barry Arthur <barry.arthur@gmail.com>
+" 		Israel Chauca F. <israelchauca@gmail.com>
+" Description:	Vimple object for Vim's builtin :highlight command.
+" Last Change:	2012-04-08
+" License:	Vim License (see :help license)
+" Location:	autoload/vimple/highlight.vim
+" Website:	https://github.com/dahu/vimple
+"
+" See vimple#highlight.txt for help.  This can be accessed by doing:
+"
+" :helptags ~/.vim/doc
+" :help vimple#highlight
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Vimscript Setup: {{{1
+" Allow use of line continuation.
+let s:save_cpo = &cpo
+set cpo&vim
+
+" load guard
+" uncomment after plugin development
+"if exists("g:loaded_lib_vimple")
+"      \ || v:version < 700
+"      \ || v:version == 703 && !has('patch338')
+"      \ || &compatible
+"  let &cpo = s:save_cpo
+"  finish
+"endif
+"let g:loaded_lib_vimple = 1
+
+" TODO: Use the Numerically sort comparator for print()
 " Highlight object
-" ARB
 
 function! vimple#highlight#new()
   let hl = {}
@@ -60,3 +92,8 @@ function! vimple#highlight#new()
   call hl.update()
   return hl
 endfunction
+
+" Teardown:{{{1
+"reset &cpo back to users setting
+let &cpo = s:save_cpo
+" vim: set sw=2 sts=2 et fdm=marker:
