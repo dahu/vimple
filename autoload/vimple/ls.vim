@@ -34,7 +34,7 @@ set cpo&vim
 " TODO: Use one s:dict instead of recreating the whole thing. Easier to debug.
 " TODO: Improve alignment of line numbers of print().
 
-function! vimple#buffer_list#new()
+function! vimple#ls#new()
   let bl = {}
   let bl.__buffers = {}
   let bl.current = 0

@@ -163,7 +163,7 @@ function! vimple#tracer()
 endfunction
 
 " Shortcuts to library objects
-let vimple#bl = vimple#buffer_list#new()
+let vimple#bl = vimple#ls#new()
 let vimple#hl = vimple#highlight#new()
 let vimple#sn = vimple#scriptnames#new()
 
