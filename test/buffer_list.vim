@@ -1,5 +1,5 @@
 call vimtest#StartTap()
-call vimtap#Plan(6)
+call vimtap#Plan(6) " <== XXX  Keep plan number updated.  XXX
 "call vimtap#Diag('Test')
 silent! call vimple#redir('set')
 call vimtap#Ok(type(vimple#bl.buffers()) == type({}), 'buffers() returns a dict.')
