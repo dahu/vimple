@@ -1,35 +1,35 @@
-*buffer_list.txt*     For Vim version 7.3     Last change: 2012-04-07
+*vimple#ls.txt*     For Vim version 7.3     Last change: 2012-04-07
 
 
                    VIM REFERENCE MANUAL    by Barry Arthur
 
 
-Help on using vimple#buffer_list                 *vimple#buffer_list*
+Help on using vimple#ls                 *vimple#ls*
 
-1. The Vimple Architecture          |buffer_list-vimple_architecture|
-2. The Buffer List Object                        |buffer_list-object|
-3. Public Methods                        |buffer_list-public_methods|
-4. Plugins Using Vimple Buffer List             |buffer_list-plugins|
+1. The Vimple Architecture                 |vimple#ls-architecture|
+2. The Buffer List Object                        |vimple#ls-object|
+3. Public Methods                        |vimple#ls-public_methods|
+4. Plugins Using Vimple Buffer List             |vimple#ls-plugins|
 
 ==============================================================================
- 1. THE VIMPLE ARCHITECTURE         *buffer_list-vimple_architecture*
+ 1. THE VIMPLE ARCHITECTURE         *vimple#ls-architecture*
 
 |Vimple| uses VimLOO (Object Oriented VimL) and so returns Objects which
 contain methods to update and manipulate them. See OBJECT ORIENTED PROGRAMMING
 in section |41.8| to learn more about VimLOO.
 
 ==============================================================================
- 2. THE BUFFER LIST OBJECT                       *buffer_list-object*
+ 2. THE BUFFER LIST OBJECT                       *vimple#ls-object*
 
 The Vimple Buffer List provides a scriptable interface to Vim's |:buffers| (or
 |:ls|) command.
 
-                                            *buffer_list-constructor*
+                                            *vimple#ls-constructor*
 Constructor~
 
-To instantiate a new vimple#buffer_list object:
+To instantiate a new vimple#ls object:
 >
-  :call vimple#buffer_list#new()
+  :call vimple#ls#new()
 <
 
 This will create a globally accessible object called:
@@ -37,13 +37,13 @@ This will create a globally accessible object called:
   vimple#bl
 <
 
-You can also create your own vimple#buffer_list objects with calls like:
+You can also create your own vimple#ls objects with calls like:
 >
-  :let bl = vimple#buffer_list#new()
+  :let bl = vimple#ls#new()
 <
 
- 3. BUFFER LIST PUBLIC METHODS           *buffer_list-public-methods*
-                                               *buffer_list-update()*
+ 3. BUFFER LIST PUBLIC METHODS           *vimple#ls-public-methods*
+                                               *vimple#ls-update()*
 ------------------------------------------------------------------------------
 Args: NONE~
 
@@ -57,20 +57,20 @@ Synopsis:~
 <
 Description:~
 
-Use this method to update the vimple#buffer_list object's knowledge of Vim's
+Use this method to update the vimple#bl object's knowledge of Vim's
 current buffer state. If you open new files or use |:bdelete| or |:bwipeout|
-to remove buffers, you will need to manually update your vimple#buffer_list
+to remove buffers, you will need to manually update your vimple#ls
 objects to reflect those changes. The need to call this manually for certain
-vimple#buffer_list calls might be removed in future versions.
+vimple#ls calls might be removed in future versions.
 
 Return:~
 
-The bl object which allows chaining of buffer_list methods, like:
+The bl object which allows chaining of vimple#ls methods, like:
 >
   :echo vimple#bl.update().to_s()
 <
 
-                                                 *buffer_list-to_s()*
+                                                 *vimple#ls-to_s()*
 ------------------------------------------------------------------------------
 Args: [format]~
 
@@ -114,7 +114,7 @@ NOTE: Currently you have to manually call vimple#bl.update() before calling
 vimple#bl.to_s() if you want the latest information. This may change in a
 future version.
 
-                                                 *buffer_list-to_l()*
+                                                 *vimple#ls-to_l()*
 ------------------------------------------------------------------------------
 Args: [buffer_property]~
 
@@ -132,7 +132,7 @@ This method returns a list representation of the buffer list.
 
 Arguments:~
 
-The to_l() method is actually just a wrapper for the |buffer_list-buffers()|
+The to_l() method is actually just a wrapper for the |vimple#ls-buffers()|
 method. See that method for details about the buffer_property argument.
 
 Return:~
@@ -159,7 +159,7 @@ NOTE: Currently you have to manually call vimple#bl.update() before calling
 vimple#bl.to_l() if you want the latest information. This may change in a
 future version.
 
-                                                 *buffer_list-to_d()*
+                                                 *vimple#ls-to_d()*
 ------------------------------------------------------------------------------
 Args: [buffer_property]~
 
@@ -178,7 +178,7 @@ for each entry in the dictionary is the buffer number as shown by |:ls|
 
 Arguments:~
 
-The to_d() method is actually just a wrapper for the |buffer_list-buffers()|
+The to_d() method is actually just a wrapper for the |vimple#ls-buffers()|
 method. See that method for details about the buffer_property argument.
 
 Return:~
@@ -207,7 +207,7 @@ NOTE: Currently you have to manually call vimple#bl.update() before calling
 vimple#bl.to_d() if you want the latest information. This may change in a
 future version.
 
-                                                *buffer_list-print()*
+                                                *vimple#ls-print()*
 ------------------------------------------------------------------------------
 Args: [show_unlisted]~
 
@@ -225,7 +225,7 @@ Use this method to print to the screen a coloured representation of the buffer
 list. The layout resembles the builtin |:ls| command but is by default
 coloured to show important information more obviously. See the
 autoload/vimple/vimple.vim file to see how to customise the colours used by
-vimple#buffer_list.print().
+vimple#ls.print().
 
 Arguments:~
 
@@ -246,7 +246,7 @@ different type (as the to_x() methods do).
 NOTE: Unlike most of the other methods, the print() method -does- update the
 buffer list (with an internal call to update()) prior to printing.
 
-                                               *buffer_list-filter()*
+                                               *vimple#ls-filter()*
 ------------------------------------------------------------------------------
 Args: [filter]~
 
@@ -263,13 +263,13 @@ Description:~
 The filter() method selects buffers from the internal list based on the
 criteria provided in the argument. This method is used heavily internally by
 other public methods, like the to_l() and to_d() and buffers() methods. This
-method returns a new buffer_list object containing only the selected buffers.
+method returns a new vimple#ls object containing only the selected buffers.
 
 Arguments:~
 
 filter~
 
-The buffer_list#filter() method uses the built-in |filter()| function which
+The vimple#ls#filter() method uses the built-in |filter()| function which
 uses the |v:val| variable to aaccess the elements of the internal buffer
 properties. Call filter() like this:
 >
@@ -296,7 +296,7 @@ Return:~
 
 The bl object (for chaining).
 
-                                              *buffer_list-buffers()*
+                                              *vimple#ls-buffers()*
 ------------------------------------------------------------------------------
 Args: [buffer_property]~
 
@@ -338,7 +338,7 @@ The bl object (for chaining).
 
 
 ==============================================================================
- 4. PLUGINS USING VIMPLE BUFFER LIST            *buffer_list-plugins*
+ 4. PLUGINS USING VIMPLE BUFFER LIST            *vimple#ls-plugins*
 
 Vimple was designed to be a library for Vim developers and plugin writers. The
 currently known plugins using Vimple:
