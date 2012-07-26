@@ -46,14 +46,15 @@ function! vimple#ls#new()
   " update {{{2
   func bl.update() dict abort
     let bufferlist = vimple#associate(vimple#redir('ls!'),
-          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+line\s\+\(\d\+\)\s*$',
-            \ '\1,\2,\4,\3',
+          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+\(\S\+\)\s\+\(\d\+\)\s*$',
+            \ '\1,\2,\4,\5,\3',
             \ '' ]],
           \ [ 'split(v:val, ",")',
-            \ 'add(v:val[0:2], join(v:val[3:-1], ","))',
+            \ 'add(v:val[0:3], join(v:val[4:-1], ","))',
             \ '{"number": v:val[0],'
-            \.'"line": v:val[2],'
-            \.'"name": (v:val[3]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[3]),'
+            \.'"line_text": v:val[2],'
+            \.'"line": v:val[3],'
+            \.'"name": (v:val[4]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[4]),'
             \.'"listed": v:val[1]     !~ "u",'
             \.'"current": v:val[1]    =~ "%",'
             \.'"alternate": v:val[1]  =~ "#",'
