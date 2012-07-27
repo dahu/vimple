@@ -87,7 +87,7 @@ function! vimple#ls#new()
   " required by printf(), so you can include extra flags (e.g.: %3b).
   func bl.to_s(...) dict
     " An empty format argument uses the default.
-    let default = "%3b%f\"%n\" line %l\n"
+    let default = "%3b%f\"%n\" %t %l\n"
     let format = a:0 && a:1 != '' ? a:1 : default
     " Apply filter.
     let buffers = self.data()
@@ -98,6 +98,7 @@ function! vimple#ls#new()
             \ format,
             \ { 'b': ['d', buffers[key]['number']],
             \   'f': ['s', self.buffer_flags(buffers[key])],
+            \   't': ['s', buffers[key]['line_text']],
             \   'n': ['s', buffers[key]['name']],
             \   'l': ['s', buffers[key]['line']]},
             \ default
@@ -178,7 +179,9 @@ function! vimple#ls#new()
       call add(pairs, ['Normal',
             \ repeat(' ', spaces)])
       call add(pairs, ['vimple_BL_Line',
-            \ 'line ' . buffer.line . "\<NL>"
+            \ buffer.line_text . ' '])
+      call add(pairs, ['vimple_BL_Line',
+            \ buffer.line . "\<NL>"
             \ ])
     endfor
     call vimple#echoc(pairs)
