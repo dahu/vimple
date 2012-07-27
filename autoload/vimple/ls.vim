@@ -46,7 +46,7 @@ function! vimple#ls#new()
   " update {{{2
   func bl.update() dict abort
     let bufferlist = vimple#associate(vimple#redir('ls!'),
-          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.\{-}\)\"\s\+\(\S\+\)\s\+\(\d\+\)\s*$',
+          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.*\)\"\s\+\(\S\+\%(\s\+\S\+\)*\)\s\+\(\d\+\)\%(\s\+.*\)\?$',
             \ '\1,\2,\4,\5,\3',
             \ '' ]],
           \ [ 'split(v:val, ",")',
