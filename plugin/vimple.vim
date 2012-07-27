@@ -5,7 +5,7 @@ function! View(cmd)
   setlocal buftype=nofile
   setlocal bufhidden=wipe
   setlocal noswapfile
-  call append(0, buf)
+  call setline(1, buf)
 endfunction
 
-command! -nargs=+ -complete=command View call View('<args>')
+command! -nargs=+ -complete=command View call View(<q-args>)
