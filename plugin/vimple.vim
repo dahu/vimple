@@ -9,3 +9,10 @@ function! View(cmd)
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)
+
+" Pre-initialise library objects
+let vimple#bl = vimple#ls#new()
+let vimple#hl = vimple#highlight#new()
+let vimple#sn = vimple#scriptnames#new()
+
+call vimple#default_colorscheme()

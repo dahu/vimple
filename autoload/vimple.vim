@@ -162,13 +162,6 @@ function! vimple#tracer()
   echom d.t()
 endfunction
 
-" Shortcuts to library objects
-let vimple#bl = vimple#ls#new()
-let vimple#hl = vimple#highlight#new()
-let vimple#sn = vimple#scriptnames#new()
-
-call vimple#default_colorscheme()
-
 " Teardown:{{{1
 "reset &cpo back to users setting
 let &cpo = s:save_cpo
