@@ -37,6 +37,7 @@ function! vimple#scriptnames#new()
   let sn.__scripts = {}
   let sn.__filter = ''
 
+  " update {{{2
   func sn.update() dict abort
     let self.__scripts = vimple#associate(vimple#redir('scriptnames'),
           \ [['^\s*\(\d\+\):\s*\(.*\)$',
@@ -45,6 +46,12 @@ function! vimple#scriptnames#new()
     return self
   endfunc
 
+  " to_l {{{2
+  func sn.to_l(...) dict
+    return self.__scripts
+  endfunc
+
+  " to_s {{{2
   func sn.to_s(...) dict
     let default = "%3n %s\n"
     "let format = default
@@ -62,6 +69,7 @@ function! vimple#scriptnames#new()
     return str
   endfunc
 
+  " print {{{2
   " only able to colour print the default to_s() output at this stage
   " Note: This is a LOT of dancing just to get coloured numbers ;)
   func sn.print() dict
@@ -69,6 +77,7 @@ function! vimple#scriptnames#new()
     call map(map(map(split(self.to_s(), '\n'), 'split(v:val, "\\d\\@<= ")'), '[["vimple_SN_Number", v:val[0]] , ["vimple_SN_Term", " : " . v:val[1] . "\n"]]'), 'vimple#echoc(v:val)')
   endfunc
 
+  " filter {{{2
   func sn.filter(filter) dict abort
     let dict = deepcopy(self)
     call filter(dict.__scripts, a:filter)
@@ -76,6 +85,7 @@ function! vimple#scriptnames#new()
     return dict
   endfunc
 
+  " filter_by_name {{{2
   func sn.filter_by_name(name) dict abort
     return self.filter('v:val["script"] =~ "' . escape(a:name, '"') . '"')
   endfunc
