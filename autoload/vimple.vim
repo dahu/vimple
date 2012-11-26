@@ -86,6 +86,7 @@ function! vimple#associate(lines, subs, maps)
       let lst[i] = substitute(lst[i], s[0], s[1], s[2])
     endfor
   endfor
+  call filter(lst, 'v:val != ""')
   for m in a:maps
     call map(lst, m)
   endfor

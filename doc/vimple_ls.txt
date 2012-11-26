@@ -29,17 +29,12 @@ Constructor~
 
 To instantiate a new vimple#ls object:
 >
-  :call vimple#ls#new()
+  :let bl = vimple#ls#new()
 <
 
 This will create a globally accessible object called:
 >
-  vimple#bl
-<
-
-You can also create your own vimple#ls objects with calls like:
->
-  :let bl = vimple#ls#new()
+  bl
 <
 
  3. BUFFER LIST PUBLIC METHODS           *vimple#ls-public-methods*

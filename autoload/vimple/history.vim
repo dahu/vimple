@@ -1,17 +1,17 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vimple wrapper for :scriptnames builtin
+" Vimple wrapper for :history builtin
 " Maintainers:	Barry Arthur <barry.arthur@gmail.com>
 " 		Israel Chauca F. <israelchauca@gmail.com>
-" Description:	Vimple object for Vim's builtin :scriptnames command.
+" Description:	Vimple object for Vim's builtin :history command.
 " Last Change:	2012-04-08
 " License:	Vim License (see :help license)
-" Location:	autoload/vimple/scriptnames.vim
+" Location:	autoload/vimple/history.vim
 " Website:	https://github.com/dahu/vimple
 "
-" See vimple#scriptnames.txt for help.  This can be accessed by doing:
+" See vimple#history.txt for help.  This can be accessed by doing:
 "
 " :helptags ~/.vim/doc
-" :help vimple#scriptnames
+" :help vimple#history
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Vimscript Setup: {{{1
@@ -32,66 +32,56 @@ set cpo&vim
 
 " TODO: Use the Numerically sort comparator for print()
 
-function! vimple#scriptnames#new()
-  let sn = {}
-  let sn.__scripts = {}
-  let sn.__filter = ''
+function! vimple#history#new()
+  let hist = {}
+  let hist.__commands = {}
+  let hist.__filter = ''
 
-  " update {{{2
-  func sn.update() dict abort
-    let self.__scripts = vimple#associate(vimple#redir('scriptnames'),
-          \ [['^\s*\(\d\+\):\s*\(.*\)$',
-          \ '\1,\2', '']],
-          \ ['split(v:val, ",")', '{"number": v:val[0], "script": v:val[1]}'])
+  func hist.update() dict abort
+    let self.__commands = vimple#associate(vimple#redir('history'),
+          \ [['^\s*#.*', '', ''],
+          \ ['[^0-9]*\(\%(\d\+\)\|#\)\s*\(.*\)$', '\1-=-=\2', '']],
+          \ ['split(v:val, "-=-=")', '{"number": v:val[0], "command": v:val[1]}'])
     return self
   endfunc
 
-  " to_l {{{2
-  func sn.to_l(...) dict
-    return self.__scripts
-  endfunc
-
-  " to_s {{{2
-  func sn.to_s(...) dict
+  func hist.to_s(...) dict
     let default = "%3n %s\n"
     "let format = default
     let format = a:0 && a:1 != '' ? a:1 : default
-    let scripts = a:0 > 1 ? a:2.__scripts : self.__scripts
+    let commands = a:0 > 1 ? a:2.__commands : self.__commands
     let str = ''
-    for i in range(0, len(scripts) - 1)
+    for i in range(0, len(commands) - 1)
       let str .= vimple#format(
             \ format,
-            \ { 'n': ['d', scripts[i]['number']],
-            \   's': ['s', scripts[i]['script']]},
+            \ { 'n': ['d', commands[i]['number']],
+            \   's': ['s', commands[i]['command']]},
             \ default
             \ )
     endfor
     return str
   endfunc
 
-  " print {{{2
   " only able to colour print the default to_s() output at this stage
   " Note: This is a LOT of dancing just to get coloured numbers ;)
-  func sn.print() dict
+  func hist.print() dict
     call self.update()
     call map(map(map(split(self.to_s(), '\n'), 'split(v:val, "\\d\\@<= ")'), '[["vimple_SN_Number", v:val[0]] , ["vimple_SN_Term", " : " . v:val[1] . "\n"]]'), 'vimple#echoc(v:val)')
   endfunc
 
-  " filter {{{2
-  func sn.filter(filter) dict abort
+  func hist.filter(filter) dict abort
     let dict = deepcopy(self)
-    call filter(dict.__scripts, a:filter)
+    call filter(dict.__commands, a:filter)
     let dict.__filter .= (dict.__filter == '' ? '' : ' && ').a:filter
     return dict
   endfunc
 
-  " filter_by_name {{{2
-  func sn.filter_by_name(name) dict abort
-    return self.filter('v:val["script"] =~ "' . escape(a:name, '"') . '"')
+  func hist.filter_by_name(name) dict abort
+    return self.filter('v:val["command"] =~ "' . escape(a:name, '"') . '"')
   endfunc
 
-  call sn.update()
-  return sn
+  call hist.update()
+  return hist
 endfunction
 
 " Teardown:{{{1
