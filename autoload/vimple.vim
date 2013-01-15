@@ -116,11 +116,9 @@ function! vimple#echoc(data)
 endfunction
 
 function! s:vimple_highlight(name, attrs)
-  try
-    silent exe "hi ".a:name
-  catch /^Vim\%((\a\+)\)\=:E411/
+  if !hlexists(a:name)
     silent exe "hi ".a:name." ".a:attrs
-  endtry
+  endif
 endfunction
 
 " Solarized inspired default colours...
