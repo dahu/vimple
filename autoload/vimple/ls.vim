@@ -76,7 +76,7 @@ function! vimple#ls#new()
     let alternate_l = filter(copy(bufferlist), 'v:val["alternate"] == 1')
     let self.current = len(current_l) > 0 ?current_l[0].number : 0
     let self.alternate = len(alternate_l) > 0 ? alternate_l[0].number : 0
-    return 1
+    return self
   endfun
 
   " to_s([format]) {{{2
