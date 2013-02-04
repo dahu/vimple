@@ -82,13 +82,18 @@ endfunction
 function! vimple#associate(lines, subs, maps)
   let lst = copy(a:lines)
   for i in range(0, len(lst) - 1)
+    " echo lst[i]
     for s in a:subs
+      " echo "  " . string(s)
       let lst[i] = substitute(lst[i], s[0], s[1], s[2])
+      " echo "  -->" . string(lst[i])
     endfor
   endfor
   call filter(lst, 'v:val != ""')
   for m in a:maps
+    " echo "\n" . m
     call map(lst, m)
+    " echo "-->" . string(lst)
   endfor
   return lst
 endfunction

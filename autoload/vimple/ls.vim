@@ -43,6 +43,15 @@ function! vimple#ls#new()
 
   " public interface {{{1
 
+  func bl._filename(bufnum, fallback)
+    let bname = bufname(a:bufnum)
+    if bname =~ '^\s*$'
+      let bname = a:fallback
+    endif
+    echo '####' . bname . '####
+    return bname
+  endfunc
+
   " update {{{2
   func bl.update() dict abort
     let bufferlist = vimple#associate(vimple#redir('ls!'),
@@ -54,7 +63,7 @@ function! vimple#ls#new()
             \ '{"number": v:val[0],'
             \.'"line_text": v:val[2],'
             \.'"line": v:val[3],'
-            \.'"name": (v:val[4]      =~ ''\[.\{-}\]'' ? bufname(v:val[0]) : v:val[4]),'
+            \.'"name": (v:val[4]      =~ ''\[.\{-}\]'' ? (bufname(v:val[0] + 0) ? bufname(v:val[0] + 0) : v:val[4]) : v:val[4]),'
             \.'"listed": v:val[1]     !~ "u",'
             \.'"current": v:val[1]    =~ "%",'
             \.'"alternate": v:val[1]  =~ "#",'
