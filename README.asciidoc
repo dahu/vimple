@@ -1,7 +1,7 @@
 Vimple
 ------
 
-_Pacifying Vimmers_
+__Pacifying Vimmers__
 
 ++Version 0.9 -- Lil' Vimmer++
 
