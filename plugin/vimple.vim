@@ -26,5 +26,6 @@ command! -nargs=+ -register Collect call Collect(<q-reg>, <q-args>)
 let vimple#bl = vimple#ls#new()
 let vimple#hl = vimple#highlight#new()
 let vimple#sn = vimple#scriptnames#new()
+let vimple#vn = vimple#version#new()
 
 call vimple#default_colorscheme()

@@ -10,9 +10,10 @@ http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 Vimple provides VimLOO (Object Oriented VimL) objects for these
 write-only ++:ex++ commands:
 
-* ++:ls++ - vimple#ls
-* ++:scriptnames++ - vimple#scriptnames
-* ++:highlight++ - vimple#highlight
+* ++:ls++ -- vimple#bl
+* ++:scriptnames++ -- vimple#sn
+* ++:highlight++ -- vimple#hl
+* ++:version++ -- vimple#vn (++.to_l()++, ++.filter()++, and ++.filter_by_name()++ methods only)
 
 In addition to these existing ++:ex++ wrappers, Vimple allows
 developers to craft their own objects too.
