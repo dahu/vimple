@@ -46,7 +46,7 @@ function! vimple#version#new()
     let i['build_version'] = substitute(info[3], '^\(.\{-}\)\..*', '\1', '')
     let i['features'] = {}
     for line in range(4, len(info))
-      if info[line] =~ '^\s*$'
+      if (info[line] =~ '^\s*$') || (info[line] =~ '^\s\+.*:\s')
         break
       endif
       call map(split(info[line], '\s\+'), 'extend(i["features"], {strpart(v:val, 1) : (v:val =~ "^+" ? 1 : 0)})')
