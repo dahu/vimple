@@ -14,6 +14,7 @@ write-only ++:ex++ commands:
 * ++:scriptnames++ -- vimple#sn
 * ++:highlight++ -- vimple#hl
 * ++:version++ -- vimple#vn (++.to_l()++, ++.filter()++, and ++.filter_by_name()++ methods only)
+* ++:marks++ -- vimple#ma
 
 In addition to these existing ++:ex++ wrappers, Vimple allows
 developers to craft their own objects too.
