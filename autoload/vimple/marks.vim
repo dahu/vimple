@@ -68,6 +68,10 @@ function! vimple#marks#new()
     return str
   endfunc
 
+  func m.to_l() dict
+    return self.__data
+  endfunc
+
   " " only able to colour print the default to_s() output at this stage
   " " Note: This is a LOT of dancing just to get coloured numbers ;)
   " func m.print() dict
