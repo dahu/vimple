@@ -22,6 +22,8 @@ endfunction
 
 command! -nargs=+ -register Collect call Collect(<q-reg>, <q-args>)
 
+command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
+
 " Pre-initialise library objects
 let vimple#bl = vimple#ls#new()
 let vimple#hl = vimple#highlight#new()
