@@ -10,17 +10,23 @@ endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)
 
-function! Collect(reg, cmd)
+function! Collect(args)
+  let [regvar; command] = split(a:args)
+  let cmd = join(command, " ")
   let list = &list
   set nolist
-  let buf = join(vimple#redir(a:cmd), "\n")
+  let buf = join(vimple#redir(cmd), "\n")
   if list
     set list
   endif
-  call setreg(a:reg, buf)
+  if len(regvar) > 1
+    exe 'let ' . regvar . '="' . escape(buf, '"') . '"'
+  else
+    call setreg(regvar, buf)
+  endif
 endfunction
 
-command! -nargs=+ -register Collect call Collect(<q-reg>, <q-args>)
+command! -nargs=+ Collect call Collect(<q-args>)
 
 command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
 
