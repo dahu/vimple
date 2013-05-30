@@ -36,5 +36,6 @@ let vimple#hl = vimple#highlight#new()
 let vimple#sn = vimple#scriptnames#new()
 let vimple#vn = vimple#version#new()
 let vimple#ma = vimple#marks#new()
+let vimple#ul = vimple#undolist#new()
 
 call vimple#default_colorscheme()
