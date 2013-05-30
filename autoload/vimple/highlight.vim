@@ -67,6 +67,10 @@ function! vimple#highlight#new()
     return str
   endfunc
 
+  func hl.to_l(...) dict
+    return self.__data
+  endfunc
+
   " only able to colour print the default to_s() output at this stage
   func hl.print() dict
     let str = self.to_s()
