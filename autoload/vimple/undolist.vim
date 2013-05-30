@@ -34,7 +34,11 @@ function! vimple#undolist#get_undolist()
   let bnum = bufnr('%')
   let bname = bufname('%')
   let ulist = vimple#undolist#new()
-  return [ulist.sort_by_age().to_l()[-1]['age'], bnum, bname]
+  if len(ulist.to_l()) != 0
+    return [ulist.sort_by_age().to_l()[-1]['age'], bnum, bname]
+  else
+    return [99999999999, bnum, bname]
+  endif
 endfunction
 
 function! vimple#undolist#most_recently_used()
@@ -60,7 +64,7 @@ function! vimple#undolist#print_mru()
   return str
 endfunction
 
-nnoremap <Plug>VimpleMRU :echo vimple#undolist#print_mru()<cr>:buffer<space>
+nnoremap <Plug>VimpleMRU :echo vimple#undolist#print_mru() . "\n"<cr>:buffer<space>
 if !hasmapto('<Plug>VimpleMRU')
   nmap <leader>gu <Plug>VimpleMRU
 endif
