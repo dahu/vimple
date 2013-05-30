@@ -8,13 +8,15 @@ __Pacifying Vimmers__
 http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 
 Vimple provides VimLOO (Object Oriented VimL) objects for these
-write-only ++:ex++ commands:
+read-only ++:ex++ commands:
 
 * ++:ls++ -- vimple#bl
 * ++:scriptnames++ -- vimple#sn
 * ++:highlight++ -- vimple#hl
-* ++:version++ -- vimple#vn (++.to_l()++, ++.filter()++, and ++.filter_by_name()++ methods only)
+* ++:version++ -- vimple#vn
 * ++:marks++ -- vimple#ma
+* ++:undolist++ -- vimple#ul
 
 In addition to these existing ++:ex++ wrappers, Vimple allows
-developers to craft their own objects too.
+developers to craft their own objects too. See autoload/vimple/*.vim
+for examples.
