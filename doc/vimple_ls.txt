@@ -1,4 +1,4 @@
-*vimple#ls.txt*     For Vim version 7.3     Last change: 2012-04-07
+*vimple#ls.txt*     Plugin for accessing the :ls info programatically
 
 
                    VIM REFERENCE MANUAL    by Barry Arthur
