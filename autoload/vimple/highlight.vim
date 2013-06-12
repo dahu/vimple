@@ -40,8 +40,8 @@ function! vimple#highlight#new()
 
   func hl.update() dict abort
     let self.__data = vimple#associate(vimple#join(vimple#redir('highlight'), '^\s\+'),
-          \ [['^\(\S\+\)\s*\S\+\s*\(.*\)$', '\1,\2', '']],
-          \ ['split(v:val, ",")',
+          \ [['^\(\S\+\)\s*\S\+\s*\(.*\)$', '\1\t\2', '']],
+          \ ['split(v:val, "\t", 2)',
           \  '{"term": v:val[0],'
           \.  '"attrs": substitute(v:val[1], "\\s\\+", " ", "g")}'])
     return self
