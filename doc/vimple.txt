@@ -1,0 +1,65 @@
+*vimple.txt*	Programmatic access to Vim's read-only command output.
+
+
+			VIM REFERENCE MANUAL	by Barry Arthur
+
+
+Help on using vimple                                                 *vimple*
+
+1. Introduction				|vimple-intro|
+2. View         			|vimple-view-command|
+3. Collect				|vimple-collect-command|
+
+==============================================================================
+ 1. INTRODUCTION                                               *vimple-intro*
+
+Vimple provides VimLOO (Object-oriented VimL) objects for several
+built-in commands, such as:
+
+* ls / buffers -> vimple#bl
+* scriptnames  -> vimple#sn
+* highlight    -> vimple#hl
+* version      -> vimple#vn
+* marks        -> vimple#ma
+* undolist     -> vimple#ul
+
+These objects all support at least the following three methods:
+
+* update() -> refresh the object's data
+* to_s()   -> return a string representation fit for :echo
+* to_l()   -> return a list representation
+
+Vimple also provides the following two utility commands to make it
+easier to work with Vim's command output:
+
+==============================================================================
+ 2. VIEW                                                *vimple-view-command*
+>
+  :View <command>
+<
+
+View will show the output of the given command in a split window.
+Having the output in a buffer makes it easily searchable and
+modifiable. This command is great if all you want to do is quickly
+check for the existance of somthing within the messy formatted output
+of a command, or if you need to elaborately massage the output for
+some reason. Being in a Vim buffer, you have all of Vim's editing
+tools at your disposal.
+
+==============================================================================
+ 3. COLLECT                                          *vimple-collect-command*
+>
+  :Collect <register-or-variable> <command>
+<
+
+Collect is useful for grabbing the command's output into a named
+register or variable. This is useful for doing further programmatic
+manipulations on the data. If the first argument is a single letter
+[a-z] then it is treated as the corresponding register to save the
+command output into. If you want to save the command output into a
+variable, use a fully scoped variable, like:
+>
+  :Collect g:regs registers
+<
+
+ vim:tw=78:ts=8:ft=help:norl:
