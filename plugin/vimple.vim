@@ -28,6 +28,23 @@ endfunction
 
 command! -nargs=+ Collect call Collect(<q-args>)
 
+function! SCall(script, function, args)
+  let scripts = g:vimple#sn.update().filter_by_name(a:script).to_l()
+  if len(scripts) == 0
+    echo "SCall: no script matches " . a:script
+    return
+  elseif len(scripts) > 1
+    echo "SCall: more than one script matches " . a:script
+  endif
+  let func = '<SNR>' . scripts[0]['number'] . '_' . a:function
+  if exists('*' . func)
+    return call(func, a:args)
+  else
+    echo "SCall: no function " . func . " in script " . a:script
+    return
+  endif
+endfunction
+
 command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
 
 " Pre-initialise library objects
