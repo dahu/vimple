@@ -54,6 +54,7 @@ let vimple#sn = vimple#scriptnames#new()
 let vimple#vn = vimple#version#new()
 let vimple#ma = vimple#marks#new()
 let vimple#ul = vimple#undolist#new()
+let vimple#mp = vimple#map#new()
 call vimple#default_colorscheme()
 
 " disabled by default
