@@ -42,6 +42,18 @@ function! vimple#comparators#termly(i1, i2)
   return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
 endfunction
 
+function! vimple#comparators#rhsly(i1, i2)
+  let i1 = matchstr(a:i1['rhs'], '\c^.*\zs<plug>.*')
+  let i2 = matchstr(a:i2['rhs'], '\c^.*\zs<plug>.*')
+  return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
+endfunction
+
+function! vimple#comparators#lhsly(i1, i2)
+  let i1 = a:i1['lhs']
+  let i2 = a:i2['lhs']
+  return i1 == i2 ? 0 : i1 > i2 ? 1 : -1
+endfunction
+
 " Teardown:{{{1
 "reset &cpo back to users setting
 let &cpo = s:save_cpo

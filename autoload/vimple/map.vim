@@ -63,21 +63,69 @@ function! vimple#map#new()
     return self
   endfunc
 
+  func m.map_type(map)
+    let tt = ['normal', 'insert', 'select', 'visual', 'operator', 'command', 'lang']
+    let type = ''
+    for i in range(0, (len(tt) - 1))
+      if a:map[tt[i]]
+        if i == 3
+          if type == 's'
+            let type = 'v'
+          else
+            let type = 'x'
+          endif
+        else
+          let type = tt[i][0]
+        endif
+      endif
+    endfor
+    return type
+  endfunc
+
+  func m.map_extra(map)
+    let et = ['remappable', 'script_remappable', 'buffer']
+    let rt = [' ', '&', '@']
+    let extra = '*'
+    for i in range(0, (len(et) - 1))
+      if a:map[et[i]]
+        let extra = rt[i]
+      endif
+    endfor
+    return extra
+  endfunc
+
   func m.to_s(...) dict
     let default = "%3n %s\n"
+    let default = "%t %L %e %R\n"
     "let format = default
     let format = a:0 && a:1 != '' ? a:1 : default
-    let scripts = a:0 > 1 ? a:2.__data : self.__data
+    let maps = a:0 > 1 ? a:2.__data : self.__data
     let str = ''
-    for i in range(0, len(scripts) - 1)
+    " for i in range(0, len(maps) - 1)
+    let lhs_plugs = self.filter('v:val["lhs"] =~ "\\c<plug>"').to_l()
+    let rhs_plugs = self.filter('v:val["rhs"] =~ "\\c<plug>"').to_l()
+    let non_plugs = self.filter('v:val["lhs"] !~ "\\c<plug>" && v:val["rhs"] !~ "\\c<plug>"').to_l()
+    let all_maps = sort(lhs_plugs, 'vimple#comparators#lhsly')
+          \+ sort(rhs_plugs, 'vimple#comparators#rhsly')
+          \+ sort(non_plugs, 'vimple#comparators#lhsly')
+    for map in all_maps
+      let type = self.map_type(map)
+      let extra = self.map_extra(map)
       let str .= vimple#format(
             \ format,
-            \ { 'n': ['d', scripts[i]['number']],
-            \   's': ['s', scripts[i]['script']]},
+            \ { 't': ['s', type],
+            \   'L': ['s', map['lhs']],
+            \   'e': ['s', extra],
+            \   'R': ['s', map['rhs']]},
             \ default
             \ )
     endfor
     return str
+  endfunc
+
+  " to_l {{{2
+  func m.to_l(...) dict
+    return self.__data
   endfunc
 
   " only able to colour print the default to_s() output at this stage
@@ -100,6 +148,24 @@ function! vimple#map#new()
 
   call m.update()
   return m
+endfunction
+
+function! MyMaps()
+  let vm = vimple#map#new()
+  let maps = split(vm.filter('v:val["lhs"] !~ "\\c<plug>"').to_s("%t %e %L %R\n"), "\n")
+  let max_l = 0
+  for s in maps
+    let l = stridx(s, ' ', 5)
+    let max_l = l > max_l ? l : max_l
+  endfor
+  let max_l += 1
+  let ms = []
+  let pat = '^.\s.\s\S\+\zs\s\+\ze'
+  for s in maps
+    let ns = match(s, pat)
+    call add(ms, substitute(s, pat, repeat(' ', max_l - ns), ''))
+  endfor
+  return join(ms, "\n")
 endfunction
 
 " Teardown:{{{1
