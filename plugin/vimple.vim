@@ -1,11 +1,14 @@
 function! View(cmd)
-  let buf = vimple#redir(a:cmd)
+  let data = vimple#redir(a:cmd)
+  call ShowInNewBuf(data)
+endfunction
 
+function! ShowInNewBuf(data)
   new
   setlocal buftype=nofile
   setlocal bufhidden=wipe
   setlocal noswapfile
-  call setline(1, buf)
+  call setline(1, a:data)
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)

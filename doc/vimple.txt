@@ -9,6 +9,7 @@ Help on using vimple                                                 *vimple*
 1. Introduction				|vimple-intro|
 2. View         			|vimple-view-command|
 3. Collect				|vimple-collect-command|
+4. MyMaps         			|vimple-mymaps-command|
 
 ==============================================================================
  1. INTRODUCTION                                               *vimple-intro*
@@ -21,6 +22,7 @@ built-in commands, such as:
 * highlight    -> vimple#hl
 * version      -> vimple#vn
 * marks        -> vimple#ma
+* maps         -> vimple#mp
 * undolist     -> vimple#ul
 
 These objects all support at least the following three methods:
@@ -61,5 +63,17 @@ variable, use a fully scoped variable, like:
 >
   :Collect g:regs registers
 <
+
+==============================================================================
+ 3. MYMAPS                                          *vimple-mymaps-command*
+>
+  :MyMaps
+<
+Will show in a new buffer your curently active maps (:map and :map!). The maps
+are displayed slightly differently to the builtin commands in that the map
+special indicators (*, & and @) are shown immediately after the mode indicator
+at the start of the map. <Plug> maps (where <plug> appears in the
+lefthand-side) are removed for clarity, and the maps are sorted in an attempt
+to group related maps together.
 
  vim:tw=78:ts=8:ft=help:norl:

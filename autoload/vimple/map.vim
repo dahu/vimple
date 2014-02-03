@@ -151,8 +151,7 @@ function! vimple#map#new()
 endfunction
 
 function! MyMaps()
-  let vm = vimple#map#new()
-  let maps = split(vm.filter('v:val["lhs"] !~ "\\c<plug>"').to_s("%t %e %L %R\n"), "\n")
+  let maps = split(g:vimple#mp.update().filter('v:val["lhs"] !~ "\\c<plug>"').to_s("%t %e %L %R\n"), "\n")
   let max_l = 0
   for s in maps
     let l = stridx(s, ' ', 5)
@@ -165,8 +164,10 @@ function! MyMaps()
     let ns = match(s, pat)
     call add(ms, substitute(s, pat, repeat(' ', max_l - ns), ''))
   endfor
-  return join(ms, "\n")
+  return ms
 endfunction
+
+command! -nargs=0 -bar MyMaps call ShowInNewBuf(MyMaps())
 
 " Teardown:{{{1
 "reset &cpo back to users setting
