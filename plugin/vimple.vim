@@ -51,13 +51,22 @@ endfunction
 command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
 
 " Pre-initialise library objects
-let vimple#bl = vimple#ls#new()
-let vimple#hl = vimple#highlight#new()
-let vimple#sn = vimple#scriptnames#new()
-let vimple#vn = vimple#version#new()
-let vimple#ma = vimple#marks#new()
-let vimple#ul = vimple#undolist#new()
-let vimple#mp = vimple#map#new()
+let s:pairs = [
+      \ ['bl', 'ls'],
+      \ ['hl', 'highlight'],
+      \ ['sn', 'scriptnames'],
+      \ ['vn', 'version'],
+      \ ['ma', 'marks'],
+      \ ['ul', 'undolist'],
+      \ ['mp', 'map'],
+      \]
+if get(g:, 'vimple_init_vars', 1)
+  for [name, func] in s:pairs
+    if get(g:, 'vimple_init_'.name, 0)
+      let vimple#{name} = vimple#{func}#new()
+    endif
+  endfor
+endif
 call vimple#default_colorscheme()
 
 " disabled by default
