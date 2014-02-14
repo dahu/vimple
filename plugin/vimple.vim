@@ -62,7 +62,7 @@ let s:pairs = [
       \]
 if get(g:, 'vimple_init_vars', 1)
   for [name, func] in s:pairs
-    if get(g:, 'vimple_init_'.name, 0)
+    if get(g:, 'vimple_init_'.name, 1)
       let vimple#{name} = vimple#{func}#new()
     endif
   endfor
