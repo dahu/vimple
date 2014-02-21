@@ -35,7 +35,7 @@ Vimple also provides the following two utility commands to make it
 easier to work with Vim's command output:
 
 ==============================================================================
- 2. VIEW                                                *vimple-view-command*
+ 2. VIEW                                    *:View*  *vimple-view-command*
 >
   :View <command>
 <
@@ -49,7 +49,7 @@ some reason. Being in a Vim buffer, you have all of Vim's editing
 tools at your disposal.
 
 ==============================================================================
- 3. COLLECT                                          *vimple-collect-command*
+ 3. COLLECT                           *:Collect*  *vimple-collect-command*
 >
   :Collect <register-or-variable> <command>
 <
@@ -65,7 +65,7 @@ variable, use a fully scoped variable, like:
 <
 
 ==============================================================================
- 3. MYMAPS                                          *vimple-mymaps-command*
+ 3. MYMAPS                              *:MyMaps*  *vimple-mymaps-command*
 >
   :MyMaps
 <
