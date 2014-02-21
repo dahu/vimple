@@ -9,7 +9,9 @@ Help on using vimple                                                 *vimple*
 1. Introduction				|vimple-intro|
 2. View         			|vimple-view-command|
 3. Collect				|vimple-collect-command|
-4. MyMaps         			|vimple-mymaps-command|
+4. GCollect				|vimple-gcollect-function|
+5. GCCollect				|vimple-gccollect-function|
+6. MyMaps         			|vimple-mymaps-command|
 
 ==============================================================================
  1. INTRODUCTION                                               *vimple-intro*
@@ -35,7 +37,7 @@ Vimple also provides the following two utility commands to make it
 easier to work with Vim's command output:
 
 ==============================================================================
- 2. VIEW                                    *:View*  *vimple-view-command*
+ 2. VIEW                                     *:View* *vimple-view-command*
 >
     :View <command>
 <
@@ -48,7 +50,7 @@ some reason. Being in a Vim buffer, you have all of Vim's editing
 tools at your disposal.
 
 ==============================================================================
- 3. COLLECT                           *:Collect*  *vimple-collect-command*
+ 3. COLLECT                            *:Collect* *vimple-collect-command*
 >
     :Collect <register-or-variable> <command>
 <
@@ -72,7 +74,7 @@ list of lines.
     :echo GCollect('^\s*===\s*')
 <
 ==============================================================================
- 3. GCCollect()                  *CGCollect()*  *vimple-gcollect-function*
+ 3. GCCollect()                  *CGCollect()* *vimple-gccollect-function*
 >
     GCCollect( pattern )
 <
@@ -82,7 +84,7 @@ list of lines with the "pattern" stripped.
     :echo GCCollect('^\s*===\s*')
 
 ==============================================================================
- 3. MYMAPS                              *:MyMaps*  *vimple-mymaps-command*
+ 3. MYMAPS                               *:MyMaps* *vimple-mymaps-command*
 >
   :MyMaps
 <
