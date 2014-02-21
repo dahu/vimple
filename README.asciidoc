@@ -7,15 +7,68 @@ __Pacifying Vimmers__
 
 http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 
-Vimple provides VimLOO (Object Oriented VimL) objects for these
-read-only ++:ex++ commands:
+Perhaps most usefully, Vimple provides a few commands to
+make the causal vimmer's life a little easier, such as:
 
-* ++:ls++ -- vimple#bl
+=== `:View ex-command`
+
+Opens a split with the output of `ex-command`.
+
+=== `SCall( script , function , arg )`
+
+A function which calls script-local `function` in `script`
+with arguments `arg`. This lets you call `<SNR>` / `s:`
+functions by script name rather than SNR (script-number).
+
+=== `:Silently ex-command`
+
+Performs the series of bar-separated ex-commands silently.
+
+=== `:Collect register-or-variable ex-command`
+
+Saves the output of `ex-command` into the specified register
+or variable.
+
+=== `Collect('register-or-variable ex-command')`
+
+Saves the output of `ex-command` into the specified register
+or variable and returns the output for further use in
+expressions.
+
+=== `GCollect( pattern )`
+
+Uses `pattern` in a `:global /pattern/` command and returns
+the results as a list of lines.
+
+    :echo GCollect('^\s*===\s*')
+
+=== `GCCollect( pattern )`
+
+Uses `pattern` in a `:global /pattern/` command and returns
+the results as a list of lines with the `pattern` stripped.
+
+    :echo GCCollect('^\s*===\s*')
+
+=== `:MyMaps`
+
+Shows your currently active |:map|s and |:imap|s in a new buffer.  :MyMaps
+attempts to group related maps to more easily allow you to create a custom map
+layout for your various |'filetype'|s.
+
+Vimple also provides VimLOO (Object Oriented VimL) objects
+for these read-only ++:ex++ commands:
+
+* ++:ls++          -- vimple#bl
 * ++:scriptnames++ -- vimple#sn
-* ++:highlight++ -- vimple#hl
-* ++:version++ -- vimple#vn
-* ++:marks++ -- vimple#ma
-* ++:undolist++ -- vimple#ul
+* ++:highlight++   -- vimple#hl
+* ++:version++     -- vimple#vn
+* ++:marks++       -- vimple#ma
+* ++:undolist++    -- vimple#ul
+* ++:maps++        -- vimple#mp
+
+NOTE: The awesome plugin
+https://github.com/Raimondi/vim-buffalo[buffalo] uses the
+`vimple#bl` object.
 
 In addition to these existing ++:ex++ wrappers, Vimple allows
 developers to craft their own objects too. See autoload/vimple/*.vim

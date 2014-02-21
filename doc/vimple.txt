@@ -37,9 +37,8 @@ easier to work with Vim's command output:
 ==============================================================================
  2. VIEW                                    *:View*  *vimple-view-command*
 >
-  :View <command>
+    :View <command>
 <
-
 View will show the output of the given command in a split window.
 Having the output in a buffer makes it easily searchable and
 modifiable. This command is great if all you want to do is quickly
@@ -51,9 +50,8 @@ tools at your disposal.
 ==============================================================================
  3. COLLECT                           *:Collect*  *vimple-collect-command*
 >
-  :Collect <register-or-variable> <command>
+    :Collect <register-or-variable> <command>
 <
-
 Collect is useful for grabbing the command's output into a named
 register or variable. This is useful for doing further programmatic
 manipulations on the data. If the first argument is a single letter
@@ -61,8 +59,27 @@ manipulations on the data. If the first argument is a single letter
 command output into. If you want to save the command output into a
 variable, use a fully scoped variable, like:
 >
-  :Collect g:regs registers
+    :Collect g:regs registers
 <
+==============================================================================
+ 3. GCollect()                    *GCollect()*  *vimple-gcollect-function*
+>
+    GCollect( pattern )
+<
+Uses "pattern" in a   :global /pattern/   command and returns the results as a
+list of lines.
+>
+    :echo GCollect('^\s*===\s*')
+<
+==============================================================================
+ 3. GCCollect()                  *CGCollect()*  *vimple-gcollect-function*
+>
+    GCCollect( pattern )
+<
+Uses "pattern" in a   :global /pattern/   command and returns the results as a
+list of lines with the "pattern" stripped.
+>
+    :echo GCCollect('^\s*===\s*')
 
 ==============================================================================
  3. MYMAPS                              *:MyMaps*  *vimple-mymaps-command*

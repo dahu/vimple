@@ -27,6 +27,16 @@ function! Collect(args)
   else
     call setreg(regvar, buf)
   endif
+  return split(buf, '\n')
+endfunction
+
+function! GCollect(pattern)
+  return map(Collect('_ g/' . a:pattern), 'join(split(v:val, "^\\s*\\d\\+\\s*"))')
+endfunction
+
+function! GCCollect(pattern)
+  return map(map(Collect('_ g/' . a:pattern), 'join(split(v:val, "^\\s*\\d\\+\\s*"))'),
+        \ 'substitute(v:val, a:pattern, "", "")')
 endfunction
 
 command! -nargs=+ Collect call Collect(<q-args>)
