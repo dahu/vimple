@@ -31,7 +31,7 @@ function! Collect(args)
 endfunction
 
 function! GCollect(pattern)
-  return map(Collect('_ g/' . a:pattern), 'join(split(v:val, "^\\s*\\d\\+\\s*"))')
+  return map(Collect('_ g/' . a:pattern), 'substitute(v:val, "^\\s*\\d\\+\\s*", "", "")')
 endfunction
 
 function! GCCollect(pattern)
