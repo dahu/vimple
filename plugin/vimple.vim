@@ -39,6 +39,15 @@ function! GCCollect(pattern)
         \ 'substitute(v:val, a:pattern, "", "")')
 endfunction
 
+function! VCollect(pattern)
+  return map(Collect('_ v/' . a:pattern), 'substitute(v:val, "^\\s*\\d\\+\\s*", "", "")')
+endfunction
+
+function! VCCollect(pattern)
+  return map(map(Collect('_ v/' . a:pattern), 'join(split(v:val, "^\\s*\\d\\+\\s*"))'),
+        \ 'substitute(v:val, a:pattern, "", "")')
+endfunction
+
 command! -nargs=+ Collect call Collect(<q-args>)
 
 function! SCall(script, function, args)
