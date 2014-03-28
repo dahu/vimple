@@ -69,23 +69,49 @@ endfunction
 
 command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
 
-" Pre-initialise library objects
-let s:pairs = [
-      \ ['bl', 'ls'],
-      \ ['hl', 'highlight'],
-      \ ['sn', 'scriptnames'],
-      \ ['vn', 'version'],
-      \ ['ma', 'marks'],
-      \ ['ul', 'undolist'],
-      \ ['mp', 'map'],
-      \]
+" It seems that the {name} way of initiallising variables is SLOW in vim
+" " Pre-initialise library objects
+" let s:pairs = [
+"       \ ['bl', 'ls'],
+"       \ ['hl', 'highlight'],
+"       \ ['sn', 'scriptnames'],
+"       \ ['vn', 'version'],
+"       \ ['ma', 'marks'],
+"       \ ['ul', 'undolist'],
+"       \ ['mp', 'map'],
+"       \]
+" if get(g:, 'vimple_init_vars', 1)
+"   for [name, func] in s:pairs
+"     if get(g:, 'vimple_init_'.name, 1)
+"       let vimple#{name} = vimple#{func}#new()
+"     endif
+"   endfor
+" endif
+
 if get(g:, 'vimple_init_vars', 1)
-  for [name, func] in s:pairs
-    if get(g:, 'vimple_init_'.name, 1)
-      let vimple#{name} = vimple#{func}#new()
-    endif
-  endfor
+  if get(g:, 'vimple_init_bl', 1)
+    let vimple#bl = vimple#ls#new()
+  endif
+  if get(g:, 'vimple_init_hl', 1)
+    let vimple#hl = vimple#highlight#new()
+  endif
+  if get(g:, 'vimple_init_sn', 1)
+    let vimple#sn = vimple#scriptnames#new()
+  endif
+  if get(g:, 'vimple_init_vn', 1)
+    let vimple#vn = vimple#version#new()
+  endif
+  if get(g:, 'vimple_init_ma', 1)
+    let vimple#ma = vimple#marks#new()
+  endif
+  if get(g:, 'vimple_init_ul', 1)
+    let vimple#ul = vimple#undolist#new()
+  endif
+  if get(g:, 'vimple_init_mp', 1)
+    let vimple#mp = vimple#map#new()
+  endif
 endif
+
 call vimple#default_colorscheme()
 
 " disabled by default
