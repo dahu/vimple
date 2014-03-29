@@ -64,7 +64,7 @@ variable, use a fully scoped variable, like:
     :Collect g:regs registers
 <
 ==============================================================================
- 3. GCollect()                    *GCollect()*  *vimple-gcollect-function*
+ 4. GCollect()                    *GCollect()*  *vimple-gcollect-function*
 >
     GCollect( pattern )
 <
@@ -74,7 +74,7 @@ list of lines.
     :echo GCollect('^\s*===\s*')
 <
 ==============================================================================
- 3. GCCollect()                  *CGCollect()* *vimple-gccollect-function*
+ 5. GCCollect()                  *CGCollect()* *vimple-gccollect-function*
 >
     GCCollect( pattern )
 <
@@ -84,7 +84,7 @@ list of lines with the "pattern" stripped.
     :echo GCCollect('^\s*===\s*')
 
 ==============================================================================
- 3. MYMAPS                               *:MyMaps* *vimple-mymaps-command*
+ 6. MYMAPS                               *:MyMaps* *vimple-mymaps-command*
 >
   :MyMaps
 <
@@ -94,5 +94,37 @@ special indicators (*, & and @) are shown immediately after the mode indicator
 at the start of the map. <Plug> maps (where <plug> appears in the
 lefthand-side) are removed for clarity, and the maps are sorted in an attempt
 to group related maps together.
+
+==============================================================================
+ 7. READINTOBUFFER       *:ReadIntoBuffer* *vimple-readintobuffer-command*
+>
+  :ReadIntoBuffer
+<
+For those times when you'd like to read in a subset of lines from a file.
+>
+  :ReadIntoBuffer foo 5 10
+<
+Will grab six lines (5 through 10, both inclusive) from file 'foo' into the
+current file beneath the current line (as |:read| does).
+
+
+It defaults to the current line, but you can specify another:
+>
+  :7 ReadIntoBuffer foo 5 10
+<
+Will grab six lines (5 through 10, both inclusive) from file 'foo' into the
+current file beneath line seven (which means it starts on line 8 - the start
+range in this command is exclusive; the end range (shown next) is inclusive.)
+
+
+And you can limit the insertion range too:
+>
+  :7,9 ReadIntoBuffer foo 5 10
+<
+Will grab two lines (5 and 6) from file 'foo' into the current file beneath
+line seven (therefore occupying lines 8 and 9 in the current buffer).
+
+The usefulness of being able to limit the range at both ends is debatable, but
+if I didn't I'd get requests to do so, surely.
 
  vim:tw=78:ts=8:ft=help:norl:

@@ -3,6 +3,33 @@ function! View(cmd)
   call ShowInNewBuf(data)
 endfunction
 
+" Takes a range as well as optional start and end lines to extract from the
+" file. If both ends of the range are give, the shorter of first:last vs
+" start:end will be used to fill the range.
+function! ReadIntoBuffer(file, ...) range
+  let first = a:firstline
+  let last = a:lastline
+  let lines = readfile(a:file)
+  let start = 0
+  let end = len(lines)
+  if a:0
+    let start = a:1 - 1
+    if a:0 > 1
+      let end = a:2 - 1
+    endif
+  endif
+  if start > len(lines)
+    return
+  endif
+  let lines = lines[start : end]
+  if len(lines) > (last-first)
+    let lines = lines[0:(last-first-1)]
+  endif
+  call append(first, lines)
+endfunction
+
+command! -range -nargs=+ -complete=file ReadIntoBuffer <line1>,<line2>call ReadIntoBuffer(<f-args>)
+
 function! ShowInNewBuf(data)
   new
   setlocal buftype=nofile
