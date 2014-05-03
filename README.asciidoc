@@ -8,7 +8,7 @@ __Pacifying Vimmers__
 http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 
 Perhaps most usefully, Vimple provides a few commands to
-make the causal vimmer's life a little easier, such as:
+make the casual vimmer's life a little easier, such as:
 
 === `:View ex-command`
 

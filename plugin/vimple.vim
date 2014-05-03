@@ -43,6 +43,7 @@ function! ShowInNewBuf(data)
   setlocal bufhidden=wipe
   setlocal noswapfile
   call setline(1, a:data)
+  Filter
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)
