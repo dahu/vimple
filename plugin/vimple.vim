@@ -3,6 +3,13 @@ function! View(cmd)
   call ShowInNewBuf(data)
 endfunction
 
+command! -range -nargs=0 Filter call vimple#filter(getline(1,'$'), {}).filter()
+nnoremap <plug>vimple_filter :Filter<cr>
+
+if !hasmapto('<plug>vimple_filter')
+  nmap <unique><silent> cf <plug>vimple_filter
+endif
+
 " Takes a range as well as optional start and end lines to extract from the
 " file. If both ends of the range are give, the shorter of first:last vs
 " start:end will be used to fill the range.

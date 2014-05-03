@@ -166,6 +166,71 @@ function! vimple#tracer()
   echom d.t()
 endfunction
 
+" Buffer Line Filter {{{1
+function! vimple#filter(lines, options)
+  let obj = {}
+  let obj.lines = a:lines
+  let obj.options = a:options
+
+  func obj.initialize() dict
+    if has_key(self.options, 'new')
+      enew
+    endif
+    if has_key(self.options, 'msg')
+      let self.msg = self.options.msg
+    else
+      let self.msg = 'Filter: '
+    endif
+    return self
+  endfunc
+
+  func obj.filter() dict
+    let old_is = &incsearch
+    let old_hls = &hlsearch
+    set incsearch hlsearch
+    call self.incremental()
+    let &incsearch = old_is
+    let &hlsearch = old_hls
+    return self
+  endfunc
+
+  func obj.incremental() dict
+    let c = ''
+    let self.partial = ''
+    while 1
+      call self.update()
+      let c = nr2char(getchar())
+      if c == "\<cr>"
+        break
+      elseif c == "\<esc>"
+        let self.partial = ''
+        call self.update()
+        break
+      elseif c == ''
+        let self.partial = self.partial[:-2]
+      else
+        let self.partial .= c
+      endif
+    endwhile
+  endfunc
+
+  func obj.update() dict
+    %delete
+    call append(0, filter(copy(self.lines), 'v:val =~ self.partial'))
+    $delete
+    if self.partial == ''
+      nohlsearch
+    else
+      exe "silent! norm! /" . self.partial . "\<cr>"
+    endif
+    1
+    redraw
+    echo self.msg . self.partial
+  endfunc
+
+  return obj.initialize()
+endfunction
+
 " Teardown:{{{1
 "reset &cpo back to users setting
 let &cpo = s:save_cpo
