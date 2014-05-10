@@ -33,14 +33,26 @@ function! parse#ini#to_file(hash, file)
 endfunction
 
 function! parse#ini#to_string(hash)
-  let s = ''
-  for [section, values] in items(a:hash)
-    let s .= '[' . section . "]\n"
-    for [name, val] in items(values)
-      let s .= name . ' = ' . string#to_string(val) . "\n"
-      unlet val
-    endfor
+  let hash = a:hash
+  let head = ''
+  let body = ''
+  if type(hash) != type({})
+    throw 'Expected Dictionary but given ' . variable#type_to_string(hash)
+  endif
+  for [section, values] in items(hash)
+    if type(values) == type({})
+      let body .= '[' . section . "]\n"
+      for [name, val] in items(values)
+        let body .= name . ' = ' . string#to_string(val) . "\n"
+        unlet val
+      endfor
+    elseif type(values) == type([])
+      " what now?!
+    else
+        let head .= section . ' = ' . string#to_string(values) . "\n"
+    endif
+    unlet values
   endfor
-  return s
+  return head . body
 endfunction
 

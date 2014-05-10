@@ -1,5 +1,5 @@
 call vimtest#StartTap()
-call vimtap#Plan(7) " <== XXX  Keep plan number updated.  XXX
+call vimtap#Plan(16) " <== XXX  Keep plan number updated.  XXX
 
 let s = 'this  is a string'
 let S = string#scanner(s)
