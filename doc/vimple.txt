@@ -12,6 +12,8 @@ Help on using vimple                                                 *vimple*
 4. GCollect				|vimple-gcollect-function|
 5. GCCollect				|vimple-gccollect-function|
 6. MyMaps         			|vimple-mymaps-command|
+7. ReadIntoBuffer			|vimple-readintobuffer-command|
+8. Filter				|vimple-filter-command|
 
 ==============================================================================
  1. INTRODUCTION                                               *vimple-intro*
@@ -126,5 +128,19 @@ line seven (therefore occupying lines 8 and 9 in the current buffer).
 
 The usefulness of being able to limit the range at both ends is debatable, but
 if I didn't I'd get requests to do so, surely.
+
+==============================================================================
+ 8. FILTER                               *:Filter* *vimple-filter-command*
+>
+  :Filter
+<
+The :Filter command behaves like an interactive :g/re/p on the current buffer.
+Only matching lines are shown, with non-matching ones being filtered out.
+
+WARNING: This command alters your buffer contents. Using it from within a
+         buffer you don't intend to filter is ill advised.
+
+The :Filter command is heavily used by the |VimFindsMe| plugin from within its
+browse window.
 
  vim:tw=78:ts=8:ft=help:norl:
