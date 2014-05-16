@@ -1,8 +1,3 @@
-function! View(cmd)
-  let data = vimple#redir(a:cmd)
-  call ShowInNewBuf(data)
-endfunction
-
 command! -range -nargs=0 Filter call vimple#filter(getline(1,'$'), {}).filter()
 nnoremap <plug>vimple_filter :Filter<cr>
 
@@ -37,6 +32,11 @@ endfunction
 
 command! -range -nargs=+ -complete=file ReadIntoBuffer <line1>,<line2>call ReadIntoBuffer(<f-args>)
 
+function! View(cmd)
+  let data = vimple#redir(a:cmd)
+  call ShowInNewBuf(data)
+endfunction
+
 function! ShowInNewBuf(data)
   new
   setlocal buftype=nofile
@@ -47,6 +47,7 @@ function! ShowInNewBuf(data)
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)
+command! -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
 
 function! Collect(args)
   let [regvar; command] = split(a:args)
