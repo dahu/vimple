@@ -59,3 +59,36 @@ function! string#eval(line)
     return line
   endif
 endfunction
+
+" range(number) - ['A' .. 'A'+number]
+" range(65, 90) - ['a' .. 'z']
+" range('a', 'f') - ['a' .. 'f']
+" range('A', 6) - ['A' .. 'F']
+function! string#range(...)
+  if ! a:0
+    throw 'vimple string#range: not enough arguments'
+  endif
+  if a:0 > 2
+    throw 'vimple string#range: too many arguments'
+  endif
+  if a:0 == 1
+    return map(range(a:1), 'nr2char(char2nr("A")+v:val)')
+  else
+    if type(a:1) == type(0)
+      let start = a:1
+    else
+      let start = char2nr(a:1)
+    endif
+    if type(a:2) == type(0)
+      if type(a:1) == type(0)
+        let end = a:2
+      else
+        let end = (start + a:2) - 1
+      endif
+    else
+      let end = char2nr(a:2)
+    endif
+    echo 'start=' . start . ', end=' . end
+    return map(range(start, end), 'nr2char(v:val)')
+  endif
+endfunction
