@@ -60,45 +60,48 @@ function! args#merge(initial, ...)
   end
 endfunction
 
+if expand('%:p') == expand('<sfile>:p')
+  " TEST string merge
 
-func! args#test_merge_2(...)
-  return args#merge(
-        \  'override me'
-        \, 'g:default'
-        \, 'g:default_2'
-        \, [a:000, 0, 'my_default']
-        \)
-endfunc
+  func! args#test_merge_2(...)
+    return args#merge(
+          \  'override me'
+          \, 'g:default'
+          \, 'g:default_2'
+          \, [a:000, 0, 'my_default']
+          \)
+  endfunc
 
-" let default = 'default'
-" silent! unlet default_2
-" echo 'default' == args#test_merge_2()
+  let default = 'default'
+  silent! unlet default_2
+  echo 'default' == args#test_merge_2()
 
-" let default_2 = 'default 2'
-" echo 'default 2' == args#test_merge_2()
+  let default_2 = 'default 2'
+  echo 'default 2' == args#test_merge_2()
 
-" echo 'my default' == args#test_merge_2({'my_default' : 'my default'})
+  echo 'my default' == args#test_merge_2({'my_default' : 'my default'})
 
-" let default_styles = {
-"       \  'one'   : 1
-"       \, 'two'   : 2
-"       \, 'three' : 3
-"       \}
+  " TEST dict merge
 
-" func! args#test_merge_1(...)
-"   return args#merge(
-"         \  {}
-"         \, g:default_styles
-"         \, 'g:default_styles_2'
-"         \, [a:000, 0, 'my_styles']
-"         \)
-" endfunc
+  let default_styles = {
+        \  'one'   : 1
+        \, 'two'   : 2
+        \, 'three' : 3
+        \}
 
-" silent! unlet g:default_styles_2
-" echo default_styles == args#test_merge_1()
-" echo args#test_merge_1()
-" echo default_styles != args#test_merge_1({'my_styles': {'one' : 4}})
-" echo {'one' : 4, 'two' : 2, 'three' : 3} == args#test_merge_1({'my_styles' : {'one' : 4}})
-" let g:default_styles_2 = {'one' : 5}
-" echo {'one' : 5, 'two' : 2, 'three' : 3} == args#test_merge_1()
+  func! args#test_merge_1(...)
+    return args#merge(
+          \  {}
+          \, g:default_styles
+          \, 'g:default_styles_2'
+          \, [a:000, 0, 'my_styles']
+          \)
+  endfunc
 
+  silent! unlet g:default_styles_2
+  echo default_styles == args#test_merge_1()
+  echo default_styles != args#test_merge_1({'my_styles': {'one' : 4}})
+  echo {'one' : 4, 'two' : 2, 'three' : 3} == args#test_merge_1({'my_styles' : {'one' : 4}})
+  let g:default_styles_2 = {'one' : 5}
+  echo {'one' : 5, 'two' : 2, 'three' : 3} == args#test_merge_1()
+endif
