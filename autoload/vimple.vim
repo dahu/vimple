@@ -216,12 +216,16 @@ function! vimple#filter(lines, options)
 
   func obj.update() dict
     %delete
-    call append(0, filter(copy(self.lines), 'v:val =~ self.partial'))
+    let partial = substitute(substitute(self.partial, '\(\\.\)\|.', '&.*', 'g'), '\.\*$', '', '')
+    if partial =~ '\.\*\$$'
+      let partial = substitute(partial, '\.\*\$$', '$', '')
+    endif
+    call append(0, filter(copy(self.lines), 'v:val =~ partial'))
     $delete
     if self.partial == ''
       nohlsearch
     else
-      exe "silent! norm! /" . self.partial . "\<cr>"
+      exe "silent! norm! /" . partial . "\<cr>"
     endif
     1
     redraw
