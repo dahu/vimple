@@ -216,7 +216,7 @@ function! vimple#filter(lines, options)
 
   func obj.update() dict
     %delete
-    let partial = substitute(substitute(self.partial, '\(\\.\)\|.', '&.*', 'g'), '\.\*$', '', '')
+    let partial = substitute(substitute(self.partial, ' ', '.*', 'g'), '\.\*$', '', '')
     if partial =~ '\.\*\$$'
       let partial = substitute(partial, '\.\*\$$', '$', '')
     endif
