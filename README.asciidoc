@@ -24,6 +24,10 @@ functions by script name rather than SNR (script-number).
 
 Performs the series of bar-separated ex-commands silently.
 
+=== `:QFdo ex-command`
+
+Performs the series of bar-separated ex-commands over the buffers in the QuickFix list
+
 === `:Collect register-or-variable ex-command`
 
 Saves the output of `ex-command` into the specified register

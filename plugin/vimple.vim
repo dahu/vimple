@@ -1,3 +1,11 @@
+function! QFbufs()
+  return quickfix#bufnames()
+endfunction
+
+command! -nargs=? QFargs call quickfix#to_args(<q-args>)
+
+command! -nargs=+ QFdo call quickfix#do(<q-args>)
+
 command! -range -nargs=0 Filter call vimple#filter(getline(1,'$'), {}).filter()
 nnoremap <plug>vimple_filter :Filter<cr>
 
