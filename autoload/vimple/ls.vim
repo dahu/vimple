@@ -74,6 +74,7 @@ function! vimple#ls#new()
             \.'"modified": v:val[1]   =~ "+",'
             \.'"read_error": v:val[1] =~ "x"}' ])
 
+    let self.__buffers = {}
     for bfr in map(copy(bufferlist), '{v:val["number"]: v:val}')
       call extend(self.__buffers, bfr)
     endfor
