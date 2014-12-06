@@ -76,7 +76,7 @@ function! ShowInNewBuf(data)
   setlocal bufhidden=wipe
   setlocal noswapfile
   call setline(1, a:data)
-  if get(g:, 'vimple_use_filter', 1)
+  if get(g:, 'vimple_auto_filter', 1)
     Filter
   endif
 endfunction
