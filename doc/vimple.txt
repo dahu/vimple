@@ -152,7 +152,7 @@ The :Filter command is heavily used by the |VimFindsMe| plugin from within its
 browse window.
 
 ==============================================================================
- 9. QUICKFIX COMMANDS                            *vimple-quickfix-command*
+ 9. QUICKFIX COMMANDS                           *vimple-quickfix-commands*
                                                                     *QFdo*
 >
   :QFdo
