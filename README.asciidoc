@@ -26,7 +26,15 @@ Performs the series of bar-separated ex-commands silently.
 
 === `:QFdo ex-command`
 
-Performs the series of bar-separated ex-commands over the buffers in the QuickFix list
+Performs the series of bar-separated ex-commands over the buffers in the QuickFix list.
+
+=== `:BufTypeDo type ex-commands`
+
+Performs the series of bar-separated ex-commands over the buffers of the given +type+.
+
+=== `:BufMatchDo pattern ex-commands`
+
+Performs the series of bar-separated ex-commands over the buffers with names matching +pattern+.
 
 === `:Collect register-or-variable ex-command`
 

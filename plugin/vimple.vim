@@ -1,3 +1,28 @@
+function! BufDo(cmds)
+  let old_hidden = &hidden
+  set hidden
+  tabnew
+  echom 'bufdo ' . a:cmds
+  exe 'bufdo ' . a:cmds
+  tabclose
+  let &hidden = old_hidden
+endfunction
+
+function! BufTypeDo(args)
+  let [type; commands] = split(a:args, ' ')
+  let cmds = join(commands)
+  call BufDo('if &ft ==? "' . escape(type, '"') . '" | exe "' . escape(cmds, '"') . '" | endif')
+endfunction
+
+function! BufMatchDo(args)
+  let [pattern; commands] = split(a:args, ' ')
+  let cmds = join(commands)
+  call BufDo('if expand("%") =~? "' . escape(pattern, '"') . '" | exe "' . escape(cmds, '"') . '" | endif')
+endfunction
+
+command! -nargs=+ BufTypeDo call BufTypeDo(<q-args>)
+command! -nargs=+ BufMatchDo call BufMatchDo(<q-args>)
+
 function! QFbufs()
   return quickfix#bufnames()
 endfunction

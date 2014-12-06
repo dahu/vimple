@@ -6,15 +6,16 @@
 
 Help on using vimple                                                 *vimple*
 
-1. Introduction				|vimple-intro|
-2. View         			|vimple-view-command|
-3. Collect				|vimple-collect-command|
-4. GCollect				|vimple-gcollect-function|
-5. GCCollect				|vimple-gccollect-function|
-6. MyMaps         			|vimple-mymaps-command|
-7. ReadIntoBuffer			|vimple-readintobuffer-command|
-8. Filter				|vimple-filter-command|
-9. QFdo					|vimple-quickfix-commands|
+1.  Introduction			|vimple-intro|
+2.  View         			|vimple-view-command|
+3.  Collect				|vimple-collect-command|
+4.  GCollect				|vimple-gcollect-function|
+5.  GCCollect				|vimple-gccollect-function|
+6.  MyMaps         			|vimple-mymaps-command|
+7.  ReadIntoBuffer			|vimple-readintobuffer-command|
+8.  Filter				|vimple-filter-command|
+9.  QFdo				|vimple-quickfix-commands|
+10. BufDo				|vimple-bufdo-commands|
 
 
 ==============================================================================
@@ -185,5 +186,30 @@ Example:
 <
 Will open a new tab-page and set the local argument list to the unique set of
 buffers contained within the QuickFix list.
+
+
+==============================================================================
+ 10. BUFDO COMMANDS                                *vimple-bufdo-commands*
+                                          *BufDo* *BufTypeDo* *BufMatchDo*
+
+Example:
+>
+  :BufTypeDo vim %s/func\\>\\ze/&tion/e
+<
+
+Will replace 'func' with 'function' in all VIM files.
+
+Note the use of the 'e' |s_flags| to ignore errors where the search term
+doesn't exist in a file.
+
+Example:
+>
+  :Nexus 1 1
+  :BufMatchDo test g/Test/s/\\d\\+/\\=Nexus()
+<
+
+Will re-number the test cases in all files containing 'test' in their filename.
+
+NOTE: This example depends on https://github.com/dahu/Nexus
 
  vim:tw=78:ts=8:ft=help:norl:
