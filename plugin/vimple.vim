@@ -76,7 +76,9 @@ function! ShowInNewBuf(data)
   setlocal bufhidden=wipe
   setlocal noswapfile
   call setline(1, a:data)
-  Filter
+  if get(g:, 'vimple_use_filter', 1)
+    Filter
+  endif
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)

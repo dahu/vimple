@@ -54,6 +54,13 @@ of a command, or if you need to elaborately massage the output for
 some reason. Being in a Vim buffer, you have all of Vim's editing
 tools at your disposal.
 
+By default, :View will prompt you for a pattern to filter the results by. If
+you want to disable this default behaviour, add a line like this to your
+|$MYVIMRC|:
+>
+  let vimple_use_filter = 0
+<
+
 ==============================================================================
  3. COLLECT                            *:Collect* *vimple-collect-command*
 >
