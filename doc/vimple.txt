@@ -58,8 +58,10 @@ By default, :View will prompt you for a pattern to filter the results by. If
 you want to disable this default behaviour, add a line like this to your
 |$MYVIMRC|:
 >
-  let vimple_auto_filter = 0
-<
+  let vimple_auto_filter = []
+< or >
+  let vimple_auto_filter = ['vfm']
+< (if you want auto-filter in VFM but not :View)
 
 ==============================================================================
  3. COLLECT                            *:Collect* *vimple-collect-command*

@@ -70,13 +70,17 @@ function! View(cmd)
   call ShowInNewBuf(data)
 endfunction
 
+if ! exists('g:vimple_auto_filter')
+  let g:vimple_auto_filter = ['view', 'vfm']
+endif
+
 function! ShowInNewBuf(data)
   new
   setlocal buftype=nofile
   setlocal bufhidden=wipe
   setlocal noswapfile
   call setline(1, a:data)
-  if get(g:, 'vimple_auto_filter', 1)
+  if index(g:vimple_auto_filter, 'view') != -1
     Filter
   endif
 endfunction
