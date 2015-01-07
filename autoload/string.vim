@@ -1,6 +1,10 @@
 function! string#scanner(str)
   let obj = {}
-  let obj.string = a:str
+  if type(a:str) == type([])
+    let obj.string = join(a:str, "\n")
+  else
+    let obj.string = a:str
+  endif
   let obj.length = len(obj.string)
   let obj.index  = 0
 
@@ -33,6 +37,17 @@ function! string#scanner(str)
       return m[0]
     endif
     return ""
+  endfunc
+
+  func obj.collect(pat) dict
+    let matches = []
+    while ! self.eos()
+      if self.skip_until(a:pat) == -1
+        break
+      endif
+      call add(matches, self.scan(a:pat))
+    endwhile
+    return matches
   endfunc
 
   return obj
