@@ -1,3 +1,28 @@
+function! Mkvimrc()
+  let rtp = uniq(map(filter(map(getline(1, '$'),
+        \ 'matchstr(v:val, "^\\s*\\d\\+:\\s\\+\\zs.*")'), 'v:val != ""'),
+        \ 'fnameescape(substitute(v:val, "/\\(autoload\\|colors\\|compiler\\|doc\\|ftdetect\\|ftplugin\\|indent\\|keymap\\|lang\\|plugin\\|syntax\\).*", "", ""))'))
+
+  if empty(rtp)
+    echohl Error
+    echom 'Mkvimrc: Buffer does not contain :scriptnames output'
+    echohl None
+    return
+  endif
+  let vimrc_lines = [
+        \   "set nocompatible"
+        \ , "let &rtp = join(" . string(map(rtp, 'fnameescape(v:val)')) . ", ',') . ',' . &rtp"
+        \ , "filetype plugin indent on"
+        \ , "syntax enable"
+        \ ]
+  let datetime = localtime()
+  let vimrc_file = './vimrc-' . datetime
+  call writefile(vimrc_lines, vimrc_file)
+  return vimrc_file
+endfunction
+
+command! -nargs=0 -bar Mkvimrc echom Mkvimrc()
+
 function! BufDo(cmds)
   let old_hidden = &hidden
   set hidden
