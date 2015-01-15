@@ -103,7 +103,6 @@ function! string#range(...)
     else
       let end = char2nr(a:2)
     endif
-    echo 'start=' . start . ', end=' . end
     return map(range(start, end), 'nr2char(v:val)')
   endif
 endfunction
