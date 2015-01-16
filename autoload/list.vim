@@ -1,3 +1,28 @@
+" list#flat([elem, ...]) {{{1
+"
+" Flatten the arguments into a single list.
+"
+" given: a = ['a', 'b']
+"        b = [1, 2]
+" list#flat(a,b)      : ['a', 'b', 1,  2]
+"
+function! list#flat(...)
+  let fl = []
+  let list = a:000
+  if a:0 == 1
+    let list = list[0]
+  endif
+  for el in list
+    if type(el) == type([])
+      call extend(fl, list#flat(el))
+    else
+      call extend(fl, [el])
+    endif
+    unlet el
+  endfor
+  return fl
+endfunction
+
 " list#zip(list_a, list_b, method) {{{1
 "
 " Join each element of list_a with the corresponding element of list_b
