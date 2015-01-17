@@ -62,6 +62,7 @@ function! vimple#options#new()
     tabclose
 
     for o in items(self.__options)
+      call extend(o[1], {'scope' : (o[1].desc =~ '(.\{-}local.\{-})' ? matchstr(o[1].desc, '(\zs.\{-}\ze)') : 'global')})
       call extend(self.__options, {o[1].short : o[1]})
     endfor
 
