@@ -82,7 +82,23 @@ function! vimple#options#new()
   " TODO: What format should to_s() show?
   " to_s {{{2
   func op.to_s(...) dict
-    return "Not implemented yet"
+    let default = "%-15l %-2p %1t %v\n"
+    let format = a:0 && a:1 != '' ? a:1 : default
+    let opts = a:0 > 1 ? a:2.__options : self.__options
+    let str = ''
+    for o in sort(items(opts))
+      let str .= vimple#format(
+            \ format,
+            \ { 'l': ['s', o[1]['long']],
+            \   's': ['s', o[1]['short']],
+            \   'd': ['s', o[1]['desc']],
+            \   'p': ['s', join(map(filter(split(o[1]['scope']), 'index(["or", "local", "to"], v:val) == -1'), 'strpart(v:val, 0, 1)'), '')],
+            \   't': ['s', strpart(o[1]['type'], 0, 1)],
+            \   'v': ['s', o[1]['value']]},
+            \ default
+            \ )
+    endfor
+    return str
   endfunc
 
   " print {{{2
@@ -103,7 +119,7 @@ function! vimple#options#new()
 
   " filter_by_name {{{2
   func op.filter_by_name(name) dict abort
-    return self.filter('v:val["script"] =~ "' . escape(a:name, '"') . '"')
+    return self.filter('v:val["long"] =~ "' . escape(a:name, '"') . '"')
   endfunc
 
   call op.update()
