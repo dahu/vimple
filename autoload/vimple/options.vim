@@ -55,7 +55,24 @@ function! vimple#options#new()
         let self.__options[long].desc .= ' ' . matchstr(l, '^\t\zs.*')
       else
         let [type, short, value] = matchlist(l, '^ \(\w\+\) \(\w\+\) \(.*\)')[1:3]
-        call extend(self.__options[long], {'type' : type, 'short' : short, 'value' : value})
+        let default = ''
+        "TODO: Is there a better way to handle these two troublesome options?
+        " toggling background messes with the colorscheme
+        " scroll seems to need a valid window size not available at start (?)
+        if index(['background', 'scroll'], long) == -1
+          exe 'set ' . short . '&vim'
+          let default = escape(eval('&' . short), " \t\\\"\|")
+          if type == 'bool'
+            if value != 0
+              exe 'set ' . short
+            else
+              exe 'set no' . short
+            endif
+          else
+            exe 'set ' . short . '=' . value
+          endif
+        endif
+        call extend(self.__options[long], {'type' : type, 'short' : short, 'value' : value, 'default' : default})
       endif
     endfor
 
@@ -79,10 +96,9 @@ function! vimple#options#new()
     return map(items(self.__options), '[v:val[0], v:val[1].value]')
   endfunc
 
-  " TODO: What format should to_s() show?
   " to_s {{{2
   func op.to_s(...) dict
-    let default = "%-15l %-2p %1t %v\n"
+    let default = "%-15l %-2p %1t %v%f\n"
     let format = a:0 && a:1 != '' ? a:1 : default
     let opts = a:0 > 1 ? a:2.__options : self.__options
     let str = ''
@@ -94,6 +110,7 @@ function! vimple#options#new()
             \   'd': ['s', o[1]['desc']],
             \   'p': ['s', join(map(filter(split(o[1]['scope']), 'index(["or", "local", "to"], v:val) == -1'), 'strpart(v:val, 0, 1)'), '')],
             \   't': ['s', strpart(o[1]['type'], 0, 1)],
+            \   'f': ['s', o[1]['value'] == o[1]['default'] ? '' : ' [' . o[1]['default'] . ']'],
             \   'v': ['s', o[1]['value']]},
             \ default
             \ )
@@ -103,10 +120,7 @@ function! vimple#options#new()
 
   " print {{{2
   " only able to colour print the default to_s() output at this stage
-  " Note: This is a LOT of dancing just to get coloured numbers ;)
   func op.print() dict
-    call self.update()
-    call map(map(map(split(self.to_s(), '\n'), 'split(v:val, "\\d\\@<= ")'), '[["vimple_SN_Number", v:val[0]] , ["vimple_SN_Term", " : " . v:val[1] . "\n"]]'), 'vimple#echoc(v:val)')
   endfunc
 
   " filter {{{2
