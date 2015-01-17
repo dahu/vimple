@@ -179,6 +179,7 @@ command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'
 "       \ ['ma', 'marks'],
 "       \ ['ul', 'undolist'],
 "       \ ['mp', 'map'],
+"       \ ['op', 'options'],
 "       \]
 " if get(g:, 'vimple_init_vars', 1)
 "   for [name, func] in s:pairs
@@ -210,9 +211,14 @@ if get(g:, 'vimple_init_vars', 1)
   if get(g:, 'vimple_init_mp', 1)
     let vimple#mp = vimple#map#new()
   endif
+  if get(g:, 'vimple_init_op', 1)
+    let vimple#op = vimple#options#new()
+  endif
 endif
 
 call vimple#default_colorscheme()
+
+call options#lock('ts', 8, 'Never change tabstop!')
 
 " disabled by default
 " let vimple#au = vimple#autocmd#new()
