@@ -156,6 +156,10 @@ function! vimple#default_colorscheme()
   " Scriptnames
   call s:vimple_highlight('vimple_SN_Number'          , 'ctermfg=4 ctermbg=8 guifg=#0087ff guibg=#1c1c1c')
   call s:vimple_highlight('vimple_SN_Term'            , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#1c1c1c')
+
+  " Options
+  call s:vimple_highlight('vimple_OP_BoolEnabled'     , 'ctermfg=12 ctermbg=8 guifg=#808080 guibg=#262626')
+  call s:vimple_highlight('vimple_OP_BoolDisabled'    , 'ctermfg=10 ctermbg=8 guifg=#4e4e4e guibg=#1c1c1c')
 endfunction
 
 function! vimple#tracer()
