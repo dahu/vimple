@@ -211,9 +211,9 @@ if get(g:, 'vimple_init_vars', 1)
   if get(g:, 'vimple_init_mp', 1)
     let vimple#mp = vimple#map#new()
   endif
-  if get(g:, 'vimple_init_op', 1)
-    let vimple#op = vimple#options#new()
-  endif
+  " if get(g:, 'vimple_init_op', 1)
+  "   let vimple#op = vimple#options#new()
+  " endif
 endif
 
 call vimple#default_colorscheme()
