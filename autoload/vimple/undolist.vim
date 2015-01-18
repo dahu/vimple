@@ -72,7 +72,7 @@ endif
 function! vimple#undolist#normalise_time(t, now)
   let t = a:t
   let now = a:now
-  if t =~? 'seconds'
+  if t =~? '^\d\+ '
     let now -= matchstr(t, '^\d*')
     let time = strftime('%Y/%m/%d %H:%M:%S', now)
   elseif t !~ '\/'
