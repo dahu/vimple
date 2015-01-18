@@ -66,7 +66,7 @@ function! vimple#options#new()
         "TODO: Is there a better way to handle these two troublesome options?
         " toggling background messes with the colorscheme
         " scroll seems to need a valid window size not available at start (?)
-        if index(['background', 'scroll'], long) == -1
+        if index(['background', 'compatible', 'scroll', 'term'], long) == -1
           exe 'set ' . short . '&vim'
           let default = escape(eval('&' . short), " \t\\\"\|")
           if type == 'bool'
