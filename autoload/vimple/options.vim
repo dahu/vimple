@@ -88,6 +88,10 @@ function! vimple#options#new()
       call extend(self.__options, {o[1].short : o[1]})
     endfor
 
+    " Preserve filter.
+    if !empty(self.__filter)
+      call filter(self.__options, self.__filter)
+    endif
     return self
   endfunc
 
