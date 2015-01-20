@@ -34,10 +34,18 @@ function! vimple#options#new()
   let op = {}
   let op.__options = {}
   let op.__filter = ''
+  let op.__update_with_map = 0
 
   " update {{{2
   func op.update() dict abort
-    let self.__options = {}
+    if self.__update_with_map
+      call map(self.__options, 'extend(v:val, {"value": eval("&".v:key)}, "force")')
+      " Preserve filter.
+      if !empty(self.__filter)
+        call filter(self.__options, self.__filter)
+      endif
+      return self
+    endif
 
     silent! options
     let content = getline(1, '$')
@@ -75,6 +83,7 @@ function! vimple#options#new()
     if !empty(self.__filter)
       call filter(self.__options, self.__filter)
     endif
+    let self.__update_with_map = 1
     return self
   endfunc
 
