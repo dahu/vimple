@@ -119,8 +119,14 @@ function! vimple#options#new()
   endfunc
 
   " changed {{{2
-  func op.changed() dict
-    return self.filter('v:val.value !=# eval("&".v:key)')
+  func op.changed(...) dict
+    let filter = 'v:val.value !=# eval("&".v:key)'
+    if a:0 && a:1 ==? 'short'
+      let filter .= ' && v:val.short ==# v:key'
+    elseif a:0 && a:1 ==? 'long'
+      let filter .= ' && v:val.long ==# v:key'
+    endif
+    return self.filter(filter)
   endfunc
 
   " print {{{2
