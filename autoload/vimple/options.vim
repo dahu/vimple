@@ -61,25 +61,8 @@ function! vimple#options#new()
         else
           let l = substitute(l, '^ \tset \(\w\+\)\t\(\w\+\)', '\=" bool " . (submatch(1) !~? "^no" ? submatch(1) : submatch(2)) . " " . (submatch(1) !~? "^no")', '')
         endif
-        let [type, short, value] = matchlist(l, '^ \(\w\+\) \(\w\+\) \(.*\)')[1:3]
-        let default = ''
-        "TODO: Is there a better way to handle these two troublesome options?
-        " toggling background messes with the colorscheme
-        " scroll seems to need a valid window size not available at start (?)
-        if index(['background', 'compatible', 'scroll', 'term', 'ttytype'], long) == -1
-          exe 'set ' . short . '&vim'
-          let default = escape(eval('&' . short), " \t\\\"\|")
-          if type == 'bool'
-            if value != 0
-              exe 'set ' . short
-            else
-              exe 'set no' . short
-            endif
-          else
-            exe 'set ' . short . '=' . value
-          endif
-        endif
-        call extend(self.__options[long], {'type' : type, 'short' : short, 'value' : value, 'default' : default})
+        let [type, short] = matchlist(l, '^ \(\w\+\) \(\w\+\)')[1:2]
+        call extend(self.__options[long], {'type' : type, 'short' : short, 'value': eval('&'.long)})
       endif
     endfor
 
@@ -107,7 +90,7 @@ function! vimple#options#new()
 
   " to_s {{{2
   func op.to_s(...) dict
-    let default = "%-15l %-2p %1t %v%f\n"
+    let default = "%-15l %-2p %1t %v\n"
     let format = a:0 && a:1 != '' ? a:1 : default
     let opts = a:0 > 1 ? a:2.__options : self.__options
     let str = ''
@@ -119,12 +102,16 @@ function! vimple#options#new()
             \   'd': ['s', o[1]['desc']],
             \   'p': ['s', join(map(filter(split(o[1]['scope']), 'index(["or", "local", "to"], v:val) == -1'), 'strpart(v:val, 0, 1)'), '')],
             \   't': ['s', strpart(o[1]['type'], 0, 1)],
-            \   'f': ['s', o[1]['value'] == o[1]['default'] ? '' : ' [' . o[1]['default'] . ']'],
             \   'v': ['s', o[1]['value']]},
             \ default
             \ )
     endfor
     return str
+  endfunc
+
+  " changed {{{2
+  func op.changed() dict
+    return self.filter('v:val.value !=# eval("&".v:key)')
   endfunc
 
   " print {{{2
