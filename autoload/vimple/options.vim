@@ -136,6 +136,50 @@ function! vimple#options#new()
   " print {{{2
   " only able to colour print the default to_s() output at this stage
   func op.print() dict
+    "let str = self.to_s()
+    " following code is from hl.print() and would not work as is here
+    "let dta = map(split(str, "\n"), '[split(v:val, " ")[0], v:val . "\n"]')
+    "call vimple#echoc(dta)
+    let pairs = []
+    let changed = self.changed()
+    let max_name = max(map(values(map(copy(self.__options), 'v:val.long." ".v:val.short.""')), 'len(v:val)'))
+    for key in sort(keys(self.long().__options))
+      let option = self.__options[key]
+      call add(pairs, ['vimple_BL_Number', option.long])
+      call add(pairs, ['Normal', ' ('])
+      call add(pairs, ['vimple_BL_Hidden', option.short])
+      call add(pairs, ['Normal', ')' . repeat(' ', max_name - len(option.short) - len(option.long))])
+      let len = len(option.value)
+      if len < &columns
+        call add(pairs, ['Normal', option.value . "\<NL>"])
+      else
+        let screen_len = &columns - max_name - 6
+        let i = 0
+        while i <= len
+           let j = i + screen_len
+           call add(pairs, ['Normal', repeat(' ',  i == 0 ? 0 : max_name + 3) . option.value[i : j] . "\<NL>"])
+           let i = j + 1
+        endwhile
+      endif
+      if has_key(changed.__options, key)
+        let len = len(eval('&'.key))
+        if len < &columns
+          call add(pairs, ['vimple_BL_Alternate', repeat(' ',  max_name + 3) . eval('&'.key) . "\<NL>"])
+        else
+          let screen_len = &columns - max_name - 6
+          let i = 0
+          while i <= len
+            let j = i + screen_len
+            call add(pairs, ['vimple_BL_Alternate', repeat(' ',  max_name + 3) . eval('&'.key)[i : j] . "\<NL>"])
+            let i = j + 1
+          endwhile
+        endif
+      endif
+    endfor
+    call vimple#echoc(pairs)
+    " Remove the last <NL>. Why?
+    let pairs[-1][1] = pairs[-1][-1][:-2]
+    return pairs
   endfunc
 
   " filter {{{2
