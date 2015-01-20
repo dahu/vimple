@@ -31,6 +31,9 @@ set cpo&vim
 "let g:loaded_lib_vimple = 1
 
 function! vimple#options#new()
+  if exists('g:vimple#op')
+    return deepcopy(g:vimple#op).update()
+  endif
   let op = {}
   let op.__options = {}
   let op.__filter = ''
