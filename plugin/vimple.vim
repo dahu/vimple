@@ -218,7 +218,5 @@ endif
 
 call vimple#default_colorscheme()
 
-"call options#lock('ts', 8, 'Never change tabstop!')
-
 " disabled by default
 " let vimple#au = vimple#autocmd#new()
