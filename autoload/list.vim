@@ -65,9 +65,27 @@ function! list#zip(a, b, ...)
     exe "return r + a:b[" . n . ":]"
   endif
 endfunction "}}}1
-"
-" split list into count-element sublists
-function! list#split(list, count)
+
+" list#inject(list, init, funcref)
+function! list#inject(list, init, funcref)
+  if ! exists('*' . a:funcref)
+    echohl Error
+    echom 'vimple: list#inject(): Funcref ' . a:funcref . ' does not exist!'
+    echohl None
+    return a:init
+  elseif empty(a:list)
+    return a:init
+  else
+    let i  = a:list[0]
+    let r  = a:list[1:-1]
+    let v = call(a:funcref, [a:init, i])
+    return list#inject(r, v, a:funcref)
+  endif
+endf
+
+
+" partition list into count-element sublists
+function! list#partition(list, count)
   let lst = deepcopy(a:list)
   let len = len(lst)
   let cnt = a:count
@@ -83,18 +101,20 @@ function! list#split(list, count)
   return newlists
 endfunc
 
-" split list into cols sublists and join with colsep=\t
+" partition list into cols sublists and join with colsep=\t
 " list#lspread(list, cols, colsep="\t")
+" returns a list
 function! list#lspread(list, cols, ...)
   let colsep = "\t"
   if a:0
     let colsep = a:1
   endif
-  return map(list#split(a:list, a:cols), 'join(v:val, "' . escape(colsep, '"') . '")')
+  return map(list#partition(a:list, a:cols), 'join(v:val, "' . escape(colsep, '"') . '")')
 endfunction
 
-" split list into cols sublists and join with col and row seps
+" partition list into cols sublists and join with col and row seps
 " list#spread(list, cols, colsep, rowsep)
+" returns a string
 function! list#spread(list, cols, ...)
   let colsep = "\t"
   let rowsep = "\n"
