@@ -1,6 +1,7 @@
  " TODO rename vfm variables.
 
 function! overlay#controller(...)
+  " TODO remove mappings and add them to VFM's actions.
   nnoremap <buffer> q :call overlay#close()<cr>
   nnoremap <buffer> cv :v//d<cr>
   if a:0
@@ -10,7 +11,7 @@ function! overlay#controller(...)
   endif
 endfunction
 
-function! overlay#show_list(list, ...)
+function! overlay#show(list, actions, ...)
   let s:altbuf = bufnr('#')
 
   let options = {
@@ -47,6 +48,10 @@ function! overlay#show_list(list, ...)
       call feedkeys('/')
     endif
   endif
+  call overlay#controller(a:actions)
+  " TODO how about evaluating an expression to decide if acting or not?
+  " TODO Should we allow specifying what action should be triggered?
+  " add "auto_act": "expr" and "auto_act_action": "expr" ?
   if g:vfm_auto_act_on_single_filter_result
     if line('$') == 1
       call feedkeys("\<enter>")
@@ -69,4 +74,18 @@ function! overlay#close()
   endif
 endfunction
 
+function! overlay#select_line()
+  let fname = getline('.')
+  call overlay#close()
+  return fname
+endfunction
 
+function! overlay#select_buffer()
+  let lines = getline(1,'$')
+  call overlay#close()
+  return lines
+endfunction
+
+function! overlay#command(cmd, actions, options)
+  call overlay#show(vimple#redir(a:cmd), a:actions, a:options)
+endfunction
