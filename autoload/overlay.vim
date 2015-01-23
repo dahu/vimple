@@ -1,4 +1,5 @@
  " TODO rename vfm variables.
+
 function! overlay#controller(...)
   nnoremap <buffer> q :call overlay#close()<cr>
   nnoremap <buffer> cv :v//d<cr>
@@ -9,21 +10,24 @@ function! overlay#controller(...)
   endif
 endfunction
 
-function! overlay#show_list(files, ...)
+function! overlay#show_list(list, ...)
   let s:altbuf = bufnr('#')
 
-  let options = {'filter' : 1}
+  let options = {
+        \ 'filter': 1,
+        \ 'use_split': 0,
+        \ }
   if a:0
     if type(a:1) == type({})
       call extend(options, a:1)
     endif
   endif
 
-  if g:vfm_use_split
+  if options.use_split
     hide noautocmd split
   endif
   hide noautocmd enew
-  let b:vfm_use_split = g:vfm_use_split
+  let b:overlay_use_split = options.use_split
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
@@ -31,7 +35,7 @@ function! overlay#show_list(files, ...)
   set incsearch
   let old_hls = &hlsearch
   set hlsearch
-  call append(0, a:files)
+  call append(0, a:list)
   $
   delete _
   redraw
@@ -51,7 +55,7 @@ function! overlay#show_list(files, ...)
 endfunction
 
 function! overlay#close()
-  if b:vfm_use_split
+  if b:overlay_use_split
     let scratch_buf = bufnr('')
     wincmd q
     exe 'bwipe ' . scratch_buf
