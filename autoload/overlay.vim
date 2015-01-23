@@ -1,6 +1,6 @@
  " TODO rename vfm variables.
-function! overlay#overlay_controller(...)
-  nnoremap <buffer> q :call overlay#close_overlay()<cr>
+function! overlay#controller(...)
+  nnoremap <buffer> q :call overlay#close()<cr>
   nnoremap <buffer> cv :v//d<cr>
   if a:0
     for [key, act] in items(a:1)
@@ -9,7 +9,7 @@ function! overlay#overlay_controller(...)
   endif
 endfunction
 
-function! overlay#show_list_overlay(files, ...)
+function! overlay#show_list(files, ...)
   let s:altbuf = bufnr('#')
 
   let options = {'filter' : 1}
@@ -50,7 +50,7 @@ function! overlay#show_list_overlay(files, ...)
   endif
 endfunction
 
-function! overlay#close_overlay()
+function! overlay#close()
   if b:vfm_use_split
     let scratch_buf = bufnr('')
     wincmd q
