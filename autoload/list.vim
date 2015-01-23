@@ -65,6 +65,54 @@ function! list#zip(a, b, ...)
     exe "return r + a:b[" . n . ":]"
   endif
 endfunction "}}}1
+"
+" split list into count-element sublists
+function! list#split(list, count)
+  let lst = deepcopy(a:list)
+  let len = len(lst)
+  let cnt = a:count
+  let newlists = []
+  for idx in range(0, len, cnt)
+    if idx < len
+      if (cnt - 1) > len(lst)
+        let cnt = len(lst)
+      endif
+      call add(newlists, remove(lst, 0, (cnt - 1)))
+    endif
+  endfor
+  return newlists
+endfunc
+
+" split list into cols sublists and join with colsep=\t
+" list#lspread(list, cols, colsep="\t")
+function! list#lspread(list, cols, ...)
+  let colsep = "\t"
+  if a:0
+    let colsep = a:1
+  endif
+  return map(list#split(a:list, a:cols), 'join(v:val, "' . escape(colsep, '"') . '")')
+endfunction
+
+" split list into cols sublists and join with col and row seps
+" list#spread(list, cols, colsep, rowsep)
+function! list#spread(list, cols, ...)
+  let colsep = "\t"
+  let rowsep = "\n"
+  if a:0
+    if a:0 == 2
+      let colsep = a:1
+      let rowsep = a:2
+    else
+      let colsep = a:1
+    endif
+  endif
+  return join(list#lspread(a:list, a:cols, colsep), rowsep)
+endfunction
+
+" " map expr over each element of each sublist of list
+" function! list#lmap(list, expr)
+"   return map(a:list, 'map(v:val, ''' . a:expr . ''')')
+" endfunction
 
 function! list#shuffle(a)
   let b = deepcopy(a:a)
