@@ -93,6 +93,9 @@ command! -range -nargs=+ -complete=file ReadIntoBuffer <line1>,<line2>call ReadI
 function! View(cmd)
   let data = vimple#redir(a:cmd)
   call ShowInNewBuf(data)
+  if index(g:vimple_auto_filter, 'view') != -1
+    Filter
+  endif
 endfunction
 
 if ! exists('g:vimple_auto_filter')
@@ -105,9 +108,6 @@ function! ShowInNewBuf(data)
   setlocal bufhidden=wipe
   setlocal noswapfile
   call setline(1, a:data)
-  if index(g:vimple_auto_filter, 'view') != -1
-    Filter
-  endif
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)
