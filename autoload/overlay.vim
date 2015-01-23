@@ -1,5 +1,3 @@
- " TODO rename vfm variables.
-
 function! overlay#controller(...)
   if a:0
     for [key, act] in items(a:1)
@@ -12,8 +10,9 @@ function! overlay#show(list, actions, ...)
   let s:altbuf = bufnr('#')
 
   let options = {
-        \ 'filter': 1,
-        \ 'use_split': 0,
+        \ 'filter'    : 1,
+        \ 'use_split' : 0,
+        \ 'auto_act'  : 0,
         \ }
   if a:0
     if type(a:1) == type({})
@@ -46,10 +45,7 @@ function! overlay#show(list, actions, ...)
     endif
   endif
   call overlay#controller(a:actions)
-  " TODO how about evaluating an expression to decide if acting or not?
-  " TODO Should we allow specifying what action should be triggered?
-  " add "auto_act": "expr" and "auto_act_action": "expr" ?
-  if g:vfm_auto_act_on_single_filter_result
+  if options.auto_act
     if line('$') == 1
       call feedkeys("\<enter>")
     endif
