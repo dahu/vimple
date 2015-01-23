@@ -1,9 +1,6 @@
  " TODO rename vfm variables.
 
 function! overlay#controller(...)
-  " TODO remove mappings and add them to VFM's actions.
-  nnoremap <buffer> q :call overlay#close()<cr>
-  nnoremap <buffer> cv :v//d<cr>
   if a:0
     for [key, act] in items(a:1)
       exe 'nnoremap <buffer> ' . key . ' ' . act
