@@ -19,7 +19,10 @@ endfunction
 function! SpellSuggest(ident)
   call overlay#show(
         \  GetSuggestions(a:ident)
-        \, {'<enter>' : ':call SpellSuggestAccept()<cr>'}
+        \, {
+        \    '<enter>' : ':call SpellSuggestAccept()<cr>'
+        \  , 'q' : ':call overlay#close()<cr>'
+        \  }
         \, {'filter'    : 0, 'use_split' : 1})
 endfunction
 

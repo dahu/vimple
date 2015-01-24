@@ -68,9 +68,9 @@ function! overlay#close()
 endfunction
 
 function! overlay#select_line()
-  let fname = getline('.')
+  let line = getline('.')
   call overlay#close()
-  return fname
+  return line
 endfunction
 
 function! overlay#select_buffer()
