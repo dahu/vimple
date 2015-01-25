@@ -29,11 +29,11 @@ endfunction
 nnoremap z= :call SpellSuggest(expand('<cword>'))<cr>
 
 function! SpellSuggestAccept()
-  let reg_save = @/
-  let idx = strlen(substitute(getline('.')[:col('.')], "[^\t]", "", "g"))
-  let word_list = split(getline('.'), '\t')
-  let word = word_list[idx]
+  let line = getline('.')
+  let idx = strlen(substitute(line[:col('.')], '[^\t]', '', 'g'))
+  let word_list = split(line, '\t')
   call overlay#close()
-  execute 'normal! ciw' . word
-  let @/ = reg_save
+  let [r1, r2] = [@@, @-]
+  exe 'norm! ciw' . word_list[idx]
+  let [@@, @-] = [r1, r2]
 endfunction
