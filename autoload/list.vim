@@ -69,9 +69,7 @@ endfunction "}}}1
 " list#inject(list, init, funcref)
 function! list#inject(list, init, funcref)
   if ! exists('*' . a:funcref)
-    echohl Error
-    echom 'vimple: list#inject(): Funcref ' . a:funcref . ' does not exist!'
-    echohl None
+    throw 'vimple: list#inject(): Funcref ' . a:funcref . ' does not exist!'
     return a:init
   elseif empty(a:list)
     return a:init
@@ -83,20 +81,23 @@ function! list#inject(list, init, funcref)
   endif
 endf
 
-
 " partition list into count-element sublists
 function! list#partition(list, count)
   let lst = deepcopy(a:list)
   let len = len(lst)
   let cnt = a:count
   let newlists = []
-  for idx in range(0, len, cnt)
-    if idx < len
-      if (cnt - 1) > len(lst)
-        let cnt = len(lst)
-      endif
-      call add(newlists, remove(lst, 0, (cnt - 1)))
+  if cnt <= 0
+    throw 'vimple: list#partition: count must be positive'
+  endif
+  if cnt >= len
+    return lst
+  endif
+  for idx in range(0, len - 1, cnt)
+    if cnt > len(lst)
+      let cnt = len(lst)
     endif
+    call add(newlists, remove(lst, 0, (cnt - 1)))
   endfor
   return newlists
 endfunc

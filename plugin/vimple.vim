@@ -1,3 +1,15 @@
+function! StringScanner(first, last, command, ...)
+  let args = []
+  if a:0
+    let args = a:000
+  endif
+  let ss = string#scanner(getline(a:first, a:last))
+  let g:vimple#ss = call(eval('ss.' . a:command), args, ss)
+  return g:vimple#ss
+endfunction
+
+command! -bar -range=% -nargs=+ StringScanner echo StringScanner(<line1>, <line2>, <f-args>)
+
 function! Mkvimrc()
   let rtp = uniq(map(filter(map(getline(1, '$'),
         \ 'matchstr(v:val, "^\\s*\\d\\+:\\s\\+\\zs.*")'), 'v:val != ""'),

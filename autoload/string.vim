@@ -50,6 +50,28 @@ function! string#scanner(str)
     return matches
   endfunc
 
+  func obj.split(sep, ...) dict
+    let keepsep = 0
+    if a:0
+      let keepsep = a:1
+    endif
+    let pieces = []
+    let old_index = 0
+    while ! self.eos()
+      if self.skip_until(a:sep) == -1
+        call add(pieces, strpart(self.string, old_index))
+        break
+      endif
+      call add(pieces, strpart(self.string, old_index, (self.index - old_index)))
+      let the_sep = self.scan(a:sep)
+      if keepsep
+        call add(pieces, the_sep)
+      endif
+      let old_index = self.index
+    endwhile
+    return pieces
+  endfunc
+
   return obj
 endfunction
 
