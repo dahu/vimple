@@ -30,7 +30,7 @@ endfunction
 function! TagSearchAccept()
   let ident = matchstr(overlay#select_line(), '^\S\+')
   let fname = s:tags[ident].filename
-  if bufnr(fname) > -1
+  if bufnr(fname) == -1
     exec 'edit ' . fname
   else
     exec 'buffer ' . fname
