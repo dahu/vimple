@@ -17,7 +17,7 @@ function! TagSearch()
     echohl None
     return
   endif
-  let data = map(copy(s:tags), 'v:val.name . "\t" . v:val.filename')
+  let data = map(copy(s:tags), 'v:key . " " . v:val.name . "\t" . v:val.filename')
   call overlay#show(
         \  data
         \, {
@@ -28,14 +28,14 @@ function! TagSearch()
 endfunction
 
 function! TagSearchAccept()
-  let ident = matchstr(overlay#select_line(), '^\S\+')
+  let ident = matchstr(overlay#select_line(), '^\d\+')
   let fname = s:tags[ident].filename
   if bufnr(fname) == -1
     exec 'edit ' . fname
   else
     exec 'buffer ' . fname
   endif
-  exe s:tags[ident].cmd
+  silent! exe s:tags[ident].cmd
 endfunction
 
 nnoremap g] :call TagSearch()<cr>

@@ -28,6 +28,13 @@ function! overlay#show(list, actions, ...)
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
+  setlocal nobuflisted
+  setlocal foldmethod=manual
+  setlocal foldcolumn=0
+  setlocal nospell
+  setlocal modifiable
+  setlocal noreadonly
+
   let old_is = &incsearch
   set incsearch
   let old_hls = &hlsearch
