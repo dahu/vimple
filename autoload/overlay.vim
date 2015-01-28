@@ -42,7 +42,7 @@ function! overlay#show(list, actions, ...)
   call append(0, a:list)
   $
   delete _
-  redraw
+  " redraw
   1
   if options.filter
     if exists(':Filter')
