@@ -28,3 +28,4 @@ function! BufGrepAccept()
 endfunction
 
 nnoremap <leader>bg :call BufGrep(input('/'))<cr>
+command -bar -nargs=* G call BufGrep(<q-args>)
