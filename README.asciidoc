@@ -7,12 +7,37 @@ __Pacifying Vimmers__
 
 http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 
-Perhaps most usefully, Vimple provides a few commands to
-make the casual vimmer's life a little easier, such as:
+Perhaps most usefully, Vimple provides a few maps and commands to make
+the casual vimmer's life a little easier, such as:
 
 === `:View ex-command`
 
 Opens a split with the output of `ex-command`.
+
+=== `z=`
+
+Shows spelling suggestions in an overlay window. Pressing `<enter>`
+will replace the word under the cursor in the original window with the
+current word under the cursor in the overlay.
+
+Use `<plug>vimple_spell_suggest` if you want to map this behaviour
+to a differnt key.
+
+=== `[I`
+
+Shows identifier search results in an overlay window. Pressing `<enter>`
+will jump to the associated line of the identifier under the cursor.
+
+Use `<plug>vimple_ident_search` if you want to map this behaviour
+to a differnt key.
+
+=== `g]`
+
+Shows tag search results in an overlay window. Pressing `<enter>`
+will jump to the associated line of the tag under the cursor.
+
+Use `<plug>vimple_tag_search` if you want to map this behaviour
+to a differnt key.
 
 === `SCall( script , function , arg )`
 

@@ -16,6 +16,7 @@ Help on using vimple                                                 *vimple*
 8.  Filter				|vimple-filter-command|
 9.  QFdo				|vimple-quickfix-commands|
 10. BufDo				|vimple-bufdo-commands|
+11. Overlay Tools			|vimple-overlay-tools|
 
 
 ==============================================================================
@@ -220,5 +221,36 @@ Example:
 Will re-number the test cases in all files containing 'test' in their filename.
 
 NOTE: This example depends on https://github.com/dahu/Nexus
+
+
+==============================================================================
+ 11. OVERLAY TOOLS                                  *vimple-overlay-tools*
+                                       *vimple-z=* *vimple-[I* *vimple-g]*
+
+|z=|
+
+Shows |spell| suggestions in an overlay window. Pressing `<enter>`
+will replace the word under the cursor in the original window with the
+current word under the cursor in the overlay.
+
+Use `<plug>vimple_spell_suggest` if you want to map this behaviour
+to a differnt key.
+
+|[I|
+
+Shows |ident-search| results in an overlay window. Pressing `<enter>`
+will jump to the associated line of the identifier under the cursor.
+
+Use `<plug>vimple_ident_search` if you want to map this behaviour
+to a differnt key.
+
+|g]|
+
+Shows |tag| search results in an overlay window. Pressing `<enter>`
+will jump to the associated line of the tag under the cursor.
+
+Use `<plug>vimple_tag_search` if you want to map this behaviour
+to a differnt key.
+
 
  vim:tw=78:ts=8:ft=help:norl:

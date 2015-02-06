@@ -3,6 +3,113 @@ function! s:SID()
 endfun
 
 
+function! TagSearch()
+  let ident = expand('<cword>')
+  let s:tags = taglist(ident)
+  if empty(s:tags)
+    echohl Warning
+    echom 'Tag not found: ' . ident
+    echohl None
+    return
+  endif
+  let data = map(copy(s:tags), 'v:key . " " . v:val.name . "\t" . v:val.filename')
+  call overlay#show(
+        \  data
+        \, {
+        \    '<enter>' : ':call ' . s:SID() . 'tagsearchaccept()<cr>'
+        \  , 'q' : ':call overlay#close()<cr>'
+        \  }
+        \, {'filter'    : 1, 'use_split' : 1})
+endfunction
+
+function! s:tagsearchaccept()
+  let ident = matchstr(overlay#select_line(), '^\d\+')
+  let fname = s:tags[ident].filename
+  if bufnr(fname) == -1
+    exec 'edit ' . fname
+  else
+    exec 'buffer ' . fname
+  endif
+  silent! exe s:tags[ident].cmd
+endfunction
+
+nnoremap <plug>vimple_tag_search :call TagSearch()<cr>
+
+if !hasmapto('<plug>vimple_tag_search')
+  nmap <unique><silent> g] <plug>vimple_tag_search
+endif
+
+
+function! IdentSearch()
+  try
+    let data = vimple#redir('norm! [I')
+  catch '^Vim\%((\a\+)\)\=:E389:'
+    echohl Warning
+    echom 'Could not find pattern'
+    echohl None
+    return
+  endtry
+  call overlay#show(
+        \  data
+        \, {
+        \    '<enter>' : ':call ' . s:SID() . 'identsearchaccept()<cr>'
+        \  , 'q' : ':call overlay#close()<cr>'
+        \  }
+        \, {'filter'    : 1, 'use_split' : 1})
+endfunction
+
+function! s:identsearchaccept()
+  let num = matchstr(overlay#select_line(), '\d\+')
+  exe 'silent! norm! ' . num . "[\t"
+endfunction
+
+nnoremap <plug>vimple_ident_search :call IdentSearch()<cr>
+
+if !hasmapto('<plug>vimple_ident_search')
+  nmap <unique><silent> [I <plug>vimple_ident_search
+endif
+
+
+
+function! SpellSuggest(ident)
+  call overlay#show(
+        \  s:getsuggestions(a:ident)
+        \, {
+        \    '<enter>' : ':call ' . s:SID() . 'spellsuggestaccept()<cr>'
+        \  , 'q' : ':call overlay#close()<cr>'
+        \  }
+        \, {'filter'    : 0, 'use_split' : 1})
+endfunction
+
+function! s:getsuggestions(ident)
+  let spell = &spell
+  if ! spell
+    set spell
+  endif
+  let suggestions = list#lspread(spellsuggest(a:ident), 5)
+  if ! spell
+    set nospell
+  endif
+  return suggestions
+endfunction
+
+function! s:spellsuggestaccept()
+  let line = getline('.')
+  let idx = strlen(substitute(line[:col('.')], '[^\t]', '', 'g'))
+  let word_list = split(line, '\t')
+  call overlay#close()
+  let [r1, r2] = [@@, @-]
+  exe 'norm! ciw' . word_list[idx]
+  let [@@, @-] = [r1, r2]
+endfunction
+
+nnoremap <plug>vimple_spell_suggest :call SpellSuggest(expand('<cword>'))<cr>
+
+if !hasmapto('<plug>vimple_spell_suggest')
+  nmap <unique><silent> z= <plug>vimple_spell_suggest
+endif
+
+
 function! BufGrep(pattern)
   let pattern = a:pattern
   let fc = pattern[0]
