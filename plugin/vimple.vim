@@ -3,6 +3,14 @@ function! s:SID()
 endfun
 
 
+function! ExtendedRegexObject(...)
+  return call('regex#ExtendedRegex', a:000)
+endfunction
+
+" ERex is a global object with access to Vim's vars:
+let ERex = ExtendedRegexObject()
+
+
 function! TagSearch()
   let ident = expand('<cword>')
   let s:tags = taglist(ident)

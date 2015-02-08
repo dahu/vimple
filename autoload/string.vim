@@ -30,6 +30,7 @@ function! string#scanner(str)
   endfunc
 
   func obj.scan(pat) dict
+    " TODO: Why do I add \_^ here?!
     let m = matchlist(self.string, '\_^' . a:pat, self.index)
     if ! empty(m)
       let self.index += len(m[0])
