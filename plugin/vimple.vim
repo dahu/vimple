@@ -13,6 +13,9 @@ let ERex = ExtendedRegexObject()
 
 function! TagSearch()
   let ident = expand('<cword>')
+  if exists('s:tags')
+    unlet s:tags
+  endif
   let s:tags = taglist(ident)
   if empty(s:tags)
     echohl Warning

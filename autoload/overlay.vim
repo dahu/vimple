@@ -13,6 +13,7 @@ function! overlay#show(list, actions, ...)
         \ 'filter'    : 1,
         \ 'use_split' : 0,
         \ 'auto_act'  : 0,
+        \ 'name'      : '__overlay__'
         \ }
   if a:0
     if type(a:1) == type({})
@@ -34,6 +35,7 @@ function! overlay#show(list, actions, ...)
   setlocal nospell
   setlocal modifiable
   setlocal noreadonly
+  exe 'file ' . options.name
 
   let old_is = &incsearch
   set incsearch
