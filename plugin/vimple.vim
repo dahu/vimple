@@ -51,9 +51,10 @@ if !hasmapto('<plug>vimple_tag_search')
 endif
 
 
-function! IdentSearch()
+function! IdentSearch(type)
+  let type = a:type ? ']I' : '[I'
   try
-    let data = vimple#redir('norm! [I')
+    let data = vimple#redir('norm! ' . type)
   catch '^Vim\%((\a\+)\)\=:E389:'
     echohl Warning
     echom 'Could not find pattern'
@@ -63,21 +64,27 @@ function! IdentSearch()
   call overlay#show(
         \  data
         \, {
-        \    '<enter>' : ':call ' . s:SID() . 'identsearchaccept()<cr>'
+        \    '<enter>' : ':call ' . s:SID() . 'identsearchaccept(' . a:type . ')<cr>'
         \  , 'q' : ':call overlay#close()<cr>'
         \  }
         \, {'filter'    : 1, 'use_split' : 1})
 endfunction
 
-function! s:identsearchaccept()
+function! s:identsearchaccept(type)
+  let type = a:type ? ']' : '['
   let num = matchstr(overlay#select_line(), '\d\+')
-  exe 'silent! norm! ' . num . "[\t"
+  exe 'silent! norm! ' . num . type . "\t"
 endfunction
 
-nnoremap <plug>vimple_ident_search :call IdentSearch()<cr>
+nnoremap <plug>vimple_ident_search         :call IdentSearch(0)<cr>
+nnoremap <plug>vimple_ident_search_forward :call IdentSearch(1)<cr>
 
 if !hasmapto('<plug>vimple_ident_search')
   nmap <unique><silent> [I <plug>vimple_ident_search
+endif
+
+if !hasmapto('<plug>vimple_ident_search_forward')
+  nmap <unique><silent> ]I <plug>vimple_ident_search_forward
 endif
 
 
