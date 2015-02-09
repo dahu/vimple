@@ -265,10 +265,11 @@ command! -range -nargs=+ -complete=file ReadIntoBuffer <line1>,<line2>call ReadI
 
 function! View(cmd)
   let data = vimple#redir(a:cmd)
-  call ShowInNewBuf(data)
-  if index(g:vimple_auto_filter, 'view') != -1
-    Filter
-  endif
+  " call ShowInNewBuf(data)
+  call overlay#show(data, {'q' : ':call overlay#close()<cr>'}, {'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
+  " if index(g:vimple_auto_filter, 'view') != -1
+  "   Filter
+  " endif
 endfunction
 
 if ! exists('g:vimple_auto_filter')
@@ -276,11 +277,12 @@ if ! exists('g:vimple_auto_filter')
 endif
 
 function! ShowInNewBuf(data)
-  new
-  setlocal buftype=nofile
-  setlocal bufhidden=wipe
-  setlocal noswapfile
-  call setline(1, a:data)
+  call overlay#show(a:data, {}, {'use_split' : 1, 'filter' : 0})
+  " new
+  " setlocal buftype=nofile
+  " setlocal bufhidden=wipe
+  " setlocal noswapfile
+  " call setline(1, a:data)
 endfunction
 
 command! -nargs=+ -complete=command View call View(<q-args>)

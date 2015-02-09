@@ -6,6 +6,8 @@ function! overlay#controller(...)
   endif
 endfunction
 
+let s:overlay_count = 1
+
 function! overlay#show(list, actions, ...)
   let s:altbuf = bufnr('#')
 
@@ -19,6 +21,11 @@ function! overlay#show(list, actions, ...)
     if type(a:1) == type({})
       call extend(options, a:1)
     endif
+  endif
+
+  if options.name == '__overlay__'
+    let options.name .= s:overlay_count . '__'
+    let s:overlay_count += 1
   endif
 
   if options.use_split
