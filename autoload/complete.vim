@@ -35,10 +35,3 @@ function! complete#trigger(func)
   return "\<c-x>\<c-u>"
 endfunction
 
-if ! exists('g:vimple_override_file_complete')
-  let g:vimple_override_file_complete = 0
-endif
-
-if g:vimple_override_file_complete
-  inoremap <expr> <c-x><c-f> complete#trigger('complete#files_in_path')
-endif
