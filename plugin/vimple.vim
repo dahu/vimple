@@ -80,7 +80,7 @@ nnoremap <plug>vimple_ident_search         :call IdentSearch(0)<cr>
 nnoremap <plug>vimple_ident_search_forward :call IdentSearch(1)<cr>
 
 if !hasmapto('<plug>vimple_ident_search')
-  nmap <unique><silent> [I <plug>vimple_ident_search
+  nmap <unique><silent> [I <plug>vimple_ident_search<bs>
 endif
 
 if !hasmapto('<plug>vimple_ident_search_forward')
