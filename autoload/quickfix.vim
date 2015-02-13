@@ -16,7 +16,7 @@ endfunction
 
 function! quickfix#do(cmd)
   " create a new window so as not to interfere with user's arglist
-  split new
+  split
   call quickfix#to_args(0)   " 0 == local not global
   exe 'argdo ' . a:cmd
   close
