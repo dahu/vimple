@@ -31,7 +31,8 @@ function! string#scanner(str)
 
   func obj.scan(pat) dict
     " TODO: Why do I add \_^ here?!
-    let m = matchlist(self.string, '\_^' . a:pat, self.index)
+    " let m = matchlist(self.string, '\_^' . a:pat, self.index)
+    let m = matchlist(self.string, a:pat, self.index)
     if ! empty(m)
       let self.index += len(m[0])
       let self.matches = m
@@ -63,10 +64,15 @@ function! string#scanner(str)
         call add(pieces, strpart(self.string, old_index))
         break
       endif
-      call add(pieces, strpart(self.string, old_index, (self.index - old_index)))
+      let the_piece = strpart(self.string, old_index, (self.index - old_index))
+      call add(pieces, the_piece)
       let the_sep = self.scan(a:sep)
-      if keepsep
+      if keepsep && (the_sep != '')
         call add(pieces, the_sep)
+      endif
+      if old_index == self.index
+        call add(pieces, strpart(self.string, old_index, 1))
+        let self.index += 1
       endif
       let old_index = self.index
     endwhile
