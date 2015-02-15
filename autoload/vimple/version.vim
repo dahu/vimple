@@ -43,7 +43,7 @@ function! vimple#version#new()
     let [i['version'], i['major'], i['minor'], i['build_name'], i['compiled']] =
           \ split(
           \   substitute(info[0]
-          \   , '^VIM.\{-}\(\(\d\+\)\.\(\d\+\)\).\{-}'
+          \   , '^N\?VIM.\{-}\(\(\d\+\)\.\(\d\+\)\).\{-}'
           \       . '(\(.\{-}\)\%(,\s\+\S\+\s\+\(.\{-}\)\)\?)'
           \   , '\1\n\2\n\3\n\4\n\5', '')
           \ , "\n", 1)
