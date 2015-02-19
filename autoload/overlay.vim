@@ -9,7 +9,8 @@ endfunction
 let s:overlay_count = 1
 
 function! overlay#show(list, actions, ...)
-  let s:altbuf = bufnr('#')
+  let overlay_parent_altbuf = bufnr('#')
+  let overlay_parent        = bufnr('%')
 
   let options = {
         \ 'filter'    : 1,
@@ -32,7 +33,9 @@ function! overlay#show(list, actions, ...)
     hide noautocmd split
   endif
   hide noautocmd enew
-  let b:overlay_use_split = options.use_split
+  let b:overlay_use_split     = options.use_split
+  let b:overlay_parent        = overlay_parent
+  let b:overlay_parent_altbuf = overlay_parent_altbuf
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
@@ -74,10 +77,11 @@ function! overlay#close()
     wincmd q
     exe 'bwipe ' . scratch_buf
   else
-    buffer #
+    exe 'buffer ' . b:overlay_parent
     bwipe #
-    if buflisted(s:altbuf)
-      exe 'buffer ' . s:altbuf
+    if exists('b:overlay_parent_altbuf')
+          \ && buflisted(b:overlay_parent_altbuf)
+      exe 'buffer ' . b:overlay_parent_altbuf
       silent! buffer #
     endif
   endif
