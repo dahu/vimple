@@ -360,26 +360,8 @@ endfunction
 
 command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'), '|')
 
-" It seems that the {name} way of initiallising variables is SLOW in vim
-" " Pre-initialise library objects
-" let s:pairs = [
-"       \ ['bl', 'ls'],
-"       \ ['hl', 'highlight'],
-"       \ ['sn', 'scriptnames'],
-"       \ ['vn', 'version'],
-"       \ ['ma', 'marks'],
-"       \ ['ul', 'undolist'],
-"       \ ['mp', 'map'],
-"       \ ['op', 'options'],
-"       \]
-" if get(g:, 'vimple_init_vars', 1)
-"   for [name, func] in s:pairs
-"     if get(g:, 'vimple_init_'.name, 1)
-"       let vimple#{name} = vimple#{func}#new()
-"     endif
-"   endfor
-" endif
 
+" " Pre-initialise library objects
 if get(g:, 'vimple_init_vars', 1)
   if get(g:, 'vimple_init_bl', 1)
     let vimple#bl = vimple#ls#new()

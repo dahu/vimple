@@ -73,9 +73,12 @@ function! vimple#redir(command, ...)
   if a:0 != 0
     let split_pat = a:1
   endif
+  let lang = v:lang
+  silent! language messages C
   redir => str
   silent exe a:command
   redir END
+  silent! exec 'language messages ' . lang
   return split(str, split_pat)
 endfunction
 

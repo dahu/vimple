@@ -53,6 +53,7 @@ function! vimple#options#new()
     silent! options
     let content = getline(1, '$')
     close
+    bwipe option-window
 
     let long = ''
     for l in content
