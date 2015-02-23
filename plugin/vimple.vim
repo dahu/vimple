@@ -301,8 +301,9 @@ function! ShowInNewBuf(data)
   " call setline(1, a:data)
 endfunction
 
-command! -nargs=+ -complete=command View call View(<q-args>)
+command! -nargs=+ -complete=command View     call View(<q-args>)
 command! -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
+command! -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<args>), "\n"))
 
 function! Collect(args)
   let [regvar; command] = split(a:args)
