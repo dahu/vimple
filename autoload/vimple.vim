@@ -192,11 +192,9 @@ function! vimple#filter(lines, options)
   endfunc
 
   func obj.filter() dict
-    let old_is = &incsearch
     let old_hls = &hlsearch
-    set incsearch hlsearch
+    set hlsearch
     call self.incremental()
-    let &incsearch = old_is
     let &hlsearch = old_hls
     return self
   endfunc
