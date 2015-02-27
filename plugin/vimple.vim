@@ -6,11 +6,16 @@ endfun
 if ! exists('g:vimple_override_file_complete')
   let g:vimple_override_file_complete = 0
 endif
+if ! exists('g:vimple_override_line_complete')
+  let g:vimple_override_line_complete = 0
+endif
 
 if g:vimple_override_file_complete
   inoremap <expr> <c-x><c-f> complete#trigger('complete#files_in_path')
 endif
-
+if g:vimple_override_line_complete
+  inoremap <expr> <c-x><c-l> complete#trigger('complete#foist')
+endif
 
 function! ExtendedRegexObject(...)
   return call('regex#ExtendedRegex', a:000)
