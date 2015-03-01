@@ -3,6 +3,16 @@ function! s:SID()
 endfun
 
 
+function! CurrentPartialWord()
+  let p = searchpos('\W\zs\w\+\%#', 'bnW')
+  let b:partial_word = strpart(getline('.'), p[1]-1, col('.')-p[1])
+endfunction
+
+augroup Vimple
+  au!
+  autocmd CursorMovedI * call CurrentPartialWord()
+augroup END
+
 if ! exists('g:vimple_override_file_complete')
   let g:vimple_override_file_complete = 0
 endif
