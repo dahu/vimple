@@ -53,6 +53,8 @@ Performs the series of bar-separated ex-commands silently.
 
 Performs the series of bar-separated ex-commands over the buffers in the QuickFix list.
 
+NOTE: The location-list analogue is `:LLdo`
+
 === `:BufTypeDo type ex-commands`
 
 Performs the series of bar-separated ex-commands over the buffers of the given +type+.

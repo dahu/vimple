@@ -165,8 +165,11 @@ browse window.
 ==============================================================================
  9. QUICKFIX COMMANDS                           *vimple-quickfix-commands*
                                                                     *QFdo*
+NOTE: The location-list analogue for the QuickFix  commands start with LL
+
 >
   :QFdo
+  :LLdo
 <
 The :QFdo command performs the series of bar-separated ex-commands over the
 buffers in the QuickFix list.
@@ -178,21 +181,31 @@ Example:
 <
 Will change all princes into frogs recursively throughout your txt files.
 
+NOTE: If you have the (https://github.com/dahu/grope) Grope plugin (which uses
+      the |location-list|, this is even easier:
 >
-  :QFbufs
+  :Grope /prince/ @@txt
+  :LLdo %s/Vim/frog/g
 <
-Returns the unique list of buffer names within the QuickFix list.
 
 >
-  :QFargs [global]
+  :QFbufs
+  :LLbufs
 <
-Sets the |:args| or |:arglocal| (depending on whether anything is provided for
-the optional "global" argument. By default, the local argument list is used.)
+Returns the unique list of buffer names within the QuickFix / Location list.
+
+>
+  :QFargs
+  :QFargslocal
+  :LLargs
+  :LLargslocal
+<
+Sets the |:args| or |:arglocal| from the relevant list.
 
 Example:
 >
   :vimgrep /prince/j **/*.txt
-  :tabnew | QFargs
+  :tabnew | QFargslocal
 <
 Will open a new tab-page and set the local argument list to the unique set of
 buffers contained within the QuickFix list.

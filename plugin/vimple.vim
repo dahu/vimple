@@ -256,9 +256,16 @@ function! QFbufs()
   return quickfix#bufnames()
 endfunction
 
-command! -nargs=? QFargs call quickfix#to_args(<q-args>)
+command! -bar     QFargs      call quickfix#to_args(1)
+command! -bar     QFargslocal call quickfix#to_args(0)
+command! -bar     LLargs      call loclist#to_args(1)
+command! -bar     LLargslocal call loclist#to_args(0)
 
-command! -nargs=+ QFdo call quickfix#do(<q-args>)
+command! -bar     QFbufs      echo quickfix#bufnames()
+command! -bar     LLbufs      echo loclist#bufnames()
+
+command! -nargs=+ QFdo        call quickfix#do(<q-args>)
+command! -nargs=+ LLdo        call loclist#do(<q-args>)
 
 command! -range -nargs=0 Filter call vimple#filter(getline(1,'$'), {}).filter()
 nnoremap <plug>vimple_filter :Filter<cr>
