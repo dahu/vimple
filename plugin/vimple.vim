@@ -2,6 +2,19 @@ function! s:SID()
   return "<SNR>" . matchstr(expand('<sfile>'), '<SNR>\zs\d\+_\zeSID$')
 endfun
 
+if !exists('g:vim_home')
+  let vim_home = fnamemodify($MYVIMRC, ':p:h')
+endif
+if !exists('g:vim_bundle_home')
+  let vim_bundle_home = g:vim_home . '/bundle/'
+endif
+
+" example call:
+"   call PathogenAddPlugin(g:vim_bundle_home . '/unused/csapprox{}')
+function! PathogenAddPlugin(plugin)
+  call pathogen#surround(a:plugin)
+  silent! runtime! plugin/*.vim
+endfunction
 
 function! CurrentPartialWord()
   let p = searchpos('\W\zs\w\+\%#', 'bnW')
