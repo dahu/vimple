@@ -94,6 +94,29 @@ Shows your currently active |:map|s and |:imap|s in a new buffer.  :MyMaps
 attempts to group related maps to more easily allow you to create a custom map
 layout for your various |'filetype'|s.
 
+=== `Scope()`
+
+The Scope() function attempts to show the current function or
+class/method scope. Some people like to display this information in
+their `statusline`, like:
+
+  set statusline=%f%m%r%h%w\ [%n:%{&ff}/%Y]\%{Scope()}%=[0x\%04.4B][%03v][%p%%\ line\ %l\ of\ %L]
+
+Currently only Vim & Python (and Python only for testing purposes, created by a NON Pythonista -- patches welcome) have been implemented, but it is very easy for you to write scope functions for your own filetypes. Take Ruby for example: Create `~/.vim/ftplugin/ruby_scope.vim` like this:
+
+----
+function! Scope_ruby()
+  let class_scope  = scope#inspect('^\s*class\s\+\([a-zA-Z0-9_.]\+\)', '^\s*end')
+  let method_scope = scope#inspect('^\s*def\s\+\([a-zA-Z0-9_.]\+\)', '^\s*end')
+  return ' ' . join(map(class_scope.stack, 'v:val.head_line_number . "," . v:val.tail_line_number . " " . v:val.head_string'), ' :: ')
+        \. ' >> ' . join(map(method_scope.stack, 'v:val.head_line_number . "," . v:val.tail_line_number . " " . v:val.head_string'), ' > ')
+endfunction
+----
+
+NOTE: The above example for Ruby is woefully inadequate. A better effect
+might be achievable with more context in the regex patterns. The
+patterns in `syntax/ruby.vim` might be useful. Parsing with regex is futile.
+
 Vimple also provides VimLOO (Object Oriented VimL) objects
 for these read-only ++:ex++ commands:
 

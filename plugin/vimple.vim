@@ -26,6 +26,13 @@ augroup Vimple
   autocmd CursorMovedI * call CurrentPartialWord()
 augroup END
 
+function! Scope()
+  let ft = tolower(&ft)
+  if exists('*Scope_' . ft)
+    return call('Scope_' . ft, [])
+  endif
+endfunction
+
 if ! exists('g:vimple_override_file_complete')
   let g:vimple_override_file_complete = 0
 endif
