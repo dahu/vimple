@@ -117,6 +117,13 @@ NOTE: The above example for Ruby is woefully inadequate. A better effect
 might be achievable with more context in the regex patterns. The
 patterns in `syntax/ruby.vim` might be useful. Parsing with regex is futile.
 
+=== Composable Completions
+
+By default, `jj` in insert mode activates a user-extendible
+meta-completion list. The default list includes abbreviations (if you
+have https://github.com/dahu/Aboriginal), some date-time patterns and
+the built-in dictionary completion (`<c-x><c-k>`).
+
 Vimple also provides VimLOO (Object Oriented VimL) objects
 for these read-only ++:ex++ commands:
 

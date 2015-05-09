@@ -434,5 +434,7 @@ endif
 
 call vimple#default_colorscheme()
 
+call completers#init()
+
 " disabled by default
 " let vimple#au = vimple#autocmd#new()
