@@ -17,6 +17,8 @@ Help on using vimple                                                 *vimple*
 9.  QFdo				|vimple-quickfix-commands|
 10. BufDo				|vimple-bufdo-commands|
 11. Overlay Tools			|vimple-overlay-tools|
+12. Scope				|vimple-scope|
+13. Custom Insert-mode Completers	|vimple-completers|
 
 
 ==============================================================================
@@ -265,5 +267,50 @@ will jump to the associated line of the tag under the cursor.
 Use `<plug>vimple_tag_search` if you want to map this behaviour
 to a differnt key.
 
+
+
+==============================================================================
+ 12. SCOPE                                                  *vimple-scope*
+
+The Scope() function attempts to show the current function or class/method
+scope. Some people like to display this information in their `statusline`,
+like:
+>
+  set statusline=%f%m%r%h%w\ [%n:%{&ff}/%Y]\%{Scope()}%=[0x\%04.4B][%03v][%p%%\ line\ %l\ of\ %L]
+<
+
+Currently only Vim & Python (and Python only for testing purposes, created by
+a NON Pythonista -- patches welcome) have been implemented, but it is very
+easy for you to write scope functions for your own filetypes. Take Ruby for
+example: Create `~/.vim/ftplugin/ruby_scope.vim` like this:
+
+----
+function! Scope_ruby()
+  let class_scope  = scope#inspect('^\s*class\s\+\([a-zA-Z0-9_.]\+\)', '^\s*end')
+  let method_scope = scope#inspect('^\s*def\s\+\([a-zA-Z0-9_.]\+\)', '^\s*end')
+  return ' ' . join(map(class_scope.stack, 'v:val.head_line_number . "," . v:val.tail_line_number . " " . v:val.head_string'), ' :: ')
+        \. ' >> ' . join(map(method_scope.stack, 'v:val.head_line_number . "," . v:val.tail_line_number . " " . v:val.head_string'), ' > ')
+endfunction
+----
+
+NOTE: The above example for Ruby is woefully inadequate. A better effect might
+be achievable with more context in the regex patterns. The patterns in
+`syntax/ruby.vim` might be useful. Parsing with regex is futile.
+
+
+==============================================================================
+ 13. COMPOSABLE COMPLETIONS                            *vimple-completers*
+                                                               *vimple-jj*
+
+
+By default, `jj` in insert mode activates a user-extendible meta-completion
+list. The default list includes abbreviations (if you have
+https://github.com/dahu/Aboriginal), some date-time patterns and the built-in
+dictionary completion (`<c-x><c-k>`).
+
+The default `jj` can be overridden like this:
+>
+  imap <c-x><c-c> <plug>vimple_completers_trigger
+<
 
  vim:tw=78:ts=8:ft=help:norl:

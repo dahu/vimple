@@ -124,6 +124,10 @@ meta-completion list. The default list includes abbreviations (if you
 have https://github.com/dahu/Aboriginal), some date-time patterns and
 the built-in dictionary completion (`<c-x><c-k>`).
 
+The default `jj` can be overridden like this:
+
+  imap <c-x><c-c> <plug>vimple_completers_trigger
+
 Vimple also provides VimLOO (Object Oriented VimL) objects
 for these read-only ++:ex++ commands:
 
