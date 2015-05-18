@@ -65,7 +65,7 @@ endfunction
 
 function! completers#init()
   inoremap <expr> <plug>vimple_completers_trigger complete#trigger('completers#trigger')
-  if !hasmapto('<plug>vimple_completers_trigger')
+  if !hasmapto('<plug>vimple_completers_trigger', 'i')
     imap <unique><silent> jj <plug>vimple_completers_trigger
   endif
   inoremap <expr> <c-x><c-a> complete#trigger('completers#abbrevs')
