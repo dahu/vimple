@@ -13,7 +13,6 @@ function! string#scanner(str)
   endfunc
 
   func obj.skip(pat) dict
-    " let pos = match(self.string, a:pat, self.index)
     let pos = matchend(self.string, '\_^' . a:pat, self.index)
     if pos != -1
       let self.index = pos
@@ -30,9 +29,9 @@ function! string#scanner(str)
   endfunc
 
   func obj.scan(pat) dict
-    " TODO: Why do I add \_^ here?!
-    " let m = matchlist(self.string, '\_^' . a:pat, self.index)
-    let m = matchlist(self.string, a:pat, self.index)
+    " Use \_^ here to anchor the match at the start of the index.
+    " Otherwise it finds the first match after index.
+    let m = matchlist(self.string, '\_^' . a:pat, self.index)
     if ! empty(m)
       let self.index += len(m[0])
       let self.matches = m
@@ -80,6 +79,116 @@ function! string#scanner(str)
   endfunc
 
   return obj
+endfunction
+
+" A list of tokens with navigation methods & element access
+function! string#tokens()
+  let obj          = {}
+  let obj.tokens   = []
+  let obj.index    = 0
+  let obj.cur_tok  = []
+  let obj.next_tok = []
+
+  "foo
+  func obj.finalise()
+    call add(self.tokens, ['_end_', '_end_', self.tokens[-1][-1]])
+    let self.num_tokens = len(self.tokens)
+    let self.next_tok = self.tokens[0]
+    return self
+  endfunc
+
+  func obj.next()
+    let self.cur_tok = self.next_tok
+    if self.index < self.num_tokens
+      let self.index += 1
+    endif
+    let self.next_tok = self.tokens[self.index]
+    return self.cur_tok
+  endfunc
+
+  func obj.add(type, value, line)
+    call add(self.tokens, [a:type, a:value, a:line])
+  endfunc
+
+  return obj
+endfunction
+
+function! string#lexer(string)
+  let obj               = {}
+  let obj.tokens        = string#tokens()
+  let obj.string        = ''
+  let obj.line_continuation_pattern = '\n\s*\\'
+  let obj.pattern_order = [
+        \  'whitespace', 'name'
+        \, 'float_number', 'hex_number', 'oct_number', 'int_number'
+        \, 'tq_string', 'dq_string', 'sq_string'
+        \, 'operator', 'comment', 'unknown'
+        \]
+  let obj.newline_patterns = [
+        \  'whitespace'
+        \, 'tq_string', 'dq_string', 'sq_string'
+        \, 'comment', 'unknown'
+        \]
+  let obj.patterns = {
+        \  'whitespace'   : ['\s\+', '\n\%(\s*\\\s*\)\?']
+        \, 'name'         : ['[ablgstw]:\w*', '[_a-zA-Z]\+']
+        \, 'float_number' : ['\d\+\.\d\+\%([eE][+-]\?\d\+\)\?']
+        \, 'hex_number'   : ['0x\x\+']
+        \, 'oct_number'   : ['0\o\+']
+        \, 'int_number'   : ['\d\+']
+        \, 'tq_string'    : ['"""\_.\{-}"""']
+        \, 'dq_string'    : ['"\%(\\\.\|[^\n]\)*"']
+        \, 'sq_string'    : ['''\%(''''\|\_.\)\{-}''']
+        \, 'operator'     : ['[\\\[\](){}<>:,./\\?=+!@#$%^&*`~|-]\+']
+        \, 'comment'      : ['"[^\n]*\n']
+        \, 'unknown'      : ['\S\+']
+        \}
+
+  func obj.new(str)
+    let self.tokens = string#tokens()
+    if type(a:str) == type([])
+      let self.string = join(a:str, "\n")
+    else
+      let self.string = a:str
+    endif
+    let self.ss = string#scanner(self.string . "\n")
+    call self.lex()
+    let self.tokens = self.tokens.finalise()
+    return self
+  endfunc
+
+  func obj.join_line_continuations(string)
+    return substitute(a:string, self.line_continuation_pattern, '', 'g')
+  endfunc
+
+  func obj.lex()
+    let lines = 1
+    while self.ss.index < self.ss.length
+      let matched = 0
+      for type in self.pattern_order
+        for pat in self.patterns[type]
+          let value = self.ss.scan(pat)
+          if value != ''
+            let matched = 1
+            let t_value = value
+            if index(self.newline_patterns, type) != -1
+              let value = self.join_line_continuations(value)
+            endif
+            call self.tokens.add(type, value, lines)
+            if index(self.newline_patterns, type) != -1
+              let lines += len(substitute(t_value, '[^\n]', '', 'g'))
+            endif
+            break
+          endif
+        endfor
+        if matched
+          break
+        endif
+      endfor
+    endwhile
+  endfunc
+
+  return obj.new(a:string)
 endfunction
 
 function! string#trim(str)
