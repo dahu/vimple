@@ -18,16 +18,16 @@ endfunction
 
 function! Oldfiles()
   call overlay#show(
-        \  v:oldfiles
+        \  vimple#redir('oldfiles')
         \, {
         \    '<enter>' : ':call OldfilesAccept()<cr>'
         \  , 'q' : ':call overlay#close()<cr>'
         \  }
-        \, {'filter'    : 0, 'use_split' : 1})
+        \, {'filter'    : 1, 'use_split' : 1})
 endfunction
 
 function! OldfilesAccept()
-  let line = line('.')
+  let line = matchstr(getline('.'), '^\d\+')
   call overlay#close()
   exe 'edit ' . expand('#<' . line)
 endfunction
