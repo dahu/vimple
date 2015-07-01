@@ -33,7 +33,8 @@ function! overlay#show(list, actions, ...)
     hide noautocmd split
   endif
   hide noautocmd enew
-  let b:overlay_use_split     = options.use_split
+  let b:options               = options
+  " let b:overlay_use_split     = b:options.use_split
   let b:overlay_parent        = overlay_parent
   let b:overlay_parent_altbuf = overlay_parent_altbuf
   setlocal buftype=nofile
@@ -45,26 +46,33 @@ function! overlay#show(list, actions, ...)
   setlocal nospell
   setlocal modifiable
   setlocal noreadonly
-  exe 'file ' . options.name
+  exe 'file ' . b:options.name
+
+  1
+  call overlay#update(a:list)
 
   let old_is = &incsearch
   set incsearch
   let old_hls = &hlsearch
   set hlsearch
+  call overlay#controller(a:actions)
+endfunction
+
+function! overlay#update(list)
+  let line = line('.')
+  % delete
   call append(0, a:list)
   $
   delete _
-  " redraw
-  1
-  if options.filter
+  exe line
+  if b:options.filter
     if exists(':Filter')
       Filter
     else
       call feedkeys('/')
     endif
   endif
-  call overlay#controller(a:actions)
-  if options.auto_act
+  if b:options.auto_act
     if line('$') == 1
       call feedkeys("\<enter>")
     endif
@@ -72,7 +80,7 @@ function! overlay#show(list, actions, ...)
 endfunction
 
 function! overlay#close()
-  if b:overlay_use_split
+  if b:options.use_split
     let scratch_buf = bufnr('')
     wincmd q
     exe 'bwipe ' . scratch_buf
