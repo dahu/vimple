@@ -23,6 +23,20 @@ endfunction
 " Example Completers
 "-------------------
 "
+function! complete#short_files_in_path(findstart, base)
+  if a:findstart
+    let line = getline('.')
+    let start = col('.') - 1
+    while start > 0 && line[start - 1] =~ '\f'
+      let start -= 1
+    endwhile
+    return start
+  else
+    let res = map(globpath(&path, a:base . '*', 0, 1)
+          \, 'fnamemodify(v:val, ":t")')
+    return res
+  endif
+endfunction
 
 function! complete#files_in_path(findstart, base)
   if a:findstart

@@ -36,12 +36,19 @@ endfunction
 if ! exists('g:vimple_override_file_complete')
   let g:vimple_override_file_complete = 0
 endif
+if ! exists('g:vimple_file_complete_short')
+  let g:vimple_file_complete_short = 0
+endif
 if ! exists('g:vimple_override_line_complete')
   let g:vimple_override_line_complete = 0
 endif
 
 if g:vimple_override_file_complete
-  inoremap <expr> <c-x><c-f> complete#trigger('complete#files_in_path')
+  if g:vimple_file_complete_short
+    inoremap <expr> <c-x><c-f> complete#trigger('complete#short_files_in_path')
+  else
+    inoremap <expr> <c-x><c-f> complete#trigger('complete#files_in_path')
+  endif
 endif
 if g:vimple_override_line_complete
   inoremap <expr> <c-x><c-l> complete#trigger('complete#foist')
