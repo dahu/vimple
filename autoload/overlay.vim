@@ -46,6 +46,9 @@ function! overlay#show(list, actions, ...)
   setlocal nospell
   setlocal modifiable
   setlocal noreadonly
+  for o in keys(filter(copy(options), 'v:key =~ "^set"'))
+    exe o
+  endfor
   exe 'file ' . b:options.name
 
   1

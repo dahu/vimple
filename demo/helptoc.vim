@@ -1,29 +1,28 @@
-" Jump to an entry in the current help file's TOC
+" Jump to a help-tag entry in the current help file
 
 " In the overlay window:
-" <enter> jumps to the first (hopefully only) tag on the current line
+" You're prompted with a filter pattern. Use <esc> to cancel.
+" <enter> jumps to the tag beneath the cursor
 " q closes the overlay without action
 
 " functions {{{1
 
-function! GetTOC() "{{{2
-  let toc = string#scanner(string#scanner(getline(1, '$')).scan('.\{-}\n====')).collect('\n\s*\zs\d\+.\{-}\n\@=')
-  return toc
-endfunction
-
 function! HelpTOC() "{{{2
   call overlay#show(
-        \  GetTOC()
+        \  list#lspread(map(filter(string#scanner(getline(1, '$')).collect('\*\S\+\*'), 'v:val =~ "[a-z]"'), 'strpart(v:val, 1, len(v:val)-2)'), 3)
         \, {
-        \    '<enter>' : ':call TOCAccept()<cr>:exe "tag " . g:toc_tag<cr>'
+        \    '<enter>' : ':exe "tag " . HelpTOCAccept()<cr>'
         \  , 'q' : ':call overlay#close()<cr>'
         \  }
-        \, {'filter'    : 0, 'use_split' : 1})
+        \, {'filter'    : 1, 'use_split' : 1, 'setlocal tabstop=50' :-0})
 endfunction
 
-function! TOCAccept() "{{{2
-  let g:toc_tag = string#scanner(getline('.')).collect('|.\{-}|')[0][1:-2]
+function! HelpTOCAccept()
+  let line      = getline('.')
+  let idx       = strlen(substitute(line[:col('.')], '[^\t]', '', 'g'))
+  let word_list = split(line, '\t')
   call overlay#close()
+  return word_list[idx]
 endfunction
 
 " maps {{{1
