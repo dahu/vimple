@@ -4,7 +4,9 @@
 " <enter> replaces current word with word under cursor
 " q closes the overlay without action
 
-function! GetSuggestions(ident)
+" functions {{{1
+
+function! GetSuggestions(ident) "{{{2
   let spell = &spell
   if ! spell
     set spell
@@ -16,7 +18,7 @@ function! GetSuggestions(ident)
   return suggestions
 endfunction
 
-function! SpellSuggest(ident)
+function! SpellSuggest(ident) "{{{2
   call overlay#show(
         \  GetSuggestions(a:ident)
         \, {
@@ -26,9 +28,7 @@ function! SpellSuggest(ident)
         \, {'filter'    : 0, 'use_split' : 1})
 endfunction
 
-nnoremap z= :call SpellSuggest(expand('<cword>'))<cr>
-
-function! SpellSuggestAccept()
+function! SpellSuggestAccept() "{{{2
   let line = getline('.')
   let idx = strlen(substitute(line[:col('.')], '[^\t]', '', 'g'))
   let word_list = split(line, '\t')
@@ -37,3 +37,9 @@ function! SpellSuggestAccept()
   exe 'norm! ciw' . word_list[idx]
   let [@@, @-] = [r1, r2]
 endfunction
+
+" maps {{{1
+
+nnoremap z= :call SpellSuggest(expand('<cword>'))<cr>
+
+" vim: fen fdm=marker

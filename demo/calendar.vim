@@ -8,12 +8,14 @@
 " <pagedown> moves forward one year
 " q closes the overlay without action
 
-function! GetCalendar(month, year)
+" functions {{{1
+
+function! GetCalendar(month, year) "{{{2
   let calendar = split(substitute(substitute(substitute(system('cal ' . a:month . ' ' . a:year), '\n', '\n ', 'g'), '_ _', '*', ''), '\s\+\_$', '', 'g'), "\n")
   return calendar
 endfunction
 
-function! Calendar(month, year)
+function! Calendar(month, year) "{{{2
   call overlay#show(
         \  GetCalendar(a:month, a:year)
         \, {
@@ -29,7 +31,7 @@ function! Calendar(month, year)
   highlight def link Today TODO
 endfunction
 
-function! CalendarUpdate(time, amount)
+function! CalendarUpdate(time, amount) "{{{2
   if a:time == 'm'
     let b:options.month += a:amount
   else
@@ -38,7 +40,7 @@ function! CalendarUpdate(time, amount)
   call overlay#update(GetCalendar(b:options.month, b:options.year))
 endfunction
 
-function! CalendarAccept()
+function! CalendarAccept() "{{{2
   let day = expand('<cword>')
   let date = b:options.year . '-' . printf('%02d', b:options.month) . '-' . printf('%02d', day)
   call overlay#close()
@@ -73,11 +75,15 @@ function! CalendarAccept()
   return date
 endfunction
 
-function! CalendarToday()
+function! CalendarToday() "{{{2
   return Calendar(strftime('%m'), strftime('%Y'))
 endfunction
+
+" maps {{{1
 
 inoremap <F2>         <esc>:let b:cal_mode='I'<cr>:call CalendarToday()<cr>
 nnoremap <leader>dda       :let b:cal_mode='a'<cr>:call CalendarToday()<cr>
 nnoremap <leader>ddi       :let b:cal_mode='i'<cr>:call CalendarToday()<cr>
 nnoremap <leader>ddc       :let b:cal_mode='c'<cr>:call CalendarToday()<cr>
+
+" vim: fen fdm=marker
