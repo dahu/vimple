@@ -329,12 +329,7 @@ endfunction
 command! -range -nargs=+ -complete=file ReadIntoBuffer <line1>,<line2>call ReadIntoBuffer(<f-args>)
 
 function! View(cmd)
-  let data = vimple#redir(a:cmd)
-  " call ShowInNewBuf(data)
-  call overlay#show(data, {'q' : ':call overlay#close()<cr>'}, {'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
-  " if index(g:vimple_auto_filter, 'view') != -1
-  "   Filter
-  " endif
+  call ShowInNewBuf(vimple#redir(a:cmd))
 endfunction
 
 if ! exists('g:vimple_auto_filter')
@@ -342,17 +337,12 @@ if ! exists('g:vimple_auto_filter')
 endif
 
 function! ShowInNewBuf(data)
-  call overlay#show(a:data, {}, {'use_split' : 1, 'filter' : 0})
-  " new
-  " setlocal buftype=nofile
-  " setlocal bufhidden=wipe
-  " setlocal noswapfile
-  " call setline(1, a:data)
+  call overlay#show(a:data, {'q' : ':call overlay#close()<cr>'}, {'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
 endfunction
 
 command! -nargs=+ -complete=command View     call View(<q-args>)
 command! -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
-command! -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<args>), "\n"))
+command! -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<q-args>), "\n"))
 
 function! Collect(args)
   let [regvar; command] = split(a:args)
@@ -389,7 +379,8 @@ function! VCCollect(pattern)
         \ 'substitute(v:val, a:pattern, "", "")')
 endfunction
 
-command! -nargs=+ Collect call Collect(<q-args>)
+command! -nargs=+ Collect  call Collect(<q-args>)
+command! -nargs=+ GCollect let GC = GCollect(<q-args>)
 
 function! SCall(script, function, args)
   let scripts = g:vimple#sn.update().filter_by_name(a:script).to_l()
