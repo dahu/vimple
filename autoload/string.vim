@@ -12,6 +12,13 @@ function! string#scanner(str)
     return self.index >= self.length
   endfunc
 
+  func obj.inject(str)
+    let self.string = strpart(self.string, 0, self.index)
+          \ . a:str . strpart(self.string, self.index)
+    let self.length = len(self.string)
+    return self
+  endfunc
+
   func obj.skip(pat) dict
     let pos = matchend(self.string, '\_^' . a:pat, self.index)
     if pos != -1
