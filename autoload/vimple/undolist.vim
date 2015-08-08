@@ -149,8 +149,8 @@ function! vimple#undolist#new()
   endfunc
 
   func m.sort_by_age() dict
-    let Fn = self.agely
-    call sort(self.__data, Fn, self)
+    let Fn_age = self.agely
+    call sort(self.__data, Fn_age, self)
     return self
   endfunc
 

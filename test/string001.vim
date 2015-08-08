@@ -1,5 +1,5 @@
 call vimtest#StartTap()
-call vimtap#Plan(16) " <== XXX  Keep plan number updated.  XXX
+call vimtap#Plan(19) " <== XXX  Keep plan number updated.  XXX
 
 let s = 'this  is a string'
 let S = string#scanner(s)
@@ -28,5 +28,21 @@ let S = string#scanner(s)
 
 call Is(S.skip_until('string') , 10       , 'skips until a target')
 call Is(S.scan('\w\+')         , 'string' , 'scan collects the pattern match')
+
+let s = "one foo\ntwo foo"
+let S = string#scanner(s)
+
+call Is(S.inject("\n").string , "\none foo\ntwo foo"   , 'inject at start')
+call S.skip('\_s*\w\+')
+call Is(S.inject("\n").string , "\none\n foo\ntwo foo" , 'inject inside string')
+
+
+
+let s = "one foo\ntwo foo\nthree foo\nfour foo\n"
+let S = string#scanner(s)
+
+call Is(S.collect('\n\zs\w\+') , ['one', 'two', 'three', 'four']       , 'collect by pattern')
+
+
 
 call vimtest#Quit()
