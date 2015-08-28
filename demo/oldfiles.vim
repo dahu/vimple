@@ -4,18 +4,6 @@
 " <enter> loads the file under the cursor
 " q closes the overlay without action
 
-function! GetSuggestions(ident)
-  let spell = &spell
-  if ! spell
-    set spell
-  endif
-  let suggestions = list#lspread(spellsuggest(a:ident), 5)
-  if ! spell
-    set nospell
-  endif
-  return suggestions
-endfunction
-
 function! Oldfiles()
   call overlay#show(
         \  vimple#redir('oldfiles')
@@ -27,9 +15,8 @@ function! Oldfiles()
 endfunction
 
 function! OldfilesAccept()
-  let line = matchstr(getline('.'), '^\d\+')
-  call overlay#close()
-  exe 'edit ' . expand('#<' . line)
+  let old_file_number = matchstr(overlay#select_line(), '^\d\+')
+  exe 'edit #<' . old_file_number
 endfunction
 
 command! -nargs=0 Oldfiles call Oldfiles()

@@ -251,3 +251,12 @@ function! string#range(...)
     return map(range(start, end), 'nr2char(v:val)')
   endif
 endfunction
+
+" returns a dict of {word : count}
+function! string#words(text)
+  let words = {}
+  for w in split(a:text)
+    let words[w] = get(words, w, 0) + 1
+  endfor
+  return words
+endfunction
