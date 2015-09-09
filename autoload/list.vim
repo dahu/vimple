@@ -23,6 +23,21 @@ function! list#flat(...)
   return fl
 endfunction
 
+function! list#split(list, match)
+  let ret = []
+  let r = []
+  for e in a:list
+    if e =~ a:match
+      call add(ret, r)
+      let r = []
+    else
+      call add(r, e)
+    endif
+  endfor
+  call add(ret, r)
+  return ret
+endfunction
+
 " list#zip(list_a, list_b, method) {{{1
 "
 " Join each element of list_a with the corresponding element of list_b
