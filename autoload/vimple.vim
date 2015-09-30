@@ -202,14 +202,21 @@ function! vimple#filter(lines, options)
   func obj.incremental() dict
     let c = ''
     let self.partial = ''
+    let &ul = &ul
+    call self.update(0)
     while 1
-      call self.update()
+      call self.update(1)
       let c = nr2char(getchar())
       if c == "\<cr>"
         break
+      elseif c == "\<c-w>"
+        if self.partial =~ '\k\+\s*$'
+          let self.partial = substitute(self.partial, '\k\+\s*$', '', '')
+        else
+          let self.partial = substitute(self.partial, '.*\k\+\zs.*$', '', '')
+        endif
       elseif c == "\<esc>"
-        let self.partial = ''
-        call self.update()
+        silent undo
         break
       elseif c == ''
         let self.partial = self.partial[:-2]
@@ -219,7 +226,10 @@ function! vimple#filter(lines, options)
     endwhile
   endfunc
 
-  func obj.update() dict
+  func obj.update(undojoin) dict
+    if a:undojoin
+      undojoin
+    endif
     %delete
     let partial = substitute(substitute(self.partial, ' ', '.*', 'g'), '\.\*$', '', '')
     if partial =~ '\.\*\$$'
