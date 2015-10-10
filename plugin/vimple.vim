@@ -340,9 +340,9 @@ function! ShowInNewBuf(data)
   call overlay#show(a:data, {'q' : ':call overlay#close()<cr>'}, {'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
 endfunction
 
-command! -nargs=+ -complete=command View     call View(<q-args>)
-command! -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
-command! -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<q-args>), "\n"))
+command! -bar -nargs=+ -complete=command View     call View(<q-args>)
+command! -bar -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
+command! -bar -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<q-args>), "\n"))
 
 function! Collect(args)
   let [regvar; command] = split(a:args)
