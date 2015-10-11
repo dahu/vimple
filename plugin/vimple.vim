@@ -332,6 +332,10 @@ function! View(cmd)
   call ShowInNewBuf(vimple#redir(a:cmd))
 endfunction
 
+function! ViewFT(cmd)
+  call overlay#show(vimple#redir(a:cmd), {'q' : ':call overlay#close()<cr>'}, {'set ft=' . &ft : 1, 'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
+endfunction
+
 if ! exists('g:vimple_auto_filter')
   let g:vimple_auto_filter = ['view', 'vfm']
 endif
@@ -341,6 +345,7 @@ function! ShowInNewBuf(data)
 endfunction
 
 command! -bar -nargs=+ -complete=command View     call View(<q-args>)
+command! -bar -nargs=+ -complete=command ViewFT   call ViewFT(<q-args>)
 command! -bar -nargs=+ -complete=command ViewExpr call ShowInNewBuf(eval(<q-args>))
 command! -bar -nargs=+ -complete=command ViewSys  call ShowInNewBuf(split(system(<q-args>), "\n"))
 
