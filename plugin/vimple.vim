@@ -333,7 +333,12 @@ function! View(cmd)
 endfunction
 
 function! ViewFT(cmd)
-  call overlay#show(vimple#redir(a:cmd), {'q' : ':call overlay#close()<cr>'}, {'set ft=' . &ft : 1, 'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1})
+  call overlay#show(vimple#redir(a:cmd), {
+        \ 'q' : ':call overlay#close()<cr>',
+        \ '<leader><enter>' : ':let t:linenum = matchstr(getline("."), "^\\s*\\d\\+") \| wincmd w \| exe "normal! " . t:linenum . "G"<cr>'
+        \ }, {
+        \ 'set ft=' . &ft : 1, 'use_split' : 1, 'filter' : index(g:vimple_auto_filter, 'view') != -1
+        \ })
 endfunction
 
 if ! exists('g:vimple_auto_filter')
