@@ -414,6 +414,9 @@ command! -nargs=+ Silently exe join(map(split(<q-args>, '|'), '"silent! ".v:val'
 
 " " Pre-initialise library objects
 if get(g:, 'vimple_init_vars', 1)
+  if get(g:, 'vimple_init_ab', 1)
+    let vimple#ab = vimple#abbreviations#new()
+  endif
   if get(g:, 'vimple_init_bl', 1)
     let vimple#bl = vimple#ls#new()
   endif
