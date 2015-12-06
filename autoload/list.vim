@@ -151,7 +151,7 @@ endfunction
 " endfunction
 
 function! list#shuffle(a)
-  let b = deepcopy(a:a)
+  let b = type(a:a) == type('') ? split(deepcopy(a:a), "\n") : a:a
   let n = 0
   let length = len(b)
   while n < length
@@ -163,6 +163,17 @@ function! list#shuffle(a)
   endwhile
   return b
 endfunction
+
+function! Shuffle(...) range abort
+  let reg = @@
+  exe a:firstline . ',' . a:lastline . 'd'
+  let lines = list#shuffle(@@)
+  call append(a:firstline - 1, lines)
+  exe a:lastline
+  let @@ = reg
+endfunction
+
+command! -nargs=0 -range=% -bar Shuffle <line1>,<line2> call Shuffle()
 
 " list#paste(a, b, join, sep)
 " Emulate the unix paste command
