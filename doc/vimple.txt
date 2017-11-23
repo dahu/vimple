@@ -6,6 +6,7 @@
 
 Help on using vimple                                                 *vimple*
 
+0.  Vimple maps and commands            |vimple-maps-commands|
 1.  Introduction			|vimple-intro|
 2.  View         			|vimple-view-command|
 3.  Collect				|vimple-collect-command|
@@ -20,6 +21,16 @@ Help on using vimple                                                 *vimple*
 12. Scope				|vimple-scope|
 13. Custom Insert-mode Completers	|vimple-completers|
 
+
+==============================================================================
+ 0. VIMPLE MAPS AND COMMANDS                           *vimple-maps-commands*
+
+Vimple creates new (and in some cases overrides default) maps and commands.
+If you don't want any of these maps and commands, they can be disabled by
+adding this line to your |$MYVIMRC|:
+>
+   let g:init_vimple_maps_and_commands = 0
+<
 
 ==============================================================================
  1. INTRODUCTION                                               *vimple-intro*

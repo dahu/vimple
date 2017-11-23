@@ -3,12 +3,16 @@ Vimple
 
 __Pacifying Vimmers__
 
-++Version 0.9 -- Lil' Vimmer++
-
 http://of-vim-and-vigor.blogspot.com/2012/03/pacifying-vimmers.html[Ad]
 
 Perhaps most usefully, Vimple provides a few maps and commands to make
-the casual vimmer's life a little easier, such as:
+the casual vimmer's life a little easier. If you don't want any of these
+maps and commands, they can be disabled by adding this line to your
+$MYVIMRC:
+
+   let g:init_vimple_maps_and_commands = 0
+
+Here are a few examples of such maps and commands:
 
 === `:View ex-command`
 
