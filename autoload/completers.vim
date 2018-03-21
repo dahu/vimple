@@ -64,10 +64,16 @@ function! completers#abbrevs(findstart, base)
 endfunction
 
 function! completers#init()
-  inoremap <expr> <plug>vimple_completers_trigger complete#trigger('completers#trigger')
+  inoremap <expr> <plug>vimple_completers_trigger          complete#trigger('completers#trigger')
+  inoremap <expr> <plug>vimple_completers_abbrev_trigger   complete#trigger('completers#abbrevs')
+  inoremap <expr> <plug>vimple_completers_datetime_trigger complete#trigger('completers#datetime')
   if !hasmapto('<plug>vimple_completers_trigger', 'i')
     imap <unique><silent> jj <plug>vimple_completers_trigger
   endif
-  inoremap <expr> <c-x><c-a> complete#trigger('completers#abbrevs')
-  inoremap <expr> <c-x><c-z> complete#trigger('completers#datetime')
+  if !hasmapto('<plug>vimple_completers_abbrev_trigger', 'i')
+    imap <unique><silent> <c-x><c-a> <plug>vimple_completers_abbrev_trigger
+  endif
+  if !hasmapto('<plug>vimple_completers_datetime_trigger', 'i')
+    imap <unique><silent> <c-x><c-z> <plug>vimple_completers_datetime_trigger
+  endif
 endfunction

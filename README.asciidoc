@@ -132,6 +132,19 @@ The default `jj` can be overridden like this:
 
   imap <c-x><c-c> <plug>vimple_completers_trigger
 
+Two other example shortcuts provided by vimple by default:
+
+* `<c-x><c-a>` to complete abbreviations
+* `<c-x><c-z>` to complete datetimes
+
+These defaults can be disabled by adding these lines to your $MYVIMRC:
+
+  imap <unique> <nop-1> <plug>vimple_completers_trigger
+  imap <unique> <nop-2> <plug>vimple_completers_abbrev_trigger
+  imap <unique> <nop-3> <plug>vimple_completers_datetime_trigger
+
+NOTE: `<unique>` is used here to trigger a warning if you're re-using a `<nop-` n `>` map.
+
 Vimple also provides VimLOO (Object Oriented VimL) objects
 for these read-only ++:ex++ commands:
 
