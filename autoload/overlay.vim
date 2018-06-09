@@ -8,6 +8,13 @@ endfunction
 
 let s:overlay_count = 1
 
+function! overlay#popup(list, ...)
+  let actions = {'q' : ':call overlay#close()<cr>'}
+  let user_options = a:0 ? a:1 : {}
+  let options = extend({'filter' : 0, 'use_split' : 1, 'vertical' : 0}, user_options)
+  call overlay#show(a:list, actions, options)
+endfunction
+
 function! overlay#show(list, actions, ...)
   let overlay_parent_altbuf = bufnr('#')
   let overlay_parent        = bufnr('%')
@@ -15,6 +22,7 @@ function! overlay#show(list, actions, ...)
   let options = {
         \ 'filter'    : 1,
         \ 'use_split' : 0,
+        \ 'vertical'  : 0,
         \ 'auto_act'  : 0,
         \ 'name'      : '__overlay__'
         \ }
@@ -29,12 +37,18 @@ function! overlay#show(list, actions, ...)
     let s:overlay_count += 1
   endif
 
+  if options.vertical
+    let options.use_split = 1
+  endif
   if options.use_split
-    hide noautocmd split
+    if options.vertical
+      hide noautocmd vsplit
+    else
+      hide noautocmd split
+    endif
   endif
   hide noautocmd enew
   let b:options               = options
-  " let b:overlay_use_split     = b:options.use_split
   let b:overlay_parent        = overlay_parent
   let b:overlay_parent_altbuf = overlay_parent_altbuf
   setlocal buftype=nofile

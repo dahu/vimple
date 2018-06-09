@@ -24,9 +24,7 @@ function! BufGrep(pattern)
 
   let data = vimple#redir('global ' . fc . pattern . lc . '#')
   if data[0] =~ 'Pattern not found:'
-    echohl Warning
-    echo data[0]
-    echohl None
+    call vimple#echoc([['Warning', data[0]]])
     return
   endif
   call overlay#show(

@@ -3,7 +3,7 @@
 " Maintainers:	Barry Arthur <barry.arthur@gmail.com>
 " 		Israel Chauca F. <israelchauca@gmail.com>
 " Description:	Vimple object for Vim's builtin :ls command.
-" Last Change:	2012-04-08
+" Last Change:	2018-06-09
 " License:	Vim License (see :help license)
 " Location:	autoload/vimple/ls.vim
 " Website:	https://github.com/dahu/vimple
@@ -55,7 +55,7 @@ function! vimple#ls#new()
   " update {{{2
   func bl.update() dict abort
     let bufferlist = vimple#associate(vimple#redir('ls!'),
-          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ah=+x ]*\)\s\+\"\(.*\)\"\s\+\(\S\+\%(\s\+\S\+\)*\)\s\+\(\d\+\)\%(\s\+.*\)\?$',
+          \ [[ '^\s*\(\d\+\)\(\s*[-u%#ahRF?=+x ]*\)\s\+\"\(.*\)\"\s\+\(\S\+\%(\s\+\S\+\)*\)\s\+\(\d\+\)\%(\s\+.*\)\?$',
             \ '\1,\2,\4,\5,\3',
             \ '' ]],
           \ [ 'split(v:val, ",")',
