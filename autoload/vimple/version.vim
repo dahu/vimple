@@ -40,24 +40,34 @@ function! vimple#version#new()
     let i = self.__info
     let info = vimple#associate(vimple#redir('version'), [], [])
 
-    let [i['version'], i['major'], i['minor'], i['build_name'], i['compiled']] =
-          \ split(
-          \   substitute(info[0]
-          \   , '^N\?VIM.\{-}\(\(\d\+\)\.\(\d\+\)\).\{-}'
-          \       . '(\(.\{-}\)\%(,\s\+\S\+\s\+\(.\{-}\)\)\?)'
-          \   , '\1\n\2\n\3\n\4\n\5', '')
-          \ , "\n", 1)
-    let i['patches'] = substitute(info[1], '^.*:\s\+\(.*\)', '\1', '')
-    let i['compiled_by'] = info[2]
-    let i['build_version'] = substitute(info[3], '^\(.\{-}\)\..*', '\1', '')
-    let i['features'] = {}
-    for line in range(4, len(info))
-      if (info[line] =~ '^\s*$') || (info[line] =~ '^\s\+.*:\s')
-        break
-      endif
-      call map(split(info[line], '\s\+'),
-            \ 'extend(i["features"], {strpart(v:val, 1) : (v:val =~ "^+" ? 1 : 0)})')
-    endfor
+    if has('nvim')
+      " Special processing for Neovim (on Arch...)
+      let [i['version'], i['major'], i['minor'] ; rest] =
+            \ split(
+            \   substitute(info[0]
+            \   , '^NVIM v\(\d\+\)\.\(\d\+\)\.\(\d\+\)'
+            \   , '\1\n\2\n\3\n', '')
+            \ , "\n", 1)
+    else
+      let [i['version'], i['major'], i['minor'], i['build_name'], i['compiled']] =
+            \ split(
+            \   substitute(info[0]
+            \   , '^N\?VIM.\{-}\(\(\d\+\)\.\(\d\+\)\(\.\(\d\+\)\)\?\)'
+            \       . '\(.\{-}(\([^,]\+\).*\)\?'
+            \   , '\1\n\2\n\3\n\5\n\7', '')
+            \ , "\n", 1)
+      let i['patches'] = substitute(info[1], '^.*:\s\+\(.*\)', '\1', '')
+      let i['compiled_by'] = info[2]
+      let i['build_version'] = substitute(info[3], '^\(.\{-}\)\..*', '\1', '')
+      let i['features'] = {}
+      for line in range(4, len(info))
+        if (info[line] =~ '^\s*$') || (info[line] =~ '^\s\+.*:\s')
+          break
+        endif
+        call map(split(info[line], '\s\+'),
+              \ 'extend(i["features"], {strpart(v:val, 1) : (v:val =~ "^+" ? 1 : 0)})')
+      endfor
+    endif
     return self
   endfunc
 
